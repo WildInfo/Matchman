@@ -13,6 +13,9 @@ public class WUser {
 	private int wuStatus;// 用户状态
 	private int wersion;// 用户角色
 
+	public WUser(String string, String string2, int i, int j) {
+	}
+
 	public int getWuId() {
 		return wuId;
 	}
