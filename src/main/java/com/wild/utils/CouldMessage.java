@@ -12,7 +12,7 @@ import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 
 public class CouldMessage {
 	public static void main(String[] args) {
-		CouldMessageContent("18473480183", getCharAndNumr(4));
+		CouldMessageContent("", getCharAndNumr(4));
 	}
 
 	public static void CouldMessageContent(String tel, String num) {
