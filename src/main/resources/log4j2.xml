@@ -4,16 +4,16 @@
 		<Console name="STDOUT" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d %-5p %C{1} (%F:%L) - %m%n" />
 		</Console>
-		<File name="fileLog" fileName="logs/vote.log">
+		<File name="fileLog" fileName="logs/wild.log">
 			<PatternLayout pattern="信息: %d  %-5p %C{1} (%F:%L) - %m%n" />
 		</File>
 	</Appenders>
 	<Loggers>
 		<!--自定义包中类的日志级别 -->
-		<Logger name="com.vote" level="debug" />
+		<Logger name="com.wild" level="debug" />
 
 		<!-- 日志级别总开头 -->
-		<Root level="error">
+		<Root level="debug">
 			<AppenderRef ref="STDOUT" />
 			<AppenderRef ref="fileLog" />
 		</Root>
