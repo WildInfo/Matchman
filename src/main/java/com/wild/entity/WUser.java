@@ -1,12 +1,17 @@
 package com.wild.entity;
 
+import java.io.Serializable;
+
 /**
  * 用户
  * 
  * @author Wild
  *
  */
-public class WUser {
+public class WUser implements Serializable {
+
+	private static final long serialVersionUID = 1632537799039372010L;
+
 	private int wuId;// 用户id
 	private String wname;// 用户名字
 	private String wpwd;// 用户密码
