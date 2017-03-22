@@ -38,8 +38,8 @@
 	<!--配置mybatis框架整合 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" /><!--数据源 -->
-		<property name="typeAliasesPackage" value="com.wild.entity" /><!-- 
-			采用别名的实体类 -->
+		<property name="typeAliasesPackage" value="com.wild.entity" />
+		<!--采用别名的实体类 -->
 		<property name="mapperLocations" value="classpath:mapper/*Mapper.xml" /><!-- 
 			配置映射文件 -->
 	</bean>
@@ -60,5 +60,4 @@
 	<mvc:default-servlet-handler />
 	<!--控制器驱动处理 ,包括数据类型转换，数据格式化， -->
 	<mvc:annotation-driven />
-
 </beans>

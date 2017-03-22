@@ -1,7 +1,5 @@
 package com.wild.utils;
 
-import java.util.Random;
-
 import org.apache.logging.log4j.LogManager;
 
 import com.taobao.api.ApiException;
@@ -10,12 +8,12 @@ import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
 import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 
-public class CouldMessage {
-	public static void main(String[] args) {
+public class WatchmanMessage {
+/*	public static void main(String[] args) {
 		CouldMessageContent("", getCharAndNumr(4));
 	}
-
-	public static void CouldMessageContent(String tel, String num) {
+*/
+	public void CouldMessageContent(String tel, String num) {
 		// 申请的端口 公共参数 TOP分配给应用的AppKey。
 		TaobaoClient client = new DefaultTaobaoClient("http://gw.api.taobao.com/router/rest", "23693002",
 				"d9e0fd532d40aa7e7cb13512ecbd3f79");
@@ -41,7 +39,7 @@ public class CouldMessage {
 	 * @param length[生成随机数的长度]
 	 * @return
 	 */
-	public static String getCharAndNumr(int length) {
+	/*public static String getCharAndNumr(int length) {
 		String val = "";
 		Random random = new Random();
 		for (int i = 0; i < length; i++) {
@@ -57,5 +55,5 @@ public class CouldMessage {
 			}
 		}
 		return val;
-	}
+	}*/
 }

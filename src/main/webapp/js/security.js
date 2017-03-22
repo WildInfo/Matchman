@@ -1,13 +1,4 @@
-﻿/*
- * RSA, a suite of routines for performing RSA public-key computations in JavaScript.
- * Copyright 1998-2005 David Shapiro.
- * Dave Shapiro
- * dave@ohdave.com 
- * changed by Fuchun, 2010-05-06
- * fcrpg2005@gmail.com
- */
-
-(function($w) {
+﻿(function($w) {
 
 if(typeof $w.RSAUtils === 'undefined')
 	var RSAUtils = $w.RSAUtils = {};
@@ -21,15 +12,6 @@ var biRadixSquared = biRadix * biRadix;
 var maxDigitVal = biRadix - 1;
 var maxInteger = 9999999999999998;
 
-//maxDigits:
-//Change this to accommodate your largest number size. Use setMaxDigits()
-//to change it!
-//
-//In general, if you're working with numbers of size N bits, you'll need 2*N
-//bits of storage. Each digit holds 16 bits. So, a 1024-bit key will need
-//
-//1024 * 2 / 16 = 128 digits of storage.
-//
 var maxDigits;
 var ZERO_ARRAY;
 var bigZero, bigOne;
