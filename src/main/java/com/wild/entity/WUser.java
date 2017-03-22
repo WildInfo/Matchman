@@ -13,7 +13,7 @@ public class WUser implements Serializable {
 
 	private static final long serialVersionUID = 1632537799039372010L;
 
-	private int WID;// 用户id
+	private String WID;// 用户id
 	private String WName;// 用户名字
 	private String WUserNum;// 用户帐号
 	private String WPassWord;// 用户密码
@@ -21,14 +21,15 @@ public class WUser implements Serializable {
 	private int WStatus;// 用户状态
 	private int WSuperManager;// 用户角色
 
-	public WUser(String string, String string2, int i, int j) {
+	public WUser(String parseInt, String string, String string2, String string3, String string4, int j, int k) {
+		// TODO Auto-generated constructor stub
 	}
 
-	public int getWID() {
+	public String getWID() {
 		return WID;
 	}
 
-	public void setWID(int wID) {
+	public void setWID(String wID) {
 		WID = wID;
 	}
 
@@ -79,10 +80,5 @@ public class WUser implements Serializable {
 	public void setWSuperManager(int wSuperManager) {
 		WSuperManager = wSuperManager;
 	}
-
-	@Override
-	public String toString() {
-		return "WUser [WID=" + WID + ", WName=" + WName + ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord
-				+ ", WDate=" + WDate + ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
-	}
+	
 }
