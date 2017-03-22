@@ -1,5 +1,7 @@
 package com.wild.service.impl;
 
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +19,17 @@ public class WUserServiceImplTest {
 	@Autowired
 	private WUserService vservice;
 
-	/**
-	 * private int WID;// 用户id private String WName;// 用户名字 private String
-	 * WUserNum;// 用户帐号 private String WPassWord;// 用户密码 private Date WDate;
-	 * private int WStatus;// 用户状态 private int WSuperManager;// 用户角色
-	 */
 	@Test
 	public void testRegister() {
-		String is=UUIDUtil.createUUID();
-		int user = vservice.register(new WUser(is, "Luodawei", "231", "eeee","2007-12-14 14:10", 2, 0));
+		WUser users = new WUser();
+		users.setWID(UUIDUtil.createUUID());
+		users.setWName("ludowe");
+		users.setWDate(new Date());
+		users.setWPassWord("erw");
+		users.setWStatus(23);
+		users.setWSuperManager(2);
+		users.setWUserNum("111100");
+		int user = vservice.register(users);
 		System.out.println("用户名为：" + user);
 	}
 

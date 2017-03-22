@@ -21,9 +21,6 @@ public class WUser implements Serializable {
 	private int WStatus;// 用户状态
 	private int WSuperManager;// 用户角色
 
-	public WUser(String parseInt, String string, String string2, String string3, String string4, int j, int k) {
-		// TODO Auto-generated constructor stub
-	}
 
 	public String getWID() {
 		return WID;
