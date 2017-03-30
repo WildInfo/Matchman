@@ -221,7 +221,7 @@
         <configuration>
                 <url>http://120.77.176.165/manager/text</url>
                 <username>admin</username>
-                <password>admin</password>
+                <password>f31055183a</password>
                 <port>8081</port>
                 <path>/${project.artifactId}</path>
         </configuration>
