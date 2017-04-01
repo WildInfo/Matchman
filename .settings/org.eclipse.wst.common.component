@@ -5,9 +5,8 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/test"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/ejbModule"/>
-        <property name="context-root" value="Watchman"/>
         <property name="java-output-path" value="/Watchman/target/classes"/>
+        <property name="context-root" value="matchman_GC_Java"/>
     </wb-module>
 </project-modules>

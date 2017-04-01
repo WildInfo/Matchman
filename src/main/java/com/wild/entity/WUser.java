@@ -21,7 +21,6 @@ public class WUser implements Serializable {
 	private int WStatus;// 用户状态
 	private int WSuperManager;// 用户角色
 
-
 	public String getWID() {
 		return WID;
 	}
