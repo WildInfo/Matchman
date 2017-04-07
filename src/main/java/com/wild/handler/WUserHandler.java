@@ -96,10 +96,10 @@ public class WUserHandler implements Serializable {
 	 * @param request
 	 * @param session
 	 */
-	@RequestMapping(value = "/smsVerificationCode", method = RequestMethod.POST)
+	@RequestMapping(value = "/smsVerificationCode", method = RequestMethod.GET)
 	public void MessageResiter(PrintWriter out, HttpServletRequest request, HttpSession session) {
 		WatchmanMessage cl = new WatchmanMessage();
-		String tel = request.getParameter("verificationCode");// 获取短信验证码
+		String tel = request.getParameter("loginName");// 获取短信验证码
 		String num = getCharAndNumr(4);
 		session.setAttribute(SessionAttribute.TELRLOGIN, num);
 		cl.CouldMessageContent(tel, num);
