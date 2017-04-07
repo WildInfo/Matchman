@@ -20,4 +20,12 @@ public interface WUserMapper {
 	 * @return
 	 */
 	public List<WUser> login(WUser user);
+	
+	/**
+	 * 完善信息(年龄段，性别)
+	 * @param age
+	 * @param sex
+	 * @return
+	 */
+	public int perfectDatum(WUser user);
 }

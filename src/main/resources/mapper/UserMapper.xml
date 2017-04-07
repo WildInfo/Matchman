@@ -8,4 +8,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		(WID,WName,WUserNum,WPassWord,WDate,WStatus,WSuperManager)
 		values(#{WID},#{WName},#{WUserNum},#{WPassWord},#{WDate},#{WStatus},#{WSuperManager})
 	</insert>
+	
+	<update id="perfectDatum" parameterType="WUser">
+		update wuser set wsex=#{WSex},wage=#{WAge} where wid=#{WID}
+	</update>
 </mapper>

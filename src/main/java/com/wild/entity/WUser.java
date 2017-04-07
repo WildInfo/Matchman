@@ -23,22 +23,9 @@ public class WUser implements Serializable {
 	private int WStatus;// 用户状态
 	private int WSuperManager;// 用户角色
 	
-	public WUser(String wID, String wName, String wSex, String wUserNum, String wPassWord, String wAge, Date wDate,
-			int wStatus, int wSuperManager) {
-		WID = wID;
-		WName = wName;
-		WSex = wSex;
-		WUserNum = wUserNum;
-		WPassWord = wPassWord;
-		WAge = wAge;
-		WDate = wDate;
-		WStatus = wStatus;
-		WSuperManager = wSuperManager;
-	}
 
 	public WUser(String wID, String wName, String wSex, String wUserNum, String wPassWord, String wAge, Date wDate,
 			int wStatus, int wSuperManager) {
-		super();
 		WID = wID;
 		WName = wName;
 		WSex = wSex;
@@ -51,7 +38,6 @@ public class WUser implements Serializable {
 	}
 
 	public WUser() {
-		super();
 	}
 
 	public String getWID() {

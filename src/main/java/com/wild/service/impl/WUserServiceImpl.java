@@ -25,4 +25,12 @@ public class WUserServiceImpl implements WUserService {
 		return wuserMapper.login(user);
 	}
 
+	/**
+	 * 用户资料完善（年龄段，性别）
+	 */
+	@Override
+	public int perfectDatum(WUser user) {
+		return wuserMapper.perfectDatum(user);
+	}
+
 }

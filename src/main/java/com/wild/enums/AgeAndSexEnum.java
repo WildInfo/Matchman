@@ -25,7 +25,5 @@ public enum AgeAndSexEnum {
 		}
 		return false;
 	}
-
-	
 }
 
