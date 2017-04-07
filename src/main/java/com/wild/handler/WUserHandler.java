@@ -45,23 +45,11 @@ public class WUserHandler implements Serializable {
 	public String register(@Valid @ModelAttribute("user") WUser user, HttpSession session, HttpServletRequest request,
 			ModelMap map) {
 
+		userService.register(user);
 		if (session.getAttribute(SessionAttribute.TELRLOGIN) == null) {
 			map.put("regErrorMsg", "验证码已失效");
 			return "register";
 		}
-		/*if (user.getCode().equalsIgnoreCase((String) session.getAttribute(SessionAttribute.TELRLOGIN))) {
-			if (service.register(user) > 0) {
-				return "login";
-			}
-		} else {
-			map.put("regErrorMsg", "验证码不正确");
-			return "register";
-		} //
-			// 如果有错误的话，那么将返回注册页面
-		if (result.hasErrors()) {
-			map.put("regErrorMsg", "注册失败");
-			return "register";
-		}*/
 
 		return "register";
 
