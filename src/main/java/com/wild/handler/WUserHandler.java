@@ -108,9 +108,7 @@ public class WUserHandler implements Serializable {
 		String num = getCharAndNumr();
 		session.setAttribute(SessionAttribute.TELRLOGIN, num);
 		cl.CouldMessageContent(tel, num);
-		Gson gson = new Gson();
-		out.println(gson
-				.toJson("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": [" + "\"verificationCode\":" + num + "]}"));
+		out.println("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {" + "\"verificationCode\":"+num + "}}");
 		out.flush();
 		out.close();
 	}
