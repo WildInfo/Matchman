@@ -15,8 +15,10 @@ public class WUser implements Serializable {
 
 	private String WID;// 用户id
 	private String WName;// 用户名字
+	private String WSex;//用户性别
 	private String WUserNum;// 用户帐号
 	private String WPassWord;// 用户密码
+	private String WAge;// 用户年龄
 	private Date WDate;
 	private int WStatus;// 用户状态
 	private int WSuperManager;// 用户角色
@@ -75,6 +77,22 @@ public class WUser implements Serializable {
 
 	public void setWSuperManager(int wSuperManager) {
 		WSuperManager = wSuperManager;
+	}
+
+	public String getWSex() {
+		return WSex;
+	}
+
+	public void setWSex(String wSex) {
+		WSex = wSex;
+	}
+
+	public String getWAge() {
+		return WAge;
+	}
+
+	public void setWAge(String wAge) {
+		WAge = wAge;
 	}
 	
 }
