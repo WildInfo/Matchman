@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -25,6 +26,9 @@ import com.wild.utils.PublicKeyMap;
 import com.wild.utils.RSAUtils;
 import com.wild.utils.SessionAttribute;
 import com.wild.utils.WatchmanMessage;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/wuser")
@@ -97,14 +101,16 @@ public class WUserHandler implements Serializable {
 	 * @param session
 	 */
 	@RequestMapping(value = "/smsVerificationCode", method = RequestMethod.GET)
-	public void MessageResiter(PrintWriter out, HttpServletRequest request, HttpSession session) {
+	public void MessageResiter(PrintWriter out, HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) {
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
-		String num = getCharAndNumr(4);
+		String num = getCharAndNumr();
 		session.setAttribute(SessionAttribute.TELRLOGIN, num);
 		cl.CouldMessageContent(tel, num);
 		Gson gson = new Gson();
-		out.println(gson.toJson(num));
+		out.println(gson
+				.toJson("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": [" + "\"verificationCode\":" + num + "]}"));
 		out.flush();
 		out.close();
 	}
@@ -114,21 +120,10 @@ public class WUserHandler implements Serializable {
 	 * @param length[生成随机数的长度]
 	 * @return
 	 */
-	public String getCharAndNumr(int length) {
-		String val = "";
-		Random random = new Random();
-		for (int i = 0; i < length; i++) {
-			// 输出字母还是数字
-			String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num";
-			// 字符串
-			if ("char".equalsIgnoreCase(charOrNum)) {
-				// 取得大写字母还是小写字母
-				int choice = random.nextInt(2) % 2 == 0 ? 65 : 97;
-				val += (char) (choice + random.nextInt(26));
-			} else if ("num".equalsIgnoreCase(charOrNum)) { // 数字
-				val += String.valueOf(random.nextInt(10));
-			}
-		}
+	public String getCharAndNumr() {
+		String val = "";// 定义两变量
+		Random ne = new Random();// 实例化一个random的对象ne
+		val = ne.nextInt(9999 - 1000 + 1) + 1000 + "";// 为变量赋随机值1000-9999
 		return val;
 	}
 }
