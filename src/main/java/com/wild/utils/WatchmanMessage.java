@@ -21,7 +21,7 @@ public class WatchmanMessage {
 		req.setExtend("123456");// 使用用户类型
 		req.setSmsType("normal");// 必须是normal
 		req.setSmsFreeSignName("登录验证");// 短信模版签名
-		req.setSmsParamString("{\"code\":\"验证码" + num + ",您正在登录GC,若非本人操作,请勿泄露。\",\"product\":\"GC\"}");// 发送内容
+		req.setSmsParamString("{\"code\":\"：" + num + "\",\"product\":\"GC\"}");// 发送内容
 		req.setRecNum(tel);// 接收手机号码,可以是多个手机号码，用,隔开
 		req.setSmsTemplateCode("SMS_53840152");// 申请的短信模版
 		AlibabaAliqinFcSmsNumSendResponse rsp;

@@ -27,9 +27,6 @@ import com.wild.utils.RSAUtils;
 import com.wild.utils.SessionAttribute;
 import com.wild.utils.WatchmanMessage;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 @Controller
 @RequestMapping("/wuser")
 @SessionAttributes(SessionAttribute.USERLOGIN)
@@ -48,13 +45,11 @@ public class WUserHandler implements Serializable {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(@Valid @ModelAttribute("user") WUser user, HttpSession session, HttpServletRequest request,
 			ModelMap map) {
-
 		userService.register(user);
 		if (session.getAttribute(SessionAttribute.TELRLOGIN) == null) {
 			map.put("regErrorMsg", "验证码已失效");
 			return "register";
 		}
-
 		return "register";
 
 	}
@@ -108,7 +103,9 @@ public class WUserHandler implements Serializable {
 		String num = getCharAndNumr();
 		session.setAttribute(SessionAttribute.TELRLOGIN, num);
 		cl.CouldMessageContent(tel, num);
-		out.println("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {" + "\"verificationCode\":"+num + "}}");
+		Gson gson = new Gson();
+		out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {"
+				+ "\"verificationCode\":" + num + "}}"));
 		out.flush();
 		out.close();
 	}
