@@ -3,6 +3,9 @@ package com.wild.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.wild.enums.UserStatusEnum;
+import com.wild.enums.UserVersioniEnum;
+
 /**
  * 用户
  * 
@@ -14,20 +17,19 @@ public class WUser implements Serializable {
 	private static final long serialVersionUID = 1632537799039372010L;
 
 	private String WID;// 用户id
-	private String WName;// 用户名字
-	private String WSex;//用户性别
+	private String WNickName;// 用户昵称
+	private String WSex;// 用户性别
 	private String WUserNum;// 用户帐号
 	private String WPassWord;// 用户密码
 	private String WAge;// 用户年龄
-	private Date WDate;
-	private int WStatus;// 用户状态
-	private int WSuperManager;// 用户角色
-	
+	private Date WDate;// 注册时间
+	private UserStatusEnum WStatus;// 用户状态
+	private UserVersioniEnum WSuperManager;// 用户角色
 
-	public WUser(String wID, String wName, String wSex, String wUserNum, String wPassWord, String wAge, Date wDate,
-			int wStatus, int wSuperManager) {
+	public WUser(String wID, String wNickName, String wSex, String wUserNum, String wPassWord, String wAge, Date wDate,
+			UserStatusEnum wStatus, UserVersioniEnum wSuperManager) {
 		WID = wID;
-		WName = wName;
+		WNickName = wNickName;
 		WSex = wSex;
 		WUserNum = wUserNum;
 		WPassWord = wPassWord;
@@ -48,12 +50,12 @@ public class WUser implements Serializable {
 		WID = wID;
 	}
 
-	public String getWName() {
-		return WName;
+	public String getWNickName() {
+		return WNickName;
 	}
 
-	public void setWName(String wName) {
-		WName = wName;
+	public void setWNickName(String wNickName) {
+		WNickName = wNickName;
 	}
 
 	public String getWUserNum() {
@@ -80,19 +82,19 @@ public class WUser implements Serializable {
 		WDate = wDate;
 	}
 
-	public int getWStatus() {
+	public UserStatusEnum getWStatus() {
 		return WStatus;
 	}
 
-	public void setWStatus(int wStatus) {
+	public void setWStatus(UserStatusEnum wStatus) {
 		WStatus = wStatus;
 	}
 
-	public int getWSuperManager() {
+	public UserVersioniEnum getWSuperManager() {
 		return WSuperManager;
 	}
 
-	public void setWSuperManager(int wSuperManager) {
+	public void setWSuperManager(UserVersioniEnum wSuperManager) {
 		WSuperManager = wSuperManager;
 	}
 
@@ -111,5 +113,5 @@ public class WUser implements Serializable {
 	public void setWAge(String wAge) {
 		WAge = wAge;
 	}
-	
+
 }

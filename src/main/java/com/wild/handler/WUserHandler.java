@@ -2,6 +2,7 @@ package com.wild.handler;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,10 +23,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.Gson;
 import com.wild.entity.WUser;
+import com.wild.enums.UserStatusEnum;
+import com.wild.enums.UserVersioniEnum;
 import com.wild.service.WUserService;
 import com.wild.utils.PublicKeyMap;
 import com.wild.utils.RSAUtils;
 import com.wild.utils.SessionAttribute;
+import com.wild.utils.UUIDUtil;
 import com.wild.utils.WatchmanMessage;
 
 @Controller
@@ -43,14 +48,31 @@ public class WUserHandler implements Serializable {
 	 * @return
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(@Valid @ModelAttribute("user") WUser user, HttpSession session, HttpServletRequest request,
-			ModelMap map) {
-		userService.register(user);
-		if (session.getAttribute(SessionAttribute.TELRLOGIN) == null) {
-			map.put("regErrorMsg", "验证码已失效");
-			return "register";
+	public void register(@Valid @ModelAttribute("user") PrintWriter out, WUser user, HttpSession session,
+			HttpServletRequest request, ModelMap map) {
+		Gson gson = new Gson();
+		String loginName = request.getParameter("loginName");// 用户名（手机号码）
+		String password = request.getParameter("password");
+		String validateCode = request.getParameter("validateCode");// 验证码
+		String NickName = request.getParameter("NickName");// 用户昵称
+
+		// 数据不为空
+		if (StringUtils.isNotBlank(loginName) && StringUtils.isNotBlank(password)
+				&& StringUtils.isNotBlank(validateCode)) {
+			if (!validateCode.equals(SessionAttribute.TELRLOGIN)) {
+				int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, "", loginName,
+						password, "", new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
+				if (resultRegister > 0) {
+					out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"注册成功！\"}"));
+					out.flush();
+					out.close();
+				}
+			} else {
+				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"注册失败！\"}"));
+				out.flush();
+				out.close();
+			}
 		}
-		return "register";
 
 	}
 
@@ -70,7 +92,6 @@ public class WUserHandler implements Serializable {
 			ModelMap map, HttpSession session) {
 		// 如果有错误的话，那么将返回注册页面
 		String pwd = RSAUtils.decryptStringByJs(userLogin.getWPassWord());
-		System.out.println(pwd);
 		List<WUser> users = userService.login(userLogin);
 		if (users.size() > 0) {
 			map.put(SessionAttribute.USERLOGIN, users.get(0));
@@ -102,6 +123,7 @@ public class WUserHandler implements Serializable {
 		String tel = request.getParameter("loginName");// 获取短信验证码
 		String num = getCharAndNumr();
 		session.setAttribute(SessionAttribute.TELRLOGIN, num);
+		session.setMaxInactiveInterval(300);// 设置验证码5分钟失效
 		cl.CouldMessageContent(tel, num);
 		Gson gson = new Gson();
 		out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {"
