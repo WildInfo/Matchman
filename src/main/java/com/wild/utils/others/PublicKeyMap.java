@@ -1,4 +1,4 @@
-package com.wild.utils;
+package com.wild.utils.others;
 
 /**
  * 密钥类

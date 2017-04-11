@@ -1,4 +1,4 @@
-package com.wild.utils;
+package com.wild.utils.others;
 
 import java.io.File;
 import java.io.FileInputStream;
