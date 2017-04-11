@@ -63,12 +63,12 @@ public class WUserHandler implements Serializable {
 		// 数据不为空
 		if (StringUtils.isNotBlank(loginName) && StringUtils.isNotBlank(password)
 				&& StringUtils.isNotBlank(validateCode)) {
-			if (SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
-				if (validateCode.equals(SessionAttribute.TELRLOGIN)
-						&& validateCode.equals(checkCodeSer.getCheckCode())) {
+			if (!SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
+				if (validateCode.equals(checkCodeSer.getCheckCode())) {
 					int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, sex, loginName,
 							password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
 					if (resultRegister > 0) {
+						SerAndDeser.deleteCheckCode(checkCodeSer);//注册成功后清除文件中的验证码信息
 						out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"注册成功！\"}"));
 						out.flush();
 						out.close();

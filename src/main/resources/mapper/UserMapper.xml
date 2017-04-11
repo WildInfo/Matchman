@@ -5,8 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.wild.mapper.WUserMapper">
 	<insert id="register" parameterType="WUser">
 		insert into wuser
-		(WID,WNickName,WUserNum,WPassWord,WDate,WStatus,WSuperManager)
-		values(#{WID},#{WNickName},#{WUserNum},#{WPassWord},#{WDate},#{WStatus},#{WSuperManager})
+		(WID,WNickName,WSex,WUserNum,WPassWord,WAge,WDate,WStatus,WSuperManager)
+		values(#{WID},#{WNickName},#{WSex},#{WUserNum},#{WPassWord},#{WAge},#{WDate},#{WStatus},#{WSuperManager})
 	</insert>
 
 	<update id="perfectDatum" parameterType="WUser">

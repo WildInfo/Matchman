@@ -17,17 +17,26 @@ import java.util.List;
 public class SerAndDeser {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
-	private static String relativelyPath = SerAndDeser.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
+	private static String relativelyPath ;
 	private static List<CheckCodeSer> list = new ArrayList<CheckCodeSer>();
-	public static File file = new File(relativelyPath + "/test.txt");
+	public static File file;
+	static{
+		relativelyPath = SerAndDeser.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
+        relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
+        String path = relativelyPath + "webapps/checkCode";
+        File fi = new File(path);
+        if(!fi.exists()){
+        	fi.mkdir();
+        }
+        System.out.println(relativelyPath);
+		file = new File(path+"/checkCode.txt");
+	}
 
 	/**
 	 * 序列化对象
 	 */
 	public static void SerializeObject(CheckCodeSer cc, boolean flag) {
 		try {
-			System.out.println(relativelyPath);
-
 			if (file.exists() && file.length() != 0) {// 如果文件存在
 				FileOutputStream fo = new FileOutputStream(file, flag);
 				ObjectOutputStream oo = new ObjectOutputStream(fo);
@@ -114,6 +123,7 @@ public class SerAndDeser {
 	 * @param cc
 	 */
 	public static void deleteCheckCode(CheckCodeSer cc) {
+		System.out.println("in");
 		DeSerializeObject("");
 		for (int i = 0; i < list.size(); i++) {
 			if (list.get(i).getTel().equalsIgnoreCase(cc.getTel())) {
