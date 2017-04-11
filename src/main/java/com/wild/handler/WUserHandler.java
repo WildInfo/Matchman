@@ -54,7 +54,7 @@ public class WUserHandler implements Serializable {
 		Gson gson = new Gson();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		user.setWUserNum(loginName);
-		CheckCodeSer checkCodeSer = SerAndDeser.DeSerializeObject(user.getWUserNum());// 反序列化
+		CheckCodeSer checkCodeSer = SerAndDeser.DeSerializeObject(user.getWUserNum()).get(0);// 反序列化
 		String password = request.getParameter("password");
 		String validateCode = request.getParameter("validateCode");// 验证码
 		String NickName = request.getParameter("NickName");// 用户昵称
@@ -144,7 +144,7 @@ public class WUserHandler implements Serializable {
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(num, time, tel);
-		if (SerAndDeser.file.exists()) {
+		if (SerAndDeser.file.exists() && SerAndDeser.file.length()>0) {
 			SerAndDeser.deleteCheckCode(checkCodeSer);// 发送前先清除，防止该号码第二次获取验证码
 		}
 		SerAndDeser.SerializeObject(checkCodeSer, true);// 序列化注册码对象
