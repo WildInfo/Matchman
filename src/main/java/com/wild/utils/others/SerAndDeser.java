@@ -24,7 +24,7 @@ public class SerAndDeser {
         relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
         String path = relativelyPath + "webapps/checkCode";
         File fi = new File(path);
-        if(!fi.exists()){
+        if(!fi.exists() && !fi.isFile()){
         	fi.mkdir();
         }
         System.out.println(relativelyPath);
@@ -123,12 +123,10 @@ public class SerAndDeser {
 	 * @param cc
 	 */
 	public static void deleteCheckCode(CheckCodeSer cc) {
-		System.out.println("in");
 		List<CheckCodeSer> list = DeSerializeObject("");
 		int a = 0;
 		for (int i = 0; i < list.size(); i++) {
 			a=i;
-			System.out.println(list.get(i));
 			if (list.get(i).getTel().equalsIgnoreCase(cc.getTel())) {
 				list.remove(list.get(i));
 				if (list.size() == 0) {
@@ -144,7 +142,6 @@ public class SerAndDeser {
 				clearFile();
 				SerializeObject(list.get(i), false);// 重新写入
 			}else{
-				System.out.println("===="+list.get(i));
 				SerializeObject(list.get(i), true);// 重新写入
 			}
 		}
