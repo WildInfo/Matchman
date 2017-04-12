@@ -71,7 +71,6 @@ public class SerAndDeser {
 		List<CheckCodeSer> list = new ArrayList<CheckCodeSer>();
 		ObjectInputStream oi;
 		try {
-			@SuppressWarnings("resource")
 			FileInputStream fi = new FileInputStream(file);
 			oi = new ObjectInputStream(fi);
 			while (fi.available() > 0) {

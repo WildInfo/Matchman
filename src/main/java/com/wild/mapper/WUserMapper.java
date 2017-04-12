@@ -28,4 +28,12 @@ public interface WUserMapper {
 	 * @return
 	 */
 	public int perfectDatum(WUser user);
+	
+	/**
+	 * 修改密码
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public int lostPassWord(WUser user);
 }
