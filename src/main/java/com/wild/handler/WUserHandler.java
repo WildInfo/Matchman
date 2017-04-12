@@ -2,6 +2,7 @@ package com.wild.handler;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -36,6 +36,7 @@ import com.wild.utils.others.SerAndDeser;
 @RequestMapping("/wuser")
 @SessionAttributes(SessionAttribute.USERLOGIN)
 public class WUserHandler implements Serializable {
+
 	private static final long serialVersionUID = -2250657581544309429L;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 
@@ -54,7 +55,7 @@ public class WUserHandler implements Serializable {
 		Gson gson = new Gson();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		user.setWUserNum(loginName);
-		CheckCodeSer checkCodeSer = SerAndDeser.DeSerializeObject(user.getWUserNum());// 反序列化
+		CheckCodeSer checkCodeSer = SerAndDeser.DeSerializeObject(user.getWUserNum()).get(0);// 反序列化
 		String password = request.getParameter("password");
 		String validateCode = request.getParameter("validateCode");// 验证码
 		String NickName = request.getParameter("NickName");// 用户昵称
@@ -68,7 +69,7 @@ public class WUserHandler implements Serializable {
 					int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, sex, loginName,
 							password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
 					if (resultRegister > 0) {
-						SerAndDeser.deleteCheckCode(checkCodeSer);//注册成功后清除文件中的验证码信息
+						SerAndDeser.deleteCheckCode(checkCodeSer);// 注册成功后清除文件中的验证码信息
 						out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"注册成功！\"}"));
 						out.flush();
 						out.close();
@@ -94,19 +95,24 @@ public class WUserHandler implements Serializable {
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public void Login(WUser userLogin, BindingResult result, HttpServletRequest request, PrintWriter out, ModelMap map,
-			HttpSession session) {
+	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
 		Gson gson = new Gson();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
-		String NickName = request.getParameter("NickName");// 用户昵称
+		String NickName = "";
+		try {
+			// String NickName = request.getParameter("NickName");// 用户昵称
+			NickName = new String(request.getParameter("NickName").getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
 		// 数据不为空
 		if (StringUtils.isNotBlank(password)
 				&& (StringUtils.isNotBlank(NickName) || StringUtils.isNotBlank(loginName))) {
 			userLogin.setWPassWord(password);
 			if (StringUtils.isNotBlank(NickName)) {
-				userLogin.setWUserNum(NickName);
+				userLogin.setWNickName(NickName);
 			}
 			if (StringUtils.isNotBlank(loginName)) {
 				userLogin.setWUserNum(loginName);
@@ -144,7 +150,7 @@ public class WUserHandler implements Serializable {
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(num, time, tel);
-		if (SerAndDeser.file.exists()) {
+		if (SerAndDeser.file.exists() && SerAndDeser.file.length()>0) {
 			SerAndDeser.deleteCheckCode(checkCodeSer);// 发送前先清除，防止该号码第二次获取验证码
 		}
 		SerAndDeser.SerializeObject(checkCodeSer, true);// 序列化注册码对象
@@ -152,6 +158,37 @@ public class WUserHandler implements Serializable {
 				+ "\"verificationCode\":" + num + "}}"));
 		out.flush();
 		out.close();
+	}
+
+	/**
+	 * 忘记密码(修改)
+	 * 
+	 * @param userLogin：用户手机号码
+	 */
+	@RequestMapping(value = "/lostPassWord", method = RequestMethod.GET)
+	public void LostPassWord(WUser userLogin, HttpServletRequest request, PrintWriter out) {
+		Gson gson = new Gson();
+		String loginName = request.getParameter("loginName");// 用户名（手机号码）
+		String password = request.getParameter("password");
+
+		// 数据不为空
+		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)) {
+
+			userLogin.setWPassWord(password);
+			userLogin.setWUserNum(loginName);
+
+			int users = userService.lostPassWord(userLogin);// 修改
+
+			if (users > 0) {
+				out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"修改成功！\"}"));
+				out.flush();
+				out.close();
+			} else {
+				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"修改失败！\"}"));
+				out.flush();
+				out.close();
+			}
+		}
 	}
 
 	/**

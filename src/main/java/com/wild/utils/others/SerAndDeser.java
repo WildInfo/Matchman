@@ -18,14 +18,13 @@ public class SerAndDeser {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 	private static String relativelyPath ;
-	private static List<CheckCodeSer> list = new ArrayList<CheckCodeSer>();
 	public static File file;
 	static{
 		relativelyPath = SerAndDeser.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
         relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
         String path = relativelyPath + "webapps/checkCode";
         File fi = new File(path);
-        if(!fi.exists()){
+        if(!fi.exists() && !fi.isFile()){
         	fi.mkdir();
         }
         System.out.println(relativelyPath);
@@ -68,17 +67,17 @@ public class SerAndDeser {
 	 * 
 	 * @return
 	 */
-	public static CheckCodeSer DeSerializeObject(String phone) {
+	public static List<CheckCodeSer> DeSerializeObject(String phone) {
+		List<CheckCodeSer> list = new ArrayList<CheckCodeSer>();
 		ObjectInputStream oi;
 		try {
-			@SuppressWarnings("resource")
 			FileInputStream fi = new FileInputStream(file);
 			oi = new ObjectInputStream(fi);
 			while (fi.available() > 0) {
 				CheckCodeSer cc = (CheckCodeSer) oi.readObject();
 				if (phone != null && phone.length() > 0) {
 					if (phone.equalsIgnoreCase(cc.getTel())) {
-						return cc;
+						list.add(cc);
 					}
 				} else {// 将所有对象存到list中
 					list.add(cc);
@@ -91,7 +90,7 @@ public class SerAndDeser {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return list;
 	}
 
 	/**
@@ -123,23 +122,14 @@ public class SerAndDeser {
 	 * @param cc
 	 */
 	public static void deleteCheckCode(CheckCodeSer cc) {
-		System.out.println("in");
-		DeSerializeObject("");
+		List<CheckCodeSer> list = DeSerializeObject("");
+		int a = 0;
 		for (int i = 0; i < list.size(); i++) {
+			a=i;
 			if (list.get(i).getTel().equalsIgnoreCase(cc.getTel())) {
 				list.remove(list.get(i));
 				if (list.size() == 0) {
-					try {
-						FileWriter fw = new FileWriter(file);
-						BufferedWriter bw = new BufferedWriter(fw);
-						bw.write("");
-						bw.flush();
-						bw.close();
-						fw.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					// SerializeObject(null,false);//重新写入
+					clearFile();
 					break;
 				} else {
 					if (i >= 1) {
@@ -147,7 +137,25 @@ public class SerAndDeser {
 					}
 				}
 			}
-			SerializeObject(list.get(i), false);// 重新写入
+			if(a==0){
+				clearFile();
+				SerializeObject(list.get(i), false);// 重新写入
+			}else{
+				SerializeObject(list.get(i), true);// 重新写入
+			}
+		}
+	}
+	
+	private static void clearFile(){
+		try {
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write("");
+			bw.flush();
+			bw.close();
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
