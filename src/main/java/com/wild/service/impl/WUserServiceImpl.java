@@ -31,8 +31,8 @@ public class WUserServiceImpl implements WUserService {
 	}
 
 	@Override
-	public String telForOnly(String tel) {
-		return wuserMapper.telForOnly(tel);
+	public String telForOnly(String tel,String NickName) {
+		return wuserMapper.telForOnly(tel,NickName);
 	}
 
 }

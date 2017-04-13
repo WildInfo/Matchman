@@ -14,8 +14,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 查看手机号码唯一 -->
 	<select id="telForOnly" parameterType="String" resultType="String">
 		select
-		WUserNum
-		from wuser where WUserNum=#{WUserNum}
+		WUserNum,WNickName
+		from wuser where (WNickName=#{WNickName}||WUserNum=#{WUserNum}) 
 	</select>
 	<!-- 登录 -->
 	<select id="login" parameterType="WUser" resultType="WUser">

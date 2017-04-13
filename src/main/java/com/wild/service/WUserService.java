@@ -15,12 +15,12 @@ public interface WUserService {
 	public int register(WUser user);
 
 	/**
-	 * 查看手机号码是否唯一
+	 * 查看手机号码,登录名是否唯一
 	 * 
 	 * @param tel
 	 * @return
 	 */
-	public String telForOnly(String tel);
+	public String telForOnly(String tel,String NickName);
 
 	/**
 	 * 用户登录
