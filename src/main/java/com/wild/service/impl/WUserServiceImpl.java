@@ -30,4 +30,9 @@ public class WUserServiceImpl implements WUserService {
 		return wuserMapper.lostPassWord(user);
 	}
 
+	@Override
+	public String telForOnly(String tel) {
+		return wuserMapper.telForOnly(tel);
+	}
+
 }
