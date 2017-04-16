@@ -141,6 +141,10 @@ public class WUserHandler implements Serializable {
 				out.flush();
 				out.close();
 			}
+		}else {
+			out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"用户名或密码错误！\"}"));
+			out.flush();
+			out.close();
 		}
 	}
 
