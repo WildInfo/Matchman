@@ -1,4 +1,4 @@
-package com.wild.service.impl;
+package com.wild.service.impl.user;
 
 import java.util.List;
 

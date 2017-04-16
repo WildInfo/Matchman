@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Wild
  *
  */
-public class Wdetails implements Serializable {
+public class WDetails implements Serializable {
 
 	private static final long serialVersionUID = -5753757172875401160L;
 
@@ -19,9 +19,13 @@ public class Wdetails implements Serializable {
 	private String WCurrency;// 游戏币
 	private String WHeadImage;// 头像地址
 	private String WBarcode;// 二维码地址
+	private String WDetails1;//备用字段
+	private String WDetails2;//备用字段
+	private String WDetails3;//备用字段
 
-	public Wdetails(String wID, String wPersonalized, String wHobbies, String wIntroduce, String wCurrency,
-			String wHeadImage, String wBarcode) {
+	public WDetails(String wID, String wPersonalized, String wHobbies, String wIntroduce, String wCurrency,
+			String wHeadImage, String wBarcode, String wDetails1, String wDetails2, String wDetails3) {
+		super();
 		WID = wID;
 		WPersonalized = wPersonalized;
 		WHobbies = wHobbies;
@@ -29,6 +33,9 @@ public class Wdetails implements Serializable {
 		WCurrency = wCurrency;
 		WHeadImage = wHeadImage;
 		WBarcode = wBarcode;
+		WDetails1 = wDetails1;
+		WDetails2 = wDetails2;
+		WDetails3 = wDetails3;
 	}
 
 	public String getWID() {
@@ -92,6 +99,30 @@ public class Wdetails implements Serializable {
 		return "Wdetails [WID=" + WID + ", WPersonalized=" + WPersonalized + ", WHobbies=" + WHobbies + ", WIntroduce="
 				+ WIntroduce + ", WCurrency=" + WCurrency + ", WHeadImage=" + WHeadImage + ", WBarcode=" + WBarcode
 				+ "]";
+	}
+
+	public String getWDetails1() {
+		return WDetails1;
+	}
+
+	public void setWDetails1(String wDetails1) {
+		WDetails1 = wDetails1;
+	}
+
+	public String getWDetails2() {
+		return WDetails2;
+	}
+
+	public void setWDetails2(String wDetails2) {
+		WDetails2 = wDetails2;
+	}
+
+	public String getWDetails3() {
+		return WDetails3;
+	}
+
+	public void setWDetails3(String wDetails3) {
+		WDetails3 = wDetails3;
 	}
 
 }

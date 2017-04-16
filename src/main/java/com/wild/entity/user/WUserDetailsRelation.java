@@ -13,7 +13,7 @@ public class WUserDetailsRelation implements Serializable {
 	private static final long serialVersionUID = -5121087614919443282L;
 
 	private WUser user;
-	private Wdetails details;
+	private WDetails details;
 
 	public WUser getUser() {
 		return user;
@@ -23,11 +23,11 @@ public class WUserDetailsRelation implements Serializable {
 		this.user = user;
 	}
 
-	public Wdetails getDetails() {
+	public WDetails getDetails() {
 		return details;
 	}
 
-	public void setDetails(Wdetails details) {
+	public void setDetails(WDetails details) {
 		this.details = details;
 	}
 }
