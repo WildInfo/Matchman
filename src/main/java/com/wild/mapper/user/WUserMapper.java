@@ -1,8 +1,8 @@
-package com.wild.mapper;
+package com.wild.mapper.user;
 
 import java.util.List;
 
-import com.wild.entity.WUser;
+import com.wild.entity.user.WUser;
 
 public interface WUserMapper {
 	/**

@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wild.entity.WUser;
-import com.wild.mapper.WUserMapper;
-import com.wild.service.WUserService;
+import com.wild.entity.user.WUser;
+import com.wild.mapper.user.WUserMapper;
+import com.wild.service.user.WUserService;
 
 @Service("wUserService")
 public class WUserServiceImpl implements WUserService {

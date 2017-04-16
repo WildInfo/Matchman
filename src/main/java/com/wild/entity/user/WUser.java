@@ -1,10 +1,10 @@
-package com.wild.entity;
+package com.wild.entity.user;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import com.wild.enums.UserStatusEnum;
-import com.wild.enums.UserVersioniEnum;
+import com.wild.enums.user.UserStatusEnum;
+import com.wild.enums.user.UserVersioniEnum;
 
 /**
  * 用户

@@ -1,4 +1,4 @@
-package com.wild.handler;
+package com.wild.handler.user;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.Gson;
-import com.wild.entity.WUser;
-import com.wild.enums.UserStatusEnum;
-import com.wild.enums.UserVersioniEnum;
-import com.wild.service.WUserService;
+import com.wild.entity.user.WUser;
+import com.wild.enums.user.UserStatusEnum;
+import com.wild.enums.user.UserVersioniEnum;
+import com.wild.service.user.WUserService;
 import com.wild.utils.SessionAttribute;
 import com.wild.utils.UUIDUtil;
 import com.wild.utils.WatchmanMessage;

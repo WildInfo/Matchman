@@ -1,4 +1,4 @@
-package com.wild.enums;
+package com.wild.enums.user;
 
 public enum UserStatusEnum {
 	// 正常    注销 

@@ -1,13 +1,12 @@
-package com.wild.enums;
+package com.wild.enums.user;
 
-public enum UserVersioniEnum {
-	// 正常    注销 
-	supervision("超级管理员"), manversion("一般管理员"),common("普通用户");
-
+public enum AgeAndSexEnum {
+	//年龄就四个选项    70 80 90 00 
+	seventy("1"),eighty("2"),ninety("3"),zero("4");
+	
 	private String desc;
-
-	private UserVersioniEnum(String desc) {
-		this.desc = desc;
+	private AgeAndSexEnum(String desc){
+		this.desc=desc;
 	}
 
 	public String getDesc() {
@@ -17,9 +16,8 @@ public enum UserVersioniEnum {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
-
 	public static boolean contain(String value) {
-		UserStatusEnum[] status = UserStatusEnum.values();
+		AgeAndSexEnum[] status = AgeAndSexEnum.values();
 		for (int i = 0; i < status.length; i++) {
 			if (status[i].toString().equals(value)) {
 				return true;
@@ -28,4 +26,6 @@ public enum UserVersioniEnum {
 		return false;
 	}
 
+	
 }
+

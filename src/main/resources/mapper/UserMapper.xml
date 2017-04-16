@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 注册 -->
 	<insert id="register" parameterType="WUser">
-		insert into wuser
+		insert into w_user
 		(WID,WNickName,WSex,WUserNum,WPassWord,WAge,WDate,WStatus,WSuperManager)
 		values(#{WID},#{WNickName},#{WSex},#{WUserNum},#{WPassWord},#{WAge},#{WDate},#{WStatus},#{WSuperManager})
 	</insert>
@@ -15,19 +15,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="telForOnly" parameterType="String" resultType="String">
 		select
 		WUserNum
-		from wuser where WUserNum=#{WUserNum}
+		from w_user where WUserNum=#{WUserNum}
 	</select>
 	<!-- 登录 -->
 	<select id="login" parameterType="WUser" resultType="WUser">
 		select *
-		from wuser where
+		from w_user where
 		WUserNum=#{WUserNum} and
 		WPassWord=#{WPassWord}
 	</select>
 
 	<!-- 忘记密码 -->
 	<update id="lostPassWord" parameterType="WUser">
-		update wuser set
+		update w_user set
 		WPassWord=#{WPassWord} where WUserNum=#{WUserNum}
 	</update>
 </mapper>
