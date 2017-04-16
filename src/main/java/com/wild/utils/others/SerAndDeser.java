@@ -27,7 +27,6 @@ public class SerAndDeser {
         if(!fi.exists() && !fi.isFile()){
         	fi.mkdir();
         }
-        System.out.println(relativelyPath);
 		file = new File(path+"/checkCode.txt");
 	}
 

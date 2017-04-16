@@ -59,7 +59,7 @@ public class WUserHandler implements Serializable {
 		String sex = request.getParameter("Sex");// 性别
 		String age = request.getParameter("Age");// 年龄
 		String NickName = "";
-		
+
 		try {
 			NickName = new String(request.getParameter("NickName").getBytes("ISO-8859-1"), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -68,17 +68,14 @@ public class WUserHandler implements Serializable {
 		// 数据不为空
 		if (StringUtils.isNotBlank(loginName) && StringUtils.isNotBlank(password)
 				&& StringUtils.isNotBlank(validateCode)) {
-			String telForOnly = userService.telForOnly(loginName, NickName);
+			String telForOnly = userService.telForOnly(loginName);
 			if (StringUtils.isBlank(telForOnly)) {// 如果电话重复
-				user.setWUserNum(loginName);// 电话号码赋值
-				//CheckCodeSer checkCodeSer = SerAndDeser.DeSerializeObject(user.getWUserNum()).get(0);// 反序列化
-				CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode"); 
+				CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
 				if (!SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
 					if (validateCode.equals(checkCodeSer.getCheckCode())) {
 						int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, sex,
 								loginName, password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
 						if (resultRegister > 0) {
-							//SerAndDeser.deleteCheckCode(checkCodeSer);// 注册成功后清除文件中的验证码信息
 							out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"注册成功！\"}"));
 							out.flush();
 							out.close();
@@ -99,7 +96,7 @@ public class WUserHandler implements Serializable {
 					out.close();
 				}
 			} else {
-				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"该电话号码火昵称已经被注册了！\"}"));
+				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"该电话号码已经被注册了！\"}"));
 				out.flush();
 				out.close();
 			}
@@ -126,21 +123,10 @@ public class WUserHandler implements Serializable {
 		Gson gson = new Gson();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
-		String NickName = "";
-		try {
-			// String NickName = request.getParameter("NickName");// 用户昵称
-			NickName = new String(request.getParameter("NickName").getBytes("ISO-8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 
 		// 数据不为空
-		if (StringUtils.isNotBlank(password)
-				&& (StringUtils.isNotBlank(NickName) || StringUtils.isNotBlank(loginName))) {
+		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)) {
 			userLogin.setWPassWord(password);
-			if (StringUtils.isNotBlank(NickName)) {
-				userLogin.setWNickName(NickName);
-			}
 			if (StringUtils.isNotBlank(loginName)) {
 				userLogin.setWUserNum(loginName);
 			}
@@ -178,11 +164,7 @@ public class WUserHandler implements Serializable {
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(num, time, tel);
 		session.setAttribute("checkCode", checkCodeSer);
-		/*if (SerAndDeser.file.exists() && SerAndDeser.file.length() > 0) {
-			SerAndDeser.deleteCheckCode(checkCodeSer);// 发送前先清除，防止该号码第二次获取验证码
-		}
-		SerAndDeser.SerializeObject(checkCodeSer, true);// 序列化注册码对象
-*/		out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {"
+		out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {"
 				+ "\"verificationCode\":" + num + "}}"));
 		out.flush();
 		out.close();

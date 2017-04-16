@@ -14,14 +14,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 查看手机号码唯一 -->
 	<select id="telForOnly" parameterType="String" resultType="String">
 		select
-		WUserNum,WNickName
-		from wuser where (WNickName=#{WNickName}||WUserNum=#{WUserNum}) 
+		WUserNum
+		from wuser where WUserNum=#{WUserNum}
 	</select>
 	<!-- 登录 -->
 	<select id="login" parameterType="WUser" resultType="WUser">
 		select *
 		from wuser where
-		(WUserNum=#{WUserNum} or WNickName=#{WNickName}) and
+		WUserNum=#{WUserNum} and
 		WPassWord=#{WPassWord}
 	</select>
 
