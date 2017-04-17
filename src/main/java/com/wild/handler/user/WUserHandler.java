@@ -141,7 +141,7 @@ public class WUserHandler implements Serializable {
 				out.flush();
 				out.close();
 			}
-		}else {
+		} else {
 			out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"用户名或密码错误！\"}"));
 			out.flush();
 			out.close();
@@ -180,25 +180,39 @@ public class WUserHandler implements Serializable {
 	 * @param userLogin：用户手机号码
 	 */
 	@RequestMapping(value = "/lostPassWord", method = RequestMethod.GET)
-	public void LostPassWord(WUser userLogin, HttpServletRequest request, PrintWriter out) {
+	public void LostPassWord(WUser userLogin, HttpServletRequest request, HttpSession session, PrintWriter out) {
 		Gson gson = new Gson();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
+		String validateCode = request.getParameter("validateCode");// 验证码
 
 		// 数据不为空
-		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)) {
+		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)&& StringUtils.isNotBlank(validateCode)) {
+			CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
+			if (!SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
+				if (validateCode.equals(checkCodeSer.getCheckCode())) {
+					userLogin.setWPassWord(password);
+					userLogin.setWUserNum(loginName);
 
-			userLogin.setWPassWord(password);
-			userLogin.setWUserNum(loginName);
+					int users = userService.lostPassWord(userLogin);// 修改
 
-			int users = userService.lostPassWord(userLogin);// 修改
-
-			if (users > 0) {
-				out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"修改成功！\"}"));
-				out.flush();
-				out.close();
+					if (users > 0) {
+						out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"修改成功！\"}"));
+						out.flush();
+						out.close();
+					} else {
+						out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"修改失败！\"}"));
+						out.flush();
+						out.close();
+					}
+				} else {
+					out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"验证码错误！\"}"));
+					out.flush();
+					out.close();
+				}
 			} else {
-				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"修改失败！\"}"));
+				session.removeAttribute("checkCode");
+				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"验证码失效！\"}"));
 				out.flush();
 				out.close();
 			}
