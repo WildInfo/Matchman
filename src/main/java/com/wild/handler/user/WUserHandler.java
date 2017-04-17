@@ -71,7 +71,7 @@ public class WUserHandler implements Serializable {
 			String telForOnly = userService.telForOnly(loginName);
 			if (StringUtils.isBlank(telForOnly)) {// 如果电话重复
 				CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
-				if (!SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
+				if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
 					if (validateCode.equals(checkCodeSer.getCheckCode())) {
 						int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, sex,
 								loginName, password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
@@ -187,9 +187,10 @@ public class WUserHandler implements Serializable {
 		String validateCode = request.getParameter("validateCode");// 验证码
 
 		// 数据不为空
-		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)&& StringUtils.isNotBlank(validateCode)) {
+		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)
+				&& StringUtils.isNotBlank(validateCode)) {
 			CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
-			if (!SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
+			if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
 				if (validateCode.equals(checkCodeSer.getCheckCode())) {
 					userLogin.setWPassWord(password);
 					userLogin.setWUserNum(loginName);
