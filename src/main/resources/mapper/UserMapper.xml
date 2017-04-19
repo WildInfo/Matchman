@@ -7,8 +7,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 注册 -->
 	<insert id="register" parameterType="WUser">
 		insert into w_user
-		(WID,WNickName,WSex,WUserNum,WPassWord,WAge,WDate,WStatus,WSuperManager)
-		values(#{WID},#{WNickName},#{WSex},#{WUserNum},#{WPassWord},#{WAge},#{WDate},#{WStatus},#{WSuperManager})
+		(WGCNum,WID,WNickName,WSex,WUserNum,WPassWord,WAge,WDate,WStatus,WSuperManager)
+		select max(WGCNum)+1,#{WID},#{WNickName},#{WSex},#{WUserNum},#{WPassWord},#{WAge},#{WDate},#{WStatus},#{WSuperManager}
+		from w_user
 	</insert>
 
 	<!-- 查看手机号码唯一 -->
