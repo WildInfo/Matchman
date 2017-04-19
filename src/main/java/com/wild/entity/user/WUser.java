@@ -17,6 +17,7 @@ public class WUser implements Serializable {
 	private static final long serialVersionUID = 1632537799039372010L;
 
 	private String WID;// 用户id
+	private String WGCNum;// GC号
 	private String WNickName;// 用户昵称
 	private String WSex;// 用户性别
 	private String WUserNum;// 用户帐号
@@ -29,6 +30,21 @@ public class WUser implements Serializable {
 	public WUser(String wID, String wNickName, String wSex, String wUserNum, String wPassWord, String wAge, Date wDate,
 			UserStatusEnum wStatus, UserVersioniEnum wSuperManager) {
 		WID = wID;
+		WNickName = wNickName;
+		WSex = wSex;
+		WUserNum = wUserNum;
+		WPassWord = wPassWord;
+		WAge = wAge;
+		WDate = wDate;
+		WStatus = wStatus;
+		WSuperManager = wSuperManager;
+	}
+
+	public WUser(String wID, String wGCNum, String wNickName, String wSex, String wUserNum, String wPassWord,
+			String wAge, Date wDate, UserStatusEnum wStatus, UserVersioniEnum wSuperManager) {
+		super();
+		WID = wID;
+		WGCNum = wGCNum;
 		WNickName = wNickName;
 		WSex = wSex;
 		WUserNum = wUserNum;
@@ -114,4 +130,20 @@ public class WUser implements Serializable {
 		WAge = wAge;
 	}
 
+	public String getWGCNum() {
+		return WGCNum;
+	}
+
+	public void setWGCNum(String wGCNum) {
+		WGCNum = wGCNum;
+	}
+
+	@Override
+	public String toString() {
+		return "WUser [WID=" + WID + ", WGCNum=" + WGCNum + ", WNickName=" + WNickName + ", WSex=" + WSex
+				+ ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord + ", WAge=" + WAge + ", WDate=" + WDate
+				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
+	}
+
+	
 }
