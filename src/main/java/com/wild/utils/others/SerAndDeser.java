@@ -106,7 +106,7 @@ public class SerAndDeser {
 			Date edate = sdf.parse(cc.getBeginDate());
 			int result = (int) (sdate.getTime() - edate.getTime());
 			if (result >= 300000) {
-				deleteCheckCode(cc);
+				//deleteCheckCode(cc);
 				return true;
 			}
 		} catch (ParseException e) {

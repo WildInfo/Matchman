@@ -57,6 +57,7 @@
 		<property name="prefix" value="/page/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
+	
 	<!--默认静态资源的请求处理 可以处理js文件 -->
 	<mvc:default-servlet-handler />
 	<!--控制器驱动处理 ,包括数据类型转换，数据格式化， -->
