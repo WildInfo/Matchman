@@ -59,7 +59,6 @@ public class WUserHandler implements Serializable {
 		String sex = request.getParameter("Sex");// 性别
 		String age = request.getParameter("Age");// 年龄
 		String NickName = "";
-
 		try {
 			NickName = new String(request.getParameter("NickName").getBytes("ISO-8859-1"), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -67,7 +66,10 @@ public class WUserHandler implements Serializable {
 		}
 		// 数据不为空
 		if (StringUtils.isNotBlank(loginName) && StringUtils.isNotBlank(password)
-				&& StringUtils.isNotBlank(validateCode)) {
+				&& StringUtils.isNotBlank(validateCode) && StringUtils.isNotBlank(age) && StringUtils.isNotBlank(sex)
+				&& StringUtils.isNotBlank(NickName)) {
+			user.setWUserNum(loginName);
+			user.setWPassWord(password);
 			String telForOnly = userService.telForOnly(loginName);
 			if (StringUtils.isBlank(telForOnly)) {// 如果电话重复
 				CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
@@ -76,7 +78,14 @@ public class WUserHandler implements Serializable {
 						int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, sex,
 								loginName, password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
 						if (resultRegister > 0) {
-							out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"注册成功！\"}"));
+							List<WUser> users = userService.login(user);// 查询
+							out.println(gson.toJson(
+									"{\"result\": 1," + " \"desc\": \"注册成功！\"," + "\"data\":{\"userinfo\":{\"gcid\":"
+											+ users.get(0).getWGCNum() + ",\"loginName\":" + users.get(0).getWUserNum()
+											+ ",\"sex\":\" " + users.get(0).getWSex() + "\",\"age\":"
+											+ users.get(0).getWAge() + ",\"nickName\":\" " + users.get(0).getWNickName()
+											+ "\",\"createTime\":" + users.get(0).getWDate().getTime()
+											+ "},\"tokenId\":\" " + users.get(0).getWID() + "\"}}"));
 							out.flush();
 							out.close();
 						} else {
@@ -131,9 +140,13 @@ public class WUserHandler implements Serializable {
 				userLogin.setWUserNum(loginName);
 			}
 			List<WUser> users = userService.login(userLogin);// 登录
-
 			if (users.size() > 0) {
-				out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"登录成功！\"}"));
+				out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"登录成功！\","
+						+ "\"data\":{\"userinfo\":{\"gcid\":" + users.get(0).getWGCNum() + ",\"loginName\":"
+						+ users.get(0).getWUserNum() + ",\"sex\":\" " + users.get(0).getWSex() + "\",\"age\":"
+						+ users.get(0).getWAge() + ",\"nickName\":\" " + users.get(0).getWNickName()
+						+ "\",\"createTime\":" + users.get(0).getWDate().getTime() + "},\"tokenId\":\" "
+						+ users.get(0).getWID() + "\"}}"));
 				out.flush();
 				out.close();
 			} else {
@@ -195,10 +208,16 @@ public class WUserHandler implements Serializable {
 					userLogin.setWPassWord(password);
 					userLogin.setWUserNum(loginName);
 
-					int users = userService.lostPassWord(userLogin);// 修改
+					int usersResult = userService.lostPassWord(userLogin);// 修改
 
-					if (users > 0) {
-						out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"修改成功！\"}"));
+					if (usersResult > 0) {
+						List<WUser> users = userService.login(userLogin);// 查询
+						out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"修改成功！\","
+								+ "\"data\":{\"userinfo\":{\"gcid\":" + users.get(0).getWGCNum() + ",\"loginName\":"
+								+ users.get(0).getWUserNum() + ",\"sex\":\" " + users.get(0).getWSex() + "\",\"age\":"
+								+ users.get(0).getWAge() + ",\"nickName\":\" " + users.get(0).getWNickName()
+								+ "\",\"createTime\":" + users.get(0).getWDate().getTime() + "},\"tokenId\":\" "
+								+ users.get(0).getWID() + "\"}}"));
 						out.flush();
 						out.close();
 					} else {
