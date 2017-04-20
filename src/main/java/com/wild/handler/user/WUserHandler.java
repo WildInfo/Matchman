@@ -1,5 +1,10 @@
 package com.wild.handler.user;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.Gson;
@@ -32,6 +38,7 @@ import com.wild.utils.SessionAttribute;
 import com.wild.utils.UUIDUtil;
 import com.wild.utils.WatchmanMessage;
 import com.wild.utils.others.CheckCodeSer;
+import com.wild.utils.others.QRCodeOP;
 import com.wild.utils.others.SerAndDeser;
 
 @Controller
@@ -82,6 +89,7 @@ public class WUserHandler implements Serializable {
 								loginName, password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
 						if (resultRegister > 0) {
 							List<WUser> users = userService.login(user);// 查询
+							uploadQR(users.get(0).getWGCNum());
 							detailsRelation.setWID(UUIDUtil.createUUID());
 							detailsRelation.setWKUserID(users.get(0).getWID());
 							detailsRelation.setWKDetailsID(UUIDUtil.createUUID());
@@ -143,7 +151,7 @@ public class WUserHandler implements Serializable {
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out) {
+	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out,HttpSession session) {
 		Gson gson = new Gson();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
@@ -156,6 +164,7 @@ public class WUserHandler implements Serializable {
 			}
 			List<WUser> users = userService.login(userLogin);// 登录
 			if (users.size() > 0) {
+				session.setAttribute(SessionAttribute.USERLOGIN, users.get(0));
 				out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"登录成功！\","
 						+ "\"data\":{\"userinfo\":{\"gcid\":" + users.get(0).getWGCNum() + ",\"loginName\":"
 						+ users.get(0).getWUserNum() + ",\"sex\":\" " + users.get(0).getWSex() + "\",\"age\":"
@@ -324,4 +333,87 @@ public class WUserHandler implements Serializable {
 		val = ne.nextInt(9999 - 1000 + 1) + 1000 + "";// 为变量赋随机值1000-9999
 		return val;
 	}
+	
+	/**
+	 * 修改头像
+	 * @param iconPath
+	 * @param request
+	 * @param map
+	 * @param session
+	 * @param out
+	 */
+	@RequestMapping(value = "/uploadIcon",method = RequestMethod.GET)
+	public void uploadHeadIcon(@RequestParam("iconPath")String iconPath,HttpServletRequest request,ModelMap map,HttpSession session,PrintWriter out){
+		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
+		String relativelyPath = "";   
+		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
+        relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
+        String path = relativelyPath + "webapps/iconHead";  //头像存储路径
+        File fi = new File(path);
+        if(!fi.exists() && !fi.isFile()){
+        	fi.mkdir();
+        }
+        path = path+"/"+wUser.getWGCNum()+iconPath.substring(iconPath.lastIndexOf(".")); 
+        FileInputStream in = null;
+        FileOutputStream output = null;
+        try {
+			in = new FileInputStream(new File(iconPath));
+			output = new FileOutputStream(new File(path));
+			int b = 0;
+			while((b = in.read()) != -1){
+				output.write(b);
+			}
+			output.flush();
+			output.close();
+			in.close();
+			out.print("修改成功...");
+			out.flush();
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 解析二维码
+	 * @param map
+	 */
+	@RequestMapping("/decodeQR")
+	public void deQR(@RequestParam("gcNum") String gcNum,ModelMap map,PrintWriter out){
+		String relativelyPath = "";   
+		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
+        relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
+        String path = relativelyPath + "webapps/iconHead/QR"+gcNum+".png";  //头像存储路径
+        QRCodeOP qr = new QRCodeOP();
+        String content = qr.decoderQRCode(path);
+        if(null != content && content.length()>0){
+        	out.print("{\"content\":\""+content+"\"}");
+        }else{
+        	out.print("{\"error\":\"解析失败\"}");
+        }
+        out.flush();
+        out.close();
+	}
+	
+	/**
+	 * 上传二维码
+	 * @param gcNum：用户GC号
+	 */
+	public void uploadQR(String gcNum){
+		String relativelyPath = "";   
+		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
+        relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
+        String path = relativelyPath + "webapps/iconHead";  //头像存储路径
+        File fi = new File(path);
+        if(!fi.exists() && !fi.isFile()){
+        	fi.mkdir();
+        }
+        String imgPath = path+"/QR"+gcNum+".png";
+        String encoderContent = "Welcome to Watchman!" + gcNum ;
+        QRCodeOP handler = new QRCodeOP();  
+        handler.encoderQRCode(encoderContent, imgPath, "png"); 
+	}
+	
 }

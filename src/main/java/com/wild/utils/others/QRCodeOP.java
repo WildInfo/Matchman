@@ -5,16 +5,16 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
 import com.swetake.util.Qrcode;
 
 import jp.sourceforge.qrcode.QRCodeDecoder;
-import jp.sourceforge.qrcode.exception.DecodingFailedException;
 
 public class QRCodeOP {
+	
+	
 	/** 
      * 生成二维码(QRCode)图片 
      * @param content 存储内容 
@@ -122,14 +122,11 @@ public class QRCodeOP {
         } catch (IOException e) {  
             System.out.println("Error: " + e.getMessage());  
             e.printStackTrace();  
-        } catch (DecodingFailedException dfe) {  
-            System.out.println("Error: " + dfe.getMessage());  
-            dfe.printStackTrace();  
-        }  
+        } 
         return content;  
     }
     
-    public static void main(String[] args) {  
+/*    public static void main(String[] args) {  
         String imgPath = "D:/Michael_QRCode2.png";  
         String encoderContent = "QRCode!" + "\nMyblog [ http://sjsky.iteye.com ]" + "\nEMail [ sjsky007@gmail.com ]";  
         QRCodeOP handler = new QRCodeOP();  
@@ -141,4 +138,4 @@ public class QRCodeOP {
         System.out.println(decoderContent);  
         System.out.println("========decoder success!!!");  
     }  
-}
+*/}

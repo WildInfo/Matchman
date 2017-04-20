@@ -2,9 +2,11 @@ E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\utils\others\RSAUtils.j
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\handler\user\WUserHandler.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\utils\others\CheckCodeSer.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\entity\message\MMessage.java
+E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\utils\others\TwoDimensionCodeImage.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\entity\message\MComment.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\entity\message\MMessageCommentRelation.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\utils\others\PublicKeyMap.java
+E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\utils\others\QRCodeOP.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\enums\message\MActivateStatusEnum.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\service\impl\message\MMessageServiceImpl.java
 E:\workspaceWild\matchman_GC_Java\src\main\java\com\wild\service\message\MMessageService.java
