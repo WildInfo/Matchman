@@ -205,7 +205,7 @@ public class WUserHandler implements Serializable {
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(num, time, tel);
 		session.setAttribute("checkCode", checkCodeSer);
-		out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {"
+		out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {"
 				+ "\"verificationCode\":" + num + "}}"));
 		out.flush();
 		out.close();
