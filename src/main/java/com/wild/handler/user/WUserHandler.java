@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.Gson;
+import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
+import com.wild.entity.user.WUserDetailsRelation;
 import com.wild.enums.user.UserStatusEnum;
 import com.wild.enums.user.UserVersioniEnum;
 import com.wild.service.user.WUserService;
@@ -53,6 +55,7 @@ public class WUserHandler implements Serializable {
 	public void register(@Valid PrintWriter out, WUser user, HttpSession session, HttpServletRequest request,
 			ModelMap map) {
 		Gson gson = new Gson();
+		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
 		String validateCode = request.getParameter("validateCode");// 验证码
@@ -79,13 +82,25 @@ public class WUserHandler implements Serializable {
 								loginName, password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
 						if (resultRegister > 0) {
 							List<WUser> users = userService.login(user);// 查询
-							out.println(gson.toJson(
-									"{\"result\": 1," + " \"desc\": \"注册成功！\"," + "\"data\":{\"userinfo\":{\"gcid\":"
-											+ users.get(0).getWGCNum() + ",\"loginName\":" + users.get(0).getWUserNum()
-											+ ",\"sex\":\" " + users.get(0).getWSex() + "\",\"age\":"
-											+ users.get(0).getWAge() + ",\"nickName\":\" " + users.get(0).getWNickName()
-											+ "\",\"createTime\":" + users.get(0).getWDate().getTime()
-											+ "},\"tokenId\":\" " + users.get(0).getWID() + "\"}}"));
+							detailsRelation.setWID(UUIDUtil.createUUID());
+							detailsRelation.setWKUserID(users.get(0).getWID());
+							detailsRelation.setWKDetailsID(UUIDUtil.createUUID());
+							int relations = userService.userDetailsDelation(detailsRelation);// 插入用户详情与用户数据表
+							int details = userService.insertDtails(new WDetails(detailsRelation.getWKDetailsID(), null,
+									null, null, 0, null, null, null, null, null));// 插入用户详情数据
+							if ((relations & details) > 0) {
+								out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"注册成功！\","
+										+ "\"data\":{\"userinfo\":{\"gcid\":" + users.get(0).getWGCNum()
+										+ ",\"loginName\":" + users.get(0).getWUserNum() + ",\"sex\":\" "
+										+ users.get(0).getWSex() + "\",\"age\":" + users.get(0).getWAge()
+										+ ",\"nickName\":\" " + users.get(0).getWNickName() + "\",\"createTime\":"
+										+ users.get(0).getWDate().getTime() + "},\"tokenId\":\" "
+										+ users.get(0).getWID() + "\"}}"));
+							} else {
+								out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"系统错误，请重试！\"}"));
+								out.flush();
+								out.close();
+							}
 							out.flush();
 							out.close();
 						} else {
@@ -236,6 +251,65 @@ public class WUserHandler implements Serializable {
 				out.flush();
 				out.close();
 			}
+		}
+	}
+
+	/**
+	 * 用户详情更新
+	 * 
+	 * @param userLogin
+	 * @param request
+	 * @param session
+	 * @param out
+	 */
+	@RequestMapping(value = "/detailsResult", method = RequestMethod.GET)
+	public void DetailsResult(WDetails details, HttpServletRequest request, HttpSession session, PrintWriter out) {
+		Gson gson = new Gson();
+		WUserDetailsRelation detailsRelation=new WUserDetailsRelation();
+		String tokenId = request.getParameter("tokenId");// 用户id
+		String signature = request.getParameter("signature");// 用户签名
+		String interest = request.getParameter("interest");// 用户兴趣
+		String introduce = request.getParameter("introduce");// 自我介绍
+		String headImage = request.getParameter("headImage");// 头像地址
+
+		// 数据不为空
+		if (StringUtils.isNotBlank(tokenId)) {
+			detailsRelation.setWKUserID(tokenId);
+			if (StringUtils.isNotBlank(headImage)) {
+				details.setWHeadImage(headImage);
+			}
+			if (StringUtils.isNotBlank(interest)) {
+				details.setWHobbies(interest);
+			}
+			if (StringUtils.isNotBlank(signature)) {
+				details.setWPersonalized(signature);
+			}
+			if (StringUtils.isNotBlank(introduce)) {
+				details.setWIntroduce(introduce);
+			}
+			List<WUserDetailsRelation> relation = userService.userDetilsById(detailsRelation);//根据用户id查询出详情
+			if (relation.size() > 0) {
+				details.setWID(relation.get(0).getWKDetailsID());// 用户详细id
+
+				int updetails = userService.updateUserDetails(details);
+				if (updetails > 0) {
+					out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"保存成功！\"}"));
+					out.flush();
+					out.close();
+				} else {
+					out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"保存失败！\"}"));
+					out.flush();
+					out.close();
+				}
+			} else {
+				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"保存失败！\"}"));
+				out.flush();
+				out.close();
+			}
+		} else {
+			out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"用户信息验证失败！\"}"));
+			out.flush();
+			out.close();
 		}
 	}
 

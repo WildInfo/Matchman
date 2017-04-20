@@ -8,7 +8,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="register" parameterType="WUser">
 		insert into w_user
 		(WGCNum,WID,WNickName,WSex,WUserNum,WPassWord,WAge,WDate,WStatus,WSuperManager)
-		select max(WGCNum)+1,#{WID},#{WNickName},#{WSex},#{WUserNum},#{WPassWord},#{WAge},#{WDate},#{WStatus},#{WSuperManager}
+		select
+		max(WGCNum)+1,#{WID},#{WNickName},#{WSex},#{WUserNum},#{WPassWord},#{WAge},#{WDate},#{WStatus},#{WSuperManager}
 		from w_user
 	</insert>
 
@@ -18,6 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WUserNum
 		from w_user where WUserNum=#{WUserNum}
 	</select>
+
 	<!-- 登录 -->
 	<select id="login" parameterType="WUser" resultType="WUser">
 		select *
@@ -26,9 +28,64 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WPassWord=#{WPassWord}
 	</select>
 
+	<!--根据id查询用户信息 -->
+	<select id="userDetils" parameterType="WUser" resultType="WUser">
+		select
+		*
+		from w_user where
+		WID=#{WID}
+	</select>
+
 	<!-- 忘记密码 -->
 	<update id="lostPassWord" parameterType="WUser">
 		update w_user set
 		WPassWord=#{WPassWord} where WUserNum=#{WUserNum}
+	</update>
+
+	<!-- 用户详情关系表-用户与用户详情 -->
+	<insert id="userDetailsDelation" parameterType="WUserDetailsRelation">
+		insert into
+		w_user_details_relation
+		(WID,WKUserID, WKDetailsID)
+		values(#{WID},#{WKUserID},#{WKDetailsID})
+	</insert>
+
+	<!--用户详情关系表-根据用户id查询用户详细信息 -->
+	<select id="userDetilsById" parameterType="WUserDetailsRelation"
+		resultType="WUserDetailsRelation">
+		select
+		*
+		from w_user_details_relation where
+		WKUserID=#{WKUserID}
+	</select>
+
+	<!-- 用户详情插入数据 -->
+	<insert id="insertDtails" parameterType="WDetails">
+		insert into w_details (
+		WID,WPersonalized,WHobbies,WIntroduce,WCurrency,WHeadImage,WBarcode)
+		values(#{WID},#{WPersonalized},#{WHobbies},#{WIntroduce},#{WCurrency},#{WHeadImage},#{WBarcode})
+	</insert>
+
+	<!-- 修改用户详情 -->
+	<update id="updateUserDetails" parameterType="WDetails">
+		update w_details
+		<set>
+			<if test="WPersonalized != null and WPersonalized != '' ">
+				WPersonalized = #{WPersonalized},
+			</if>
+			<if test="WHobbies != null and WHobbies != '' ">  <!-- 兴趣爱好 -->
+				WHobbies = #{WHobbies},
+			</if>
+			<if test="WIntroduce != null ">  <!-- 介绍自己 -->
+				WIntroduce = #{WIntroduce},
+			</if>
+			<if test="WHeadImage != null ">  <!-- 头像地址 -->
+				WHeadImage = #{WHeadImage},
+			</if>
+			<if test="WBarcode != '' ">
+				WBarcode = #{WBarcode}
+			</if>
+		</set>
+		WHERE WID = #{WID};
 	</update>
 </mapper>

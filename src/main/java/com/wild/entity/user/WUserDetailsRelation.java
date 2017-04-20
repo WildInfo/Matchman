@@ -12,22 +12,25 @@ public class WUserDetailsRelation implements Serializable {
 
 	private static final long serialVersionUID = -5121087614919443282L;
 
-	private WUser user;
-	private WDetails details;
-
-	public WUser getUser() {
-		return user;
+	private String WID;
+	private String WKUserID;
+	private String WKDetailsID;
+	public String getWID() {
+		return WID;
 	}
-
-	public void setUser(WUser user) {
-		this.user = user;
+	public void setWID(String wID) {
+		WID = wID;
 	}
-
-	public WDetails getDetails() {
-		return details;
+	public String getWKUserID() {
+		return WKUserID;
 	}
-
-	public void setDetails(WDetails details) {
-		this.details = details;
+	public void setWKUserID(String wKUserID) {
+		WKUserID = wKUserID;
+	}
+	public String getWKDetailsID() {
+		return WKDetailsID;
+	}
+	public void setWKDetailsID(String wKDetailsID) {
+		WKDetailsID = wKDetailsID;
 	}
 }

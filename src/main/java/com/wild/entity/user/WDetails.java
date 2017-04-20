@@ -16,16 +16,19 @@ public class WDetails implements Serializable {
 	private String WPersonalized;// 个性签名
 	private String WHobbies;// 兴趣爱好
 	private String WIntroduce;// 介绍自己
-	private String WCurrency;// 游戏币
+	private int WCurrency;// 游戏币
 	private String WHeadImage;// 头像地址
 	private String WBarcode;// 二维码地址
 	private String WDetails1;//备用字段
 	private String WDetails2;//备用字段
 	private String WDetails3;//备用字段
 
-	public WDetails(String wID, String wPersonalized, String wHobbies, String wIntroduce, String wCurrency,
-			String wHeadImage, String wBarcode, String wDetails1, String wDetails2, String wDetails3) {
+	public WDetails() {
 		super();
+	}
+
+	public WDetails(String wID, String wPersonalized, String wHobbies, String wIntroduce, int wCurrency,
+			String wHeadImage, String wBarcode, String wDetails1, String wDetails2, String wDetails3) {
 		WID = wID;
 		WPersonalized = wPersonalized;
 		WHobbies = wHobbies;
@@ -70,11 +73,11 @@ public class WDetails implements Serializable {
 		WIntroduce = wIntroduce;
 	}
 
-	public String getWCurrency() {
+	public int getWCurrency() {
 		return WCurrency;
 	}
 
-	public void setWCurrency(String wCurrency) {
+	public void setWCurrency(int wCurrency) {
 		WCurrency = wCurrency;
 	}
 
@@ -92,13 +95,6 @@ public class WDetails implements Serializable {
 
 	public void setWBarcode(String wBarcode) {
 		WBarcode = wBarcode;
-	}
-
-	@Override
-	public String toString() {
-		return "Wdetails [WID=" + WID + ", WPersonalized=" + WPersonalized + ", WHobbies=" + WHobbies + ", WIntroduce="
-				+ WIntroduce + ", WCurrency=" + WCurrency + ", WHeadImage=" + WHeadImage + ", WBarcode=" + WBarcode
-				+ "]";
 	}
 
 	public String getWDetails1() {
