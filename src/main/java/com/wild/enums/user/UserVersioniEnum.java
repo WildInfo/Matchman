@@ -1,5 +1,7 @@
 package com.wild.enums.user;
 
+import com.wild.enums.StatusEnum;
+
 public enum UserVersioniEnum {
 	//超级管理员  一般管理员  普通用户
 	supervision("超级管理员"), manversion("一般管理员"),common("普通用户");
@@ -19,7 +21,7 @@ public enum UserVersioniEnum {
 	}
 
 	public static boolean contain(String value) {
-		UserStatusEnum[] status = UserStatusEnum.values();
+		StatusEnum[] status = StatusEnum.values();
 		for (int i = 0; i < status.length; i++) {
 			if (status[i].toString().equals(value)) {
 				return true;

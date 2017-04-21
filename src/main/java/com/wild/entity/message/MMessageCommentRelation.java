@@ -3,7 +3,7 @@ package com.wild.entity.message;
 import java.io.Serializable;
 
 /**
- * 热点与评论关系
+ * 热点，消息与评论关系
  * 
  * @author Wild
  *
@@ -13,13 +13,16 @@ public class MMessageCommentRelation implements Serializable {
 	private static final long serialVersionUID = -2001468437579196488L;
 
 	private String MID;// 主键ID
+	private String MInformationID;// 消息ID
 	private String MKMessageID;// 热点ID
 	private String MKUserID;// 用户ID
 	private String MKCommentID;// 评论ID
 
-	public MMessageCommentRelation(String mID, String mKMessageID, String mKUserID, String mKCommentID) {
+	public MMessageCommentRelation(String mID, String mInformationID, String mKMessageID, String mKUserID,
+			String mKCommentID) {
 		super();
 		MID = mID;
+		MInformationID = mInformationID;
 		MKMessageID = mKMessageID;
 		MKUserID = mKUserID;
 		MKCommentID = mKCommentID;
@@ -55,6 +58,14 @@ public class MMessageCommentRelation implements Serializable {
 
 	public void setMKCommentID(String mKCommentID) {
 		MKCommentID = mKCommentID;
+	}
+
+	public String getMInformationID() {
+		return MInformationID;
+	}
+
+	public void setMInformationID(String mInformationID) {
+		MInformationID = mInformationID;
 	}
 
 }

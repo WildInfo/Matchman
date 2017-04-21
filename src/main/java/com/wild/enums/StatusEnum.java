@@ -1,12 +1,12 @@
-package com.wild.enums.user;
+package com.wild.enums;
 
-public enum UserStatusEnum {
+public enum StatusEnum {
 	// 正常    注销 
 	normal("1"), cancel("2");
 
 	private String desc;
 
-	private UserStatusEnum(String desc) {
+	private StatusEnum(String desc) {
 		this.desc = desc;
 	}
 
@@ -19,7 +19,7 @@ public enum UserStatusEnum {
 	}
 
 	public static boolean contain(String value) {
-		UserStatusEnum[] status = UserStatusEnum.values();
+		StatusEnum[] status = StatusEnum.values();
 		for (int i = 0; i < status.length; i++) {
 			if (status[i].toString().equals(value)) {
 				return true;

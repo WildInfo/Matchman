@@ -3,6 +3,7 @@ package com.wild.entity.message;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.wild.enums.StatusEnum;
 import com.wild.enums.message.MActivateStatusEnum;
 
 /**
@@ -21,19 +22,23 @@ public class MMessage implements Serializable {
 	private int MGrade;// 热点等级(游戏币数量)
 	private String MAdress;// 消息地址
 	private Date MDate;// 消息创建时间
+	private StatusEnum MGetStatus;// 消息状态
 	private MActivateStatusEnum MActivateStatus;// 消息激活状态
 	private String MMessage1;// 备用字段1
 	private String MMessage2;// 备用字段2
 	private String MMessage3;// 备用字段3
 
 	public MMessage(String mID, String mContent, String mImage, int mGrade, String mAdress, Date mDate,
-			MActivateStatusEnum mActivateStatus, String mMessage1, String mMessage2, String mMessage3) {
+			StatusEnum mGetStatus, MActivateStatusEnum mActivateStatus, String mMessage1, String mMessage2,
+			String mMessage3) {
+		super();
 		MID = mID;
 		MContent = mContent;
 		MImage = mImage;
 		MGrade = mGrade;
 		MAdress = mAdress;
 		MDate = mDate;
+		MGetStatus = mGetStatus;
 		MActivateStatus = mActivateStatus;
 		MMessage1 = mMessage1;
 		MMessage2 = mMessage2;
@@ -118,6 +123,14 @@ public class MMessage implements Serializable {
 
 	public void setMMessage3(String mMessage3) {
 		MMessage3 = mMessage3;
+	}
+
+	public StatusEnum getMGetStatus() {
+		return MGetStatus;
+	}
+
+	public void setMGetStatus(StatusEnum mGetStatus) {
+		MGetStatus = mGetStatus;
 	}
 
 }

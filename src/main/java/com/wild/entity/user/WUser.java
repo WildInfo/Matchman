@@ -3,7 +3,7 @@ package com.wild.entity.user;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.wild.enums.user.UserStatusEnum;
+import com.wild.enums.StatusEnum;
 import com.wild.enums.user.UserVersioniEnum;
 
 /**
@@ -24,11 +24,11 @@ public class WUser implements Serializable {
 	private String WPassWord;// 用户密码
 	private String WAge;// 用户年龄
 	private Date WDate;// 注册时间
-	private UserStatusEnum WStatus;// 用户状态
+	private StatusEnum WStatus;// 用户状态
 	private UserVersioniEnum WSuperManager;// 用户角色
 
 	public WUser(String wID, String wNickName, String wSex, String wUserNum, String wPassWord, String wAge, Date wDate,
-			UserStatusEnum wStatus, UserVersioniEnum wSuperManager) {
+			StatusEnum wStatus, UserVersioniEnum wSuperManager) {
 		WID = wID;
 		WNickName = wNickName;
 		WSex = wSex;
@@ -41,7 +41,7 @@ public class WUser implements Serializable {
 	}
 
 	public WUser(String wID, String wGCNum, String wNickName, String wSex, String wUserNum, String wPassWord,
-			String wAge, Date wDate, UserStatusEnum wStatus, UserVersioniEnum wSuperManager) {
+			String wAge, Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager) {
 		super();
 		WID = wID;
 		WGCNum = wGCNum;
@@ -98,11 +98,11 @@ public class WUser implements Serializable {
 		WDate = wDate;
 	}
 
-	public UserStatusEnum getWStatus() {
+	public StatusEnum getWStatus() {
 		return WStatus;
 	}
 
-	public void setWStatus(UserStatusEnum wStatus) {
+	public void setWStatus(StatusEnum wStatus) {
 		WStatus = wStatus;
 	}
 

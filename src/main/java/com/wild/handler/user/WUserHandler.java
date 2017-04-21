@@ -31,7 +31,7 @@ import com.google.gson.Gson;
 import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
-import com.wild.enums.user.UserStatusEnum;
+import com.wild.enums.StatusEnum;
 import com.wild.enums.user.UserVersioniEnum;
 import com.wild.service.user.WUserService;
 import com.wild.utils.SessionAttribute;
@@ -86,7 +86,7 @@ public class WUserHandler implements Serializable {
 				if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
 					if (validateCode.equals(checkCodeSer.getCheckCode())) {
 						int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, sex,
-								loginName, password, age, new Date(), UserStatusEnum.normal, UserVersioniEnum.common));
+								loginName, password, age, new Date(), StatusEnum.normal, UserVersioniEnum.common));
 						if (resultRegister > 0) {
 							List<WUser> users = userService.login(user);// 查询
 							uploadQR(users.get(0).getWGCNum());
