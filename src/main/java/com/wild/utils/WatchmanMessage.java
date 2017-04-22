@@ -9,11 +9,11 @@ import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
 import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 
 public class WatchmanMessage {
-/*	public static void main(String[] args) {
-		CouldMessageContent("", getCharAndNumr(4));
-	}
-*/
-	public void CouldMessageContent(String tel, String num) {
+	/*public static void main(String[] args) {
+		CouldMessageContent("15197462033", getCharAndNumr(4));
+	}*/
+
+	public boolean CouldMessageContent(String tel, String num) {
 		// 申请的端口 公共参数 TOP分配给应用的AppKey。
 		TaobaoClient client = new DefaultTaobaoClient("http://gw.api.taobao.com/router/rest", "23693002",
 				"d9e0fd532d40aa7e7cb13512ecbd3f79");
@@ -24,13 +24,18 @@ public class WatchmanMessage {
 		req.setSmsParamString("{\"code\":\"：" + num + "\",\"product\":\"GC\"}");// 发送内容
 		req.setRecNum(tel);// 接收手机号码,可以是多个手机号码，用,隔开
 		req.setSmsTemplateCode("SMS_53840152");// 申请的短信模版
-		AlibabaAliqinFcSmsNumSendResponse rsp;
+		AlibabaAliqinFcSmsNumSendResponse rsp ;
 		try {
 			rsp = client.execute(req);
 			LogManager.getLogger().debug("短信发送情况为：" + rsp.getBody());
+			if(rsp.isSuccess()){
+				return true;
+			}
 		} catch (ApiException e) {
 			e.printStackTrace();
 		}
+		
+		return false;
 	}
 
 	/**

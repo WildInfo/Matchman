@@ -40,22 +40,8 @@ public class WUser implements Serializable {
 		WSuperManager = wSuperManager;
 	}
 
-	public WUser(String wID, String wGCNum, String wNickName, String wSex, String wUserNum, String wPassWord,
-			String wAge, Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager) {
-		super();
-		WID = wID;
-		WGCNum = wGCNum;
-		WNickName = wNickName;
-		WSex = wSex;
-		WUserNum = wUserNum;
-		WPassWord = wPassWord;
-		WAge = wAge;
-		WDate = wDate;
-		WStatus = wStatus;
-		WSuperManager = wSuperManager;
-	}
-
 	public WUser() {
+		
 	}
 
 	public String getWID() {
@@ -137,13 +123,4 @@ public class WUser implements Serializable {
 	public void setWGCNum(String wGCNum) {
 		WGCNum = wGCNum;
 	}
-
-	@Override
-	public String toString() {
-		return "WUser [WID=" + WID + ", WGCNum=" + WGCNum + ", WNickName=" + WNickName + ", WSex=" + WSex
-				+ ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord + ", WAge=" + WAge + ", WDate=" + WDate
-				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
-	}
-
-	
 }

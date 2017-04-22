@@ -10,7 +10,9 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +23,6 @@ import javax.validation.Valid;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,9 +60,10 @@ public class WUserHandler implements Serializable {
 	 * @return
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public void register(@Valid PrintWriter out, WUser user, HttpSession session, HttpServletRequest request,
-			ModelMap map) {
+	public void register(@Valid PrintWriter out, WUser user, HttpSession session, HttpServletRequest request
+			) {
 		Gson gson = new Gson();
+		Map<String,Object> map=new HashMap<String,Object>();
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
@@ -97,43 +99,63 @@ public class WUserHandler implements Serializable {
 							int details = userService.insertDtails(new WDetails(detailsRelation.getWKDetailsID(), null,
 									null, null, 0, null, null, null, null, null));// 插入用户详情数据
 							if ((relations & details) > 0) {
-								out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"注册成功！\","
-										+ "\"data\":{\"userinfo\":{\"gcid\":" + users.get(0).getWGCNum()
-										+ ",\"loginName\":" + users.get(0).getWUserNum() + ",\"sex\":\" "
-										+ users.get(0).getWSex() + "\",\"age\":" + users.get(0).getWAge()
-										+ ",\"nickName\":\" " + users.get(0).getWNickName() + "\",\"createTime\":"
-										+ users.get(0).getWDate().getTime() + "},\"tokenId\":\" "
-										+ users.get(0).getWID() + "\"}}"));
+								WUser userJson = new WUser();
+
+								userJson.setWGCNum(users.get(0).getWGCNum());
+								userJson.setWNickName(users.get(0).getWNickName());
+								userJson.setWSex(users.get(0).getWSex());
+								userJson.setWUserNum(users.get(0).getWUserNum());
+								userJson.setWAge(users.get(0).getWAge());
+								userJson.setWDate(users.get(0).getWDate());
+
+								map.put("result", 1);
+								map.put("desc", "注册成功！");
+								map.put("userinfo", userJson);
+								map.put("tokenId", users.get(0).getWID());
+
+								out.println(gson.toJson(map));
 							} else {
-								out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"系统错误，请重试！\"}"));
+								map.put("result", 0);
+								map.put("desc", "系统错误，请重试！");
+								out.println(gson.toJson(map));
 								out.flush();
 								out.close();
 							}
 							out.flush();
 							out.close();
 						} else {
-							out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"系统错误，请重试！\"}"));
+							map.put("result", 0);
+							map.put("desc", "系统错误，请重试！");
+							out.println(gson.toJson(map));
 							out.flush();
 							out.close();
 						}
 					} else {
-						out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"验证码错误！\"}"));
+						map.put("result", 2);
+						map.put("desc", "验证码错误！");
+						out.println(gson.toJson(map));
 						out.flush();
 						out.close();
 					}
 				} else {
 					session.removeAttribute("checkCode");
-					out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"验证码失效！\"}"));
+					map.put("result", 3);
+					map.put("desc", "验证码失效！");
+					out.println(gson.toJson(map));
 					out.flush();
 					out.close();
 				}
 			} else {
-				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"该电话号码已经被注册了！\"}"));
+				map.put("result", 4);
+				map.put("desc", "该电话号码已经被注册了！");
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			}
 		} else {
-			out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"数据不能为空！\"}"));
+			map.put("result", 5);
+			map.put("desc", "数据不能为空！");
+			out.println(gson.toJson(map));
 			out.flush();
 			out.close();
 		}
@@ -151,11 +173,12 @@ public class WUserHandler implements Serializable {
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out,HttpSession session) {
+	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out,
+			HttpSession session) {
 		Gson gson = new Gson();
+		Map<String, Object> map = new HashMap<String, Object>();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
-
 		// 数据不为空
 		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)) {
 			userLogin.setWPassWord(password);
@@ -165,21 +188,34 @@ public class WUserHandler implements Serializable {
 			List<WUser> users = userService.login(userLogin);// 登录
 			if (users.size() > 0) {
 				session.setAttribute(SessionAttribute.USERLOGIN, users.get(0));
-				out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"登录成功！\","
-						+ "\"data\":{\"userinfo\":{\"gcid\":" + users.get(0).getWGCNum() + ",\"loginName\":"
-						+ users.get(0).getWUserNum() + ",\"sex\":\" " + users.get(0).getWSex() + "\",\"age\":"
-						+ users.get(0).getWAge() + ",\"nickName\":\" " + users.get(0).getWNickName()
-						+ "\",\"createTime\":" + users.get(0).getWDate().getTime() + "},\"tokenId\":\" "
-						+ users.get(0).getWID() + "\"}}"));
+				WUser userJson = new WUser();
+
+				userJson.setWGCNum(users.get(0).getWGCNum());
+				userJson.setWNickName(users.get(0).getWNickName());
+				userJson.setWSex(users.get(0).getWSex());
+				userJson.setWUserNum(users.get(0).getWUserNum());
+				userJson.setWAge(users.get(0).getWAge());
+				userJson.setWDate(users.get(0).getWDate());
+
+				map.put("result", 1);
+				map.put("desc", "登录成功！");
+				map.put("userinfo", userJson);
+				map.put("tokenId", users.get(0).getWID());
+
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			} else {
-				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"登录失败！\"}"));
+				map.put("result", 0);
+				map.put("desc", "登录失败！");
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			}
 		} else {
-			out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"用户名或密码错误！\"}"));
+			map.put("result", 2);
+			map.put("desc", "用户名或密码错误！");
+			out.println(gson.toJson(map));
 			out.flush();
 			out.close();
 		}
@@ -196,19 +232,34 @@ public class WUserHandler implements Serializable {
 	public void MessageResiter(PrintWriter out, HttpServletRequest request, HttpServletResponse response,
 			HttpSession session) {
 		Gson gson = new Gson();
+		Map<String, Object> map = new HashMap<String, Object>();
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
 		String num = getCharAndNumr();
 		session.setAttribute(SessionAttribute.TELRLOGIN, num);
-		cl.CouldMessageContent(tel, num);
+		boolean result = cl.CouldMessageContent(tel, num);
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(num, time, tel);
 		session.setAttribute("checkCode", checkCodeSer);
-		out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"发送验证码成功！\", " + "\"data\": {"
-				+ "\"verificationCode\":" + num + "}}"));
-		out.flush();
-		out.close();
+		if (result) {// 如果短信发送成功
+
+			map.put("result", 1);
+			map.put("desc", "验证码发送成功！");
+			map.put("verificationCode", num);
+
+			out.println(gson.toJson(map));
+			out.flush();
+			out.close();
+		} else {
+			map.put("result", 0);
+			map.put("desc", "验证码发送失败！");
+
+			out.println(gson.toJson(map));
+			out.flush();
+			out.close();
+		}
+
 	}
 
 	/**
@@ -219,6 +270,8 @@ public class WUserHandler implements Serializable {
 	@RequestMapping(value = "/lostPassWord", method = RequestMethod.GET)
 	public void LostPassWord(WUser userLogin, HttpServletRequest request, HttpSession session, PrintWriter out) {
 		Gson gson = new Gson();
+		Map<String, Object> map = new HashMap<String, Object>();
+
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
 		String validateCode = request.getParameter("validateCode");// 验证码
@@ -236,27 +289,42 @@ public class WUserHandler implements Serializable {
 
 					if (usersResult > 0) {
 						List<WUser> users = userService.login(userLogin);// 查询
-						out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"修改成功！\","
-								+ "\"data\":{\"userinfo\":{\"gcid\":" + users.get(0).getWGCNum() + ",\"loginName\":"
-								+ users.get(0).getWUserNum() + ",\"sex\":\" " + users.get(0).getWSex() + "\",\"age\":"
-								+ users.get(0).getWAge() + ",\"nickName\":\" " + users.get(0).getWNickName()
-								+ "\",\"createTime\":" + users.get(0).getWDate().getTime() + "},\"tokenId\":\" "
-								+ users.get(0).getWID() + "\"}}"));
+						WUser userJson = new WUser();
+
+						userJson.setWGCNum(users.get(0).getWGCNum());
+						userJson.setWNickName(users.get(0).getWNickName());
+						userJson.setWSex(users.get(0).getWSex());
+						userJson.setWUserNum(users.get(0).getWUserNum());
+						userJson.setWAge(users.get(0).getWAge());
+						userJson.setWDate(users.get(0).getWDate());
+
+						map.put("result", 1);
+						map.put("desc", "修改成功！");
+						map.put("userinfo", userJson);
+						map.put("tokenId", users.get(0).getWID());
+
+						out.println(gson.toJson(map));
 						out.flush();
 						out.close();
 					} else {
-						out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"修改失败！\"}"));
+						map.put("result", 0);
+						map.put("desc", "修改失败！");
+						out.println(gson.toJson(map));
 						out.flush();
 						out.close();
 					}
 				} else {
-					out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"验证码错误！\"}"));
+					map.put("result", 2);
+					map.put("desc", "验证码错误！");
+					out.println(gson.toJson(map));
 					out.flush();
 					out.close();
 				}
 			} else {
 				session.removeAttribute("checkCode");
-				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"验证码失效！\"}"));
+				map.put("result", 3);
+				map.put("desc", "验证码失效！");
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			}
@@ -274,7 +342,9 @@ public class WUserHandler implements Serializable {
 	@RequestMapping(value = "/detailsResult", method = RequestMethod.GET)
 	public void DetailsResult(WDetails details, HttpServletRequest request, HttpSession session, PrintWriter out) {
 		Gson gson = new Gson();
-		WUserDetailsRelation detailsRelation=new WUserDetailsRelation();
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		String tokenId = request.getParameter("tokenId");// 用户id
 		String signature = request.getParameter("signature");// 用户签名
 		String interest = request.getParameter("interest");// 用户兴趣
@@ -296,27 +366,35 @@ public class WUserHandler implements Serializable {
 			if (StringUtils.isNotBlank(introduce)) {
 				details.setWIntroduce(introduce);
 			}
-			List<WUserDetailsRelation> relation = userService.userDetilsById(detailsRelation);//根据用户id查询出详情
+			List<WUserDetailsRelation> relation = userService.userDetilsById(detailsRelation);// 根据用户id查询出详情
 			if (relation.size() > 0) {
 				details.setWID(relation.get(0).getWKDetailsID());// 用户详细id
 
 				int updetails = userService.updateUserDetails(details);
 				if (updetails > 0) {
-					out.println(gson.toJson("{\"result\": 1," + " \"desc\": \"保存成功！\"}"));
+					map.put("result", 1);
+					map.put("desc", "保存成功！");
+					out.println(gson.toJson(map));
 					out.flush();
 					out.close();
 				} else {
-					out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"保存失败！\"}"));
+					map.put("result", 0);
+					map.put("desc", "保存失败！");
+					out.println(gson.toJson(map));
 					out.flush();
 					out.close();
 				}
 			} else {
-				out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"保存失败！\"}"));
+				map.put("result", 0);
+				map.put("desc", "保存失败！");
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			}
 		} else {
-			out.println(gson.toJson("{\"result\": 0," + " \"desc\": \"用户信息验证失败！\"}"));
+			map.put("result", 2);
+			map.put("desc", "用户信息验证失败！");
+			out.println(gson.toJson(map));
 			out.flush();
 			out.close();
 		}
@@ -333,40 +411,47 @@ public class WUserHandler implements Serializable {
 		val = ne.nextInt(9999 - 1000 + 1) + 1000 + "";// 为变量赋随机值1000-9999
 		return val;
 	}
-	
+
 	/**
 	 * 修改头像
+	 * 
 	 * @param iconPath
 	 * @param request
 	 * @param map
 	 * @param session
 	 * @param out
 	 */
-	@RequestMapping(value = "/uploadIcon",method = RequestMethod.GET)
-	public void uploadHeadIcon(@RequestParam("iconPath")String iconPath,HttpServletRequest request,ModelMap map,HttpSession session,PrintWriter out){
+	@RequestMapping(value = "/uploadIcon", method = RequestMethod.GET)
+	public void uploadHeadIcon(@RequestParam("iconPath") String iconPath, HttpServletRequest request,
+			HttpSession session, PrintWriter out) {
 		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
-		String relativelyPath = "";   
+		Map<String, Object> map = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		
+		String relativelyPath = "";
 		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
-        relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
-        String path = relativelyPath + "webapps/iconHead";  //头像存储路径
-        File fi = new File(path);
-        if(!fi.exists() && !fi.isFile()){
-        	fi.mkdir();
-        }
-        path = path+"/"+wUser.getWGCNum()+iconPath.substring(iconPath.lastIndexOf(".")); 
-        FileInputStream in = null;
-        FileOutputStream output = null;
-        try {
+		relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
+		String path = relativelyPath + "webapps/iconHead"; // 头像存储路径
+		File fi = new File(path);
+		if (!fi.exists() && !fi.isFile()) {
+			fi.mkdir();
+		}
+		path = path + "/" + wUser.getWGCNum() + iconPath.substring(iconPath.lastIndexOf("."));
+		FileInputStream in = null;
+		FileOutputStream output = null;
+		try {
 			in = new FileInputStream(new File(iconPath));
 			output = new FileOutputStream(new File(path));
 			int b = 0;
-			while((b = in.read()) != -1){
+			while ((b = in.read()) != -1) {
 				output.write(b);
 			}
 			output.flush();
 			output.close();
 			in.close();
-			out.print("修改成功...");
+			map.put("result", 1);
+			map.put("desc", "保存成功！");
+			out.println(gson.toJson(map));
 			out.flush();
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -375,45 +460,53 @@ public class WUserHandler implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 解析二维码
+	 * 
 	 * @param map
 	 */
 	@RequestMapping("/decodeQR")
-	public void deQR(@RequestParam("gcNum") String gcNum,ModelMap map,PrintWriter out){
-		String relativelyPath = "";   
+	public void deQR(@RequestParam("gcNum") String gcNum, PrintWriter out) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		String relativelyPath = "";
 		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
-        relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
-        String path = relativelyPath + "webapps/iconHead/QR"+gcNum+".png";  //头像存储路径
-        QRCodeOP qr = new QRCodeOP();
-        String content = qr.decoderQRCode(path);
-        if(null != content && content.length()>0){
-        	out.print("{\"content\":\""+content+"\"}");
-        }else{
-        	out.print("{\"error\":\"解析失败\"}");
-        }
-        out.flush();
-        out.close();
+		relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
+		String path = relativelyPath + "webapps/iconHead/QR" + gcNum + ".png"; // 头像存储路径
+		QRCodeOP qr = new QRCodeOP();
+		String content = qr.decoderQRCode(path);
+		if (null != content && content.length() > 0) {
+			map.put("result", 1);
+			map.put("desc", "保存成功！");
+			map.put("content", content);
+			out.println(gson.toJson(map));
+		} else {
+			map.put("result", 0);
+			map.put("desc", "解析失败！");
+		}
+		out.flush();
+		out.close();
 	}
-	
+
 	/**
 	 * 上传二维码
+	 * 
 	 * @param gcNum：用户GC号
 	 */
-	public void uploadQR(String gcNum){
-		String relativelyPath = "";   
+	public void uploadQR(String gcNum) {
+		String relativelyPath = "";
 		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
-        relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
-        String path = relativelyPath + "webapps/iconHead";  //头像存储路径
-        File fi = new File(path);
-        if(!fi.exists() && !fi.isFile()){
-        	fi.mkdir();
-        }
-        String imgPath = path+"/QR"+gcNum+".png";
-        String encoderContent = "Welcome to Watchman!" + gcNum ;
-        QRCodeOP handler = new QRCodeOP();  
-        handler.encoderQRCode(encoderContent, imgPath, "png"); 
+		relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
+		String path = relativelyPath + "webapps/iconHead"; // 头像存储路径
+		File fi = new File(path);
+		if (!fi.exists() && !fi.isFile()) {
+			fi.mkdir();
+		}
+		String imgPath = path + "/QR" + gcNum + ".png";
+		String encoderContent = "Welcome to Watchman!" + gcNum;
+		QRCodeOP handler = new QRCodeOP();
+		handler.encoderQRCode(encoderContent, imgPath, "png");
 	}
-	
+
 }
