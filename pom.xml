@@ -216,24 +216,24 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.7</version>
 		</dependency>
-		
+
 		<!-- 二维码 -->
 		<dependency>
-		    <groupId>com.swetake</groupId>
-		    <artifactId>QRCode</artifactId>
-		    <version>1.0</version>
+			<groupId>com.swetake</groupId>
+			<artifactId>QRCode</artifactId>
+			<version>1.0</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>com.swetake</groupId>
-		    <artifactId>Qrcodeen</artifactId>
-		    <version>1.0</version>
+			<groupId>com.swetake</groupId>
+			<artifactId>Qrcodeen</artifactId>
+			<version>1.0</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>com.swetake</groupId>
-		    <artifactId>jmagick</artifactId>
-		    <version>1.0</version>
+			<groupId>com.swetake</groupId>
+			<artifactId>jmagick</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 	</dependencies>
