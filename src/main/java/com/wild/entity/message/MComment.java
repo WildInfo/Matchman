@@ -41,6 +41,10 @@ public class MComment implements Serializable {
 		MMessage3 = mMessage3;
 	}
 
+	public MComment() {
+		super();
+	}
+
 	public String getMID() {
 		return MID;
 	}
@@ -127,6 +131,14 @@ public class MComment implements Serializable {
 
 	public void setMMessage3(String mMessage3) {
 		MMessage3 = mMessage3;
+	}
+
+	@Override
+	public String toString() {
+		return "\nMComment [MID=" + MID + ", MOwnerUser=" + MOwnerUser + ", MTargetUser=" + MTargetUser + ", MContent="
+				+ MContent + ", MLikeCount=" + MLikeCount + ", MCreatedAt=" + MCreatedAt + ", MParent=" + MParent
+				+ ", MParentType=" + MParentType + ", MMessage1=" + MMessage1 + ", MMessage2=" + MMessage2
+				+ ", MMessage3=" + MMessage3 + "]";
 	}
 
 }

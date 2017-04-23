@@ -25,6 +25,24 @@ public class IInformation implements Serializable {
 	private String IInformation2;// 备用字段2
 	private String IInformation3;// 备用字段3
 
+	public IInformation(String iID, String iContent, String iImage, String iAdress, Date iDate, StatusEnum iStatus,
+			String iInformation1, String iInformation2, String iInformation3) {
+		super();
+		IID = iID;
+		IContent = iContent;
+		IImage = iImage;
+		IAdress = iAdress;
+		IDate = iDate;
+		IStatus = iStatus;
+		IInformation1 = iInformation1;
+		IInformation2 = iInformation2;
+		IInformation3 = iInformation3;
+	}
+
+	public IInformation() {
+		super();
+	}
+
 	public String getIID() {
 		return IID;
 	}
@@ -95,6 +113,13 @@ public class IInformation implements Serializable {
 
 	public void setIImage(String iImage) {
 		IImage = iImage;
+	}
+
+	@Override
+	public String toString() {
+		return "IInformation [IID=" + IID + ", IContent=" + IContent + ", IImage=" + IImage + ", IAdress=" + IAdress
+				+ ", IDate=" + IDate + ", IStatus=" + IStatus + ", IInformation1=" + IInformation1 + ", IInformation2="
+				+ IInformation2 + ", IInformation3=" + IInformation3 + "]";
 	}
 
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wild.mapper.message.MCommentMapper">
+	<!-- 查看手机号码唯一 -->
+	<select id="getComments" parameterType="IInformation" resultType="MComment">
+		select * from m_comment where MID in 
+		(select mkcommentid from m_message_comment_relation where MInformationID=#{IID})
+	</select>
+	
+	<insert id="insertComment" parameterType="MComment">
+		<selectKey keyProperty="MID" keyColumn="MID" resultType="String" order="AFTER">
+			select max(mid) from m_comment where MOwnerUser=#{MOwnerUser}
+		</selectKey>
+		INSERT INTO matchman.m_comment (MID, MOwnerUser, MTargetUser, MContent, MLikeCount, 
+		MCreatedAt, MParent, MParentType, MMessage1, MMessage2, MMessage3)
+		select CONCAT('c',max(substr(mid,2))+1),#{MOwnerUser},#{MTargetUser},
+		#{MContent},#{MLikeCount},#{MCreatedAt},#{MParent},#{MParentType},
+		#{MMessage1},#{MMessage2},#{MMessage3} FROM m_comment  	
+	</insert>
+	
+	<insert id="insertIMC" parameterType="MMessageCommentRelation">
+		INSERT INTO m_message_comment_relation 
+		(MID, MInformationID, MKMessageID, WKUserID, MKCommentID)
+		select CONCAT('mc',max(substr(mid,3))+1),#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID}
+		from  m_message_comment_relation
+	</insert>
+</mapper>

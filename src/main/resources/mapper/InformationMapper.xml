@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wild.mapper.message.InformationMapper">
+	<!-- 查看手机号码唯一 -->
+	<select id="getPublicNews" parameterType="String" resultType="IInformation">
+		select * from i_information where 1=1 and iadress=#{adress}
+	</select>
+	
+	<insert id="insertPublicNews" parameterType="IInformation">
+		INSERT INTO i_information (IID, IContent, IImage, IAdress, IDate, IStatus, IInformation1, IInformation2, IInformation3) 
+		 select CONCAT('i',(max(SUBSTR(iid,2))+1)),#{IContent},#{IImage},#{IAdress},#{IDate},
+		 #{IStatus},null,null,null from i_information
+	</insert>
+</mapper>

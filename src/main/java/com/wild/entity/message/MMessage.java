@@ -29,7 +29,7 @@ public class MMessage implements Serializable {
 	private String MMessage3;// 备用字段3
 
 	public MMessage(String mID, String mContent, String mImage, int mGrade, String mAdress, Date mDate,
-			StatusEnum mGetStatus, MActivateStatusEnum mActivateStatus, String mMessage1, String mMessage2,
+			StatusEnum mGetStatus, MActivateStatusEnum mActivateStatus, String MMessage1, String mMessage2,
 			String mMessage3) {
 		super();
 		MID = mID;
@@ -40,9 +40,12 @@ public class MMessage implements Serializable {
 		MDate = mDate;
 		MGetStatus = mGetStatus;
 		MActivateStatus = mActivateStatus;
-		MMessage1 = mMessage1;
+		this.MMessage1 = MMessage1;
 		MMessage2 = mMessage2;
 		MMessage3 = mMessage3;
+	}
+	
+	public MMessage() {
 	}
 
 	public String getMID() {
@@ -105,8 +108,8 @@ public class MMessage implements Serializable {
 		return MMessage1;
 	}
 
-	public void setMMessage1(String mMessage1) {
-		MMessage1 = mMessage1;
+	public void setMMessage1(String MMessage1) {
+		this.MMessage1 = MMessage1;
 	}
 
 	public String getMMessage2() {
@@ -133,4 +136,11 @@ public class MMessage implements Serializable {
 		MGetStatus = mGetStatus;
 	}
 
+	@Override
+	public String toString() {
+		return "MMessage [MID=" + MID + ", MContent=" + MContent + ", MImage=" + MImage + ", MGrade=" + MGrade
+				+ ", MAdress=" + MAdress + ", MDate=" + MDate + ", MGetStatus=" + MGetStatus + ", MActivateStatus="
+				+ MActivateStatus + ", MMessage1=" + MMessage1 + ", MMessage2=" + MMessage2 + ", MMessage3=" + MMessage3
+				+ "]";
+	}
 }
