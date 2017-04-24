@@ -3,7 +3,6 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.message.InformationMapper">
-	<!-- 查看手机号码唯一 -->
 	<select id="getPublicNews" parameterType="String" resultType="IInformation">
 		select * from i_information where 1=1 and iadress=#{adress}
 	</select>

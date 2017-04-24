@@ -66,6 +66,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values(#{WID},#{WPersonalized},#{WHobbies},#{WIntroduce},#{WCurrency},#{WHeadImage},#{WBarcode})
 	</insert>
 
+	<!--根据用户详情id查询用户详情 -->
+	<select id="selectDetils" parameterType="WDetails"
+		resultType="WDetails">
+		select
+		*
+		from w_details where
+		WID = #{WID}
+	</select>
 	<!-- 修改用户详情 -->
 	<update id="updateUserDetails" parameterType="WDetails">
 		update w_details

@@ -3,8 +3,9 @@ package com.wild.entity.message;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.wild.enums.StatusEnum;
+import com.wild.enums.message.GetStatusEnum;
 import com.wild.enums.message.MActivateStatusEnum;
+import com.wild.enums.message.StatusEnum;
 
 /**
  * 热点
@@ -22,31 +23,12 @@ public class MMessage implements Serializable {
 	private int MGrade;// 热点等级(游戏币数量)
 	private String MAdress;// 消息地址
 	private Date MDate;// 消息创建时间
-	private StatusEnum MGetStatus;// 消息状态
 	private MActivateStatusEnum MActivateStatus;// 消息激活状态
+	private StatusEnum MStatus;// 消息状态
+	private GetStatusEnum MGetStatus;// 消息状态
 	private String MMessage1;// 备用字段1
 	private String MMessage2;// 备用字段2
 	private String MMessage3;// 备用字段3
-
-	public MMessage(String mID, String mContent, String mImage, int mGrade, String mAdress, Date mDate,
-			StatusEnum mGetStatus, MActivateStatusEnum mActivateStatus, String MMessage1, String mMessage2,
-			String mMessage3) {
-		super();
-		MID = mID;
-		MContent = mContent;
-		MImage = mImage;
-		MGrade = mGrade;
-		MAdress = mAdress;
-		MDate = mDate;
-		MGetStatus = mGetStatus;
-		MActivateStatus = mActivateStatus;
-		this.MMessage1 = MMessage1;
-		MMessage2 = mMessage2;
-		MMessage3 = mMessage3;
-	}
-	
-	public MMessage() {
-	}
 
 	public String getMID() {
 		return MID;
@@ -104,12 +86,28 @@ public class MMessage implements Serializable {
 		MActivateStatus = mActivateStatus;
 	}
 
+	public StatusEnum getMStatus() {
+		return MStatus;
+	}
+
+	public void setMStatus(StatusEnum mStatus) {
+		MStatus = mStatus;
+	}
+
+	public GetStatusEnum getMGetStatus() {
+		return MGetStatus;
+	}
+
+	public void setMGetStatus(GetStatusEnum mGetStatus) {
+		MGetStatus = mGetStatus;
+	}
+
 	public String getMMessage1() {
 		return MMessage1;
 	}
 
-	public void setMMessage1(String MMessage1) {
-		this.MMessage1 = MMessage1;
+	public void setMMessage1(String mMessage1) {
+		MMessage1 = mMessage1;
 	}
 
 	public String getMMessage2() {
@@ -128,19 +126,4 @@ public class MMessage implements Serializable {
 		MMessage3 = mMessage3;
 	}
 
-	public StatusEnum getMGetStatus() {
-		return MGetStatus;
-	}
-
-	public void setMGetStatus(StatusEnum mGetStatus) {
-		MGetStatus = mGetStatus;
-	}
-
-	@Override
-	public String toString() {
-		return "MMessage [MID=" + MID + ", MContent=" + MContent + ", MImage=" + MImage + ", MGrade=" + MGrade
-				+ ", MAdress=" + MAdress + ", MDate=" + MDate + ", MGetStatus=" + MGetStatus + ", MActivateStatus="
-				+ MActivateStatus + ", MMessage1=" + MMessage1 + ", MMessage2=" + MMessage2 + ", MMessage3=" + MMessage3
-				+ "]";
-	}
 }

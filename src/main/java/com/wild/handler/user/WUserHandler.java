@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import com.google.gson.Gson;
 import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
-import com.wild.enums.StatusEnum;
+import com.wild.enums.message.StatusEnum;
 import com.wild.enums.user.UserVersioniEnum;
 import com.wild.service.user.WUserService;
 import com.wild.utils.SessionAttribute;
@@ -60,10 +60,12 @@ public class WUserHandler implements Serializable {
 	 * @return
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public void register(@Valid PrintWriter out, WUser user, HttpSession session, HttpServletRequest request
-			) {
+	public void register(PrintWriter out, WUser user, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
-		Map<String,Object> map=new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
+
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
@@ -108,12 +110,18 @@ public class WUserHandler implements Serializable {
 								userJson.setWAge(users.get(0).getWAge());
 								userJson.setWDate(users.get(0).getWDate());
 
+								map2.put("userInfo", userJson);
+								map2.put("tokenId", users.get(0).getWID());
+
 								map.put("result", 1);
 								map.put("desc", "注册成功！");
-								map.put("userinfo", userJson);
-								map.put("tokenId", users.get(0).getWID());
+								map.put("data", map2);
 
-								out.println(gson.toJson(map));
+								list.add(map);
+
+								out.println(gson.toJson(list));
+								out.flush();
+								out.close();
 							} else {
 								map.put("result", 0);
 								map.put("desc", "系统错误，请重试！");
@@ -121,8 +129,6 @@ public class WUserHandler implements Serializable {
 								out.flush();
 								out.close();
 							}
-							out.flush();
-							out.close();
 						} else {
 							map.put("result", 0);
 							map.put("desc", "系统错误，请重试！");
@@ -177,6 +183,8 @@ public class WUserHandler implements Serializable {
 			HttpSession session) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
 		// 数据不为空
@@ -197,12 +205,16 @@ public class WUserHandler implements Serializable {
 				userJson.setWAge(users.get(0).getWAge());
 				userJson.setWDate(users.get(0).getWDate());
 
+				map2.put("userInfo", userJson);
+				map2.put("tokenId", users.get(0).getWID());
+
 				map.put("result", 1);
 				map.put("desc", "登录成功！");
-				map.put("userinfo", userJson);
-				map.put("tokenId", users.get(0).getWID());
+				map.put("data", map2);
 
-				out.println(gson.toJson(map));
+				list.add(map);
+
+				out.println(gson.toJson(list));
 				out.flush();
 				out.close();
 			} else {
@@ -233,22 +245,28 @@ public class WUserHandler implements Serializable {
 			HttpSession session) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
-		String num = getCharAndNumr();
-		session.setAttribute(SessionAttribute.TELRLOGIN, num);
-		boolean result = cl.CouldMessageContent(tel, num);
+		String verificationCode = getCharAndNumr();
+		session.setAttribute(SessionAttribute.TELRLOGIN, verificationCode);
+		boolean result = cl.CouldMessageContent(tel, verificationCode);
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
-		CheckCodeSer checkCodeSer = new CheckCodeSer(num, time, tel);
+		CheckCodeSer checkCodeSer = new CheckCodeSer(verificationCode, time, tel);
 		session.setAttribute("checkCode", checkCodeSer);
 		if (result) {// 如果短信发送成功
 
+			map2.put("verificationCode", verificationCode);
+
 			map.put("result", 1);
 			map.put("desc", "验证码发送成功！");
-			map.put("verificationCode", num);
+			map.put("data", map2);
 
-			out.println(gson.toJson(map));
+			list.add(map);
+
+			out.println(gson.toJson(list));
 			out.flush();
 			out.close();
 		} else {
@@ -271,7 +289,8 @@ public class WUserHandler implements Serializable {
 	public void LostPassWord(WUser userLogin, HttpServletRequest request, HttpSession session, PrintWriter out) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
-
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
 		String loginName = request.getParameter("loginName");// 用户名（手机号码）
 		String password = request.getParameter("password");
 		String validateCode = request.getParameter("validateCode");// 验证码
@@ -298,12 +317,16 @@ public class WUserHandler implements Serializable {
 						userJson.setWAge(users.get(0).getWAge());
 						userJson.setWDate(users.get(0).getWDate());
 
+						map2.put("userInfo", userJson);
+						map2.put("tokenId", users.get(0).getWID());
+
 						map.put("result", 1);
 						map.put("desc", "修改成功！");
-						map.put("userinfo", userJson);
-						map.put("tokenId", users.get(0).getWID());
+						map.put("data", map2);
 
-						out.println(gson.toJson(map));
+						list.add(map);
+
+						out.println(gson.toJson(list));
 						out.flush();
 						out.close();
 					} else {
@@ -343,6 +366,8 @@ public class WUserHandler implements Serializable {
 	public void DetailsResult(WDetails details, HttpServletRequest request, HttpSession session, PrintWriter out) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
 
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		String tokenId = request.getParameter("tokenId");// 用户id
@@ -372,9 +397,16 @@ public class WUserHandler implements Serializable {
 
 				int updetails = userService.updateUserDetails(details);
 				if (updetails > 0) {
+
 					map.put("result", 1);
 					map.put("desc", "保存成功！");
-					out.println(gson.toJson(map));
+					map2.put("", "");
+
+					map.put("data", map2);
+
+					list.add(map);
+
+					out.println(gson.toJson(list));
 					out.flush();
 					out.close();
 				} else {
@@ -426,8 +458,10 @@ public class WUserHandler implements Serializable {
 			HttpSession session, PrintWriter out) {
 		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
-		
+
 		String relativelyPath = "";
 		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
 		relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
@@ -451,7 +485,13 @@ public class WUserHandler implements Serializable {
 			in.close();
 			map.put("result", 1);
 			map.put("desc", "保存成功！");
-			out.println(gson.toJson(map));
+			map2.put("", "");
+
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 			out.flush();
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -469,6 +509,8 @@ public class WUserHandler implements Serializable {
 	@RequestMapping("/decodeQR")
 	public void deQR(@RequestParam("gcNum") String gcNum, PrintWriter out) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<>();
 		Gson gson = new Gson();
 		String relativelyPath = "";
 		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
@@ -479,8 +521,13 @@ public class WUserHandler implements Serializable {
 		if (null != content && content.length() > 0) {
 			map.put("result", 1);
 			map.put("desc", "保存成功！");
-			map.put("content", content);
-			out.println(gson.toJson(map));
+			map2.put("content", content);
+
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 		} else {
 			map.put("result", 0);
 			map.put("desc", "解析失败！");

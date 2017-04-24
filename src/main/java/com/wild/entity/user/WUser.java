@@ -3,7 +3,7 @@ package com.wild.entity.user;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.wild.enums.StatusEnum;
+import com.wild.enums.message.StatusEnum;
 import com.wild.enums.user.UserVersioniEnum;
 
 /**

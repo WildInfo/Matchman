@@ -1,12 +1,12 @@
-package com.wild.enums;
+package com.wild.enums.message;
 
-public enum StatusEnum {
-	// 正常    注销 
-	normal("1"), cancel("2");
+public enum GetStatusEnum {
+	// 领取  未领取
+	received("1"), unreceived("0");
 
 	private String desc;
 
-	private StatusEnum(String desc) {
+	private GetStatusEnum(String desc) {
 		this.desc = desc;
 	}
 
@@ -19,7 +19,7 @@ public enum StatusEnum {
 	}
 
 	public static boolean contain(String value) {
-		StatusEnum[] status = StatusEnum.values();
+		GetStatusEnum[] status = GetStatusEnum.values();
 		for (int i = 0; i < status.length; i++) {
 			if (status[i].toString().equals(value)) {
 				return true;

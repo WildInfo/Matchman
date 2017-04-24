@@ -87,4 +87,12 @@ public interface WUserMapper {
 	 * @return
 	 */
 	public int insertDtails(WDetails details);
+
+	/**
+	 * 根据用户详情id查询用户详情
+	 * 
+	 * @param details
+	 * @return
+	 */
+	public List<WDetails> selectDetils(WDetails details);
 }

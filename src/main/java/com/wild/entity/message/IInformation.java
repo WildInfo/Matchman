@@ -3,7 +3,7 @@ package com.wild.entity.message;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.wild.enums.StatusEnum;
+import com.wild.enums.message.StatusEnum;
 
 /**
  * 消息
