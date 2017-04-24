@@ -2,11 +2,7 @@ package com.wild.service.message;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.wild.entity.message.IInformation;
-import com.wild.entity.message.MMessage;
-import com.wild.entity.message.MMessageCommentRelation;
 
 public interface InformationService {
 	/**
