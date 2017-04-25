@@ -71,7 +71,6 @@ public interface WUserService {
 	 * @return
 	 */
 	public List<WUserDetailsRelation> userDetilsById(WUserDetailsRelation detailsRelation);
-	
 
 	/**
 	 * 插入用户详情数据
@@ -80,4 +79,12 @@ public interface WUserService {
 	 * @return
 	 */
 	public int insertDtails(WDetails details);
+
+	/**
+	 * 根据用户详情id查询用户详情
+	 * 
+	 * @param details
+	 * @return
+	 */
+	public List<WDetails> selectDetils(WDetails details);
 }

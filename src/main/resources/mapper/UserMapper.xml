@@ -3,7 +3,6 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.user.WUserMapper">
-
 	<!-- 注册 -->
 	<insert id="register" parameterType="WUser">
 		insert into w_user
@@ -66,6 +65,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values(#{WID},#{WPersonalized},#{WHobbies},#{WIntroduce},#{WCurrency},#{WHeadImage},#{WBarcode})
 	</insert>
 
+	<!--根据用户详情id查询用户详情 -->
+	<select id="selectDetils" parameterType="WDetails"
+		resultType="WDetails">
+		select
+		*
+		from w_details where
+		WID = #{WID}
+	</select>
 	<!-- 修改用户详情 -->
 	<update id="updateUserDetails" parameterType="WDetails">
 		update w_details
@@ -88,4 +95,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</set>
 		WHERE WID = #{WID};
 	</update>
+	
+	<!--查询用户的好友-->
+	<select id="getUserFrieds" parameterType="WUser" resultType="WUser">
+		
+	</select>
+	
 </mapper>

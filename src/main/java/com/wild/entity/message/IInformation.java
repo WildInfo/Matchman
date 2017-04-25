@@ -2,8 +2,10 @@ package com.wild.entity.message;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-import com.wild.enums.StatusEnum;
+import com.wild.enums.message.StatusEnum;
+
 
 /**
  * 消息
@@ -21,12 +23,15 @@ public class IInformation implements Serializable {
 	private String IAdress;// 消息地址
 	private Date IDate;// 消息创建时间
 	private StatusEnum IStatus;// 消息状态
-	private String IInformation1;// 备用字段1
+	private String IUserId;// 备用字段1
 	private String IInformation2;// 备用字段2
 	private String IInformation3;// 备用字段3
+	
+	private List<MComment> comments; //评论
+	private List<MPraise> praises; //评论
 
 	public IInformation(String iID, String iContent, String iImage, String iAdress, Date iDate, StatusEnum iStatus,
-			String iInformation1, String iInformation2, String iInformation3) {
+			String IUserId, String iInformation2, String iInformation3) {
 		super();
 		IID = iID;
 		IContent = iContent;
@@ -34,9 +39,26 @@ public class IInformation implements Serializable {
 		IAdress = iAdress;
 		IDate = iDate;
 		IStatus = iStatus;
-		IInformation1 = iInformation1;
+		this.IUserId = IUserId;
 		IInformation2 = iInformation2;
 		IInformation3 = iInformation3;
+	}
+
+	public IInformation(String iID, String iContent, String iImage, String iAdress, Date iDate, StatusEnum iStatus,
+			String iUserId, String iInformation2, String iInformation3, List<MComment> comments,
+			List<MPraise> praises) {
+		super();
+		IID = iID;
+		IContent = iContent;
+		IImage = iImage;
+		IAdress = iAdress;
+		IDate = iDate;
+		IStatus = iStatus;
+		IUserId = iUserId;
+		IInformation2 = iInformation2;
+		IInformation3 = iInformation3;
+		this.comments = comments;
+		this.praises = praises;
 	}
 
 	public IInformation() {
@@ -83,12 +105,12 @@ public class IInformation implements Serializable {
 		IStatus = iStatus;
 	}
 
-	public String getIInformation1() {
-		return IInformation1;
+	public String getIUserId() {
+		return IUserId;
 	}
 
-	public void setIInformation1(String iInformation1) {
-		IInformation1 = iInformation1;
+	public void setIUserId(String IUserId) {
+		this.IUserId = IUserId;
 	}
 
 	public String getIInformation2() {
@@ -115,11 +137,27 @@ public class IInformation implements Serializable {
 		IImage = iImage;
 	}
 
-	@Override
-	public String toString() {
-		return "IInformation [IID=" + IID + ", IContent=" + IContent + ", IImage=" + IImage + ", IAdress=" + IAdress
-				+ ", IDate=" + IDate + ", IStatus=" + IStatus + ", IInformation1=" + IInformation1 + ", IInformation2="
-				+ IInformation2 + ", IInformation3=" + IInformation3 + "]";
+	public List<MComment> getComments() {
+		return comments;
 	}
 
+	public void setComments(List<MComment> comments) {
+		this.comments = comments;
+	}
+
+	public List<MPraise> getPraises() {
+		return praises;
+	}
+
+	public void setPraises(List<MPraise> praises) {
+		this.praises = praises;
+	}
+
+	@Override
+	public String toString() {
+		return "\nIInformation [IID=" + IID + ", IContent=" + IContent + ", IImage=" + IImage + ", IAdress=" + IAdress
+				+ ", IDate=" + IDate + ", IStatus=" + IStatus + ", IUserId=" + IUserId + ", IInformation2="
+				+ IInformation2 + ", IInformation3=" + IInformation3 + ", \ncomments=" + comments + ", \npraises=" + praises
+				+ "]";
+	}
 }

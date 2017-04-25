@@ -87,4 +87,6 @@ public interface WUserMapper {
 	 * @return
 	 */
 	public int insertDtails(WDetails details);
+	
+	//public List<Wu>
 }

@@ -9,21 +9,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		(select mkcommentid from m_message_comment_relation where MInformationID=#{IID})
 	</select>
 	
+	<!--插入评论-->
 	<insert id="insertComment" parameterType="MComment">
 		<selectKey keyProperty="MID" keyColumn="MID" resultType="String" order="AFTER">
 			select max(mid) from m_comment where MOwnerUser=#{MOwnerUser}
 		</selectKey>
 		INSERT INTO matchman.m_comment (MID, MOwnerUser, MTargetUser, MContent, MLikeCount, 
 		MCreatedAt, MParent, MParentType, MMessage1, MMessage2, MMessage3)
-		select CONCAT('c',max(substr(mid,2))+1),#{MOwnerUser},#{MTargetUser},
+		#{MID},#{MOwnerUser},#{MTargetUser},
 		#{MContent},#{MLikeCount},#{MCreatedAt},#{MParent},#{MParentType},
 		#{MMessage1},#{MMessage2},#{MMessage3} FROM m_comment  	
 	</insert>
 	
+	<!--插入消息评论关系表-->
 	<insert id="insertIMC" parameterType="MMessageCommentRelation">
 		INSERT INTO m_message_comment_relation 
 		(MID, MInformationID, MKMessageID, WKUserID, MKCommentID)
-		select CONCAT('mc',max(substr(mid,3))+1),#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID}
+		#{MID},#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID}
 		from  m_message_comment_relation
 	</insert>
 </mapper>

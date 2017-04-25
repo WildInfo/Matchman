@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wild.entity.message.IInformation;
-import com.wild.entity.message.MMessage;
-import com.wild.entity.message.MMessageCommentRelation;
 import com.wild.mapper.message.InformationMapper;
 import com.wild.service.message.InformationService;
 
@@ -25,5 +23,15 @@ public class InformationServiceImpl implements InformationService {
 	@Override
 	public int insertPublicNews(IInformation infomation) {
 		return informationMapper.insertPublicNews(infomation);
+	}
+
+	@Override
+	public List<IInformation> getInfoDetails(IInformation information) {
+		return informationMapper.getInfoDetails(information);
+	}
+
+	@Override
+	public List<IInformation> getInfoDetailsByStrenger(IInformation information) {
+		return informationMapper.getInfoDetailsByStrenger(information);
 	}
 }

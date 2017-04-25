@@ -1,14 +1,12 @@
-package com.wild.enums.user;
+package com.wild.enums.message;
 
-import com.wild.enums.message.StatusEnum;
-
-public enum UserVersioniEnum {
-	//超级管理员  一般管理员  普通用户
-	supervision("超级管理员"), manversion("一般管理员"),common("普通用户");
+public enum StatusEnum {
+	// 正常    注销 
+	normal("1"), cancel("2");
 
 	private String desc;
 
-	private UserVersioniEnum(String desc) {
+	private StatusEnum(String desc) {
 		this.desc = desc;
 	}
 

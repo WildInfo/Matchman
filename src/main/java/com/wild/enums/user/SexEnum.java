@@ -1,23 +1,23 @@
 package com.wild.enums.user;
 
-public enum AgeAndSexEnum {
+public enum SexEnum {
 	//年龄就四个选项    70 80 90 00 
-	seventy("1"),eighty("2"),ninety("3"),zero("4");
+	man(0),woman(1);
 	
-	private String desc;
-	private AgeAndSexEnum(String desc){
+	private int desc;
+	private SexEnum(int desc){
 		this.desc=desc;
 	}
 
-	public String getDesc() {
+	public int getDesc() {
 		return desc;
 	}
 
-	public void setDesc(String desc) {
+	public void setDesc(int desc) {
 		this.desc = desc;
 	}
 	public static boolean contain(String value) {
-		AgeAndSexEnum[] status = AgeAndSexEnum.values();
+		SexEnum[] status = SexEnum.values();
 		for (int i = 0; i < status.length; i++) {
 			if (status[i].toString().equals(value)) {
 				return true;
@@ -25,7 +25,5 @@ public enum AgeAndSexEnum {
 		}
 		return false;
 	}
-
-	
 }
 

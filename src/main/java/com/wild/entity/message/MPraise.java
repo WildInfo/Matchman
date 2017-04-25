@@ -27,6 +27,10 @@ public class MPraise implements Serializable {
 		MPraise2 = mPraise2;
 	}
 
+	public MPraise() {
+		super();
+	}
+
 	public String getMID() {
 		return MID;
 	}
@@ -65,6 +69,12 @@ public class MPraise implements Serializable {
 
 	public void setMPraise2(String mPraise2) {
 		MPraise2 = mPraise2;
+	}
+
+	@Override
+	public String toString() {
+		return "MPraise [MID=" + MID + ", MKUserID=" + MKUserID + ", MKMessageID=" + MKMessageID + ", MPraise1="
+				+ MPraise1 + ", MPraise2=" + MPraise2 + "]";
 	}
 
 }

@@ -62,4 +62,9 @@ public class WUserServiceImpl implements WUserService {
 		return wuserMapper.insertDtails(details);
 	}
 
+	@Override
+	public List<WDetails> selectDetils(WDetails details) {
+		return wuserMapper.selectDetils(details);
+	}
+
 }
