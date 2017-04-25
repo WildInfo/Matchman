@@ -95,4 +95,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</set>
 		WHERE WID = #{WID};
 	</update>
+	
+	<!--查询用户的好友-->
+	<select id="getUserFrieds" parameterType="WUser" resultType="WUser">
+		
+	</select>
+	
 </mapper>

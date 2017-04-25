@@ -25,4 +25,18 @@ public interface InformationMapper {
 	 */
 	public int insertIMC(MMessageCommentRelation mcr);
 	
+	/**
+	 * 获取消息详情
+	 * @param information：要查看的消息
+	 * @return
+	 */
+	public List<IInformation> getInfoDetails(IInformation information);
+	
+	/**
+	 * 陌生人获取消息详情
+	 * @param information：要查看的消息
+	 * @return
+	 */
+	public List<IInformation> getInfoDetailsByStrenger(IInformation information);
+	
 }

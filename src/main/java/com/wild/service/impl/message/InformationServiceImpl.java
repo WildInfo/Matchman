@@ -24,4 +24,14 @@ public class InformationServiceImpl implements InformationService {
 	public int insertPublicNews(IInformation infomation) {
 		return informationMapper.insertPublicNews(infomation);
 	}
+
+	@Override
+	public List<IInformation> getInfoDetails(IInformation information) {
+		return informationMapper.getInfoDetails(information);
+	}
+
+	@Override
+	public List<IInformation> getInfoDetailsByStrenger(IInformation information) {
+		return informationMapper.getInfoDetailsByStrenger(information);
+	}
 }
