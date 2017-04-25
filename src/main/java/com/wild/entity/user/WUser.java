@@ -123,4 +123,12 @@ public class WUser implements Serializable {
 	public void setWGCNum(String wGCNum) {
 		WGCNum = wGCNum;
 	}
+
+	@Override
+	public String toString() {
+		return "WUser [WID=" + WID + ", WGCNum=" + WGCNum + ", WNickName=" + WNickName + ", WSex=" + WSex
+				+ ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord + ", WAge=" + WAge + ", WDate=" + WDate
+				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
+	}
+	
 }
