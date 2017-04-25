@@ -84,7 +84,11 @@ public class MMessageHandler {
 			} else {
 				map.put("result", 0);
 				map.put("desc", "添加失败!");
-				out.println(gson.toJson(map));
+				map.put("data", map2);
+
+				list.add(map);
+
+				out.println(gson.toJson(list));
 				out.flush();
 				out.close();
 			}
@@ -133,14 +137,22 @@ public class MMessageHandler {
 			} else {
 				map.put("result", 0);
 				map.put("desc", "查询失败!");
-				out.println(gson.toJson(map));
+				map.put("data", map2);
+
+				list.add(map);
+
+				out.println(gson.toJson(list));
 				out.flush();
 				out.close();
 			}
 		} else {
 			map.put("result", 0);
 			map.put("desc", "查询失败!");
-			out.println(gson.toJson(map));
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 			out.flush();
 			out.close();
 		}

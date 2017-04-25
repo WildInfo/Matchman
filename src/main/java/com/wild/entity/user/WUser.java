@@ -19,30 +19,13 @@ public class WUser implements Serializable {
 	private String WID;// 用户id
 	private String WGCNum;// GC号
 	private String WNickName;// 用户昵称
-	private String WSex;// 用户性别
+	private int WSex;// 用户性别
 	private String WUserNum;// 用户帐号
 	private String WPassWord;// 用户密码
-	private String WAge;// 用户年龄
+	private int WAge;// 用户年龄
 	private Date WDate;// 注册时间
 	private StatusEnum WStatus;// 用户状态
 	private UserVersioniEnum WSuperManager;// 用户角色
-
-	public WUser(String wID, String wNickName, String wSex, String wUserNum, String wPassWord, String wAge, Date wDate,
-			StatusEnum wStatus, UserVersioniEnum wSuperManager) {
-		WID = wID;
-		WNickName = wNickName;
-		WSex = wSex;
-		WUserNum = wUserNum;
-		WPassWord = wPassWord;
-		WAge = wAge;
-		WDate = wDate;
-		WStatus = wStatus;
-		WSuperManager = wSuperManager;
-	}
-
-	public WUser() {
-		
-	}
 
 	public String getWID() {
 		return WID;
@@ -52,12 +35,28 @@ public class WUser implements Serializable {
 		WID = wID;
 	}
 
+	public String getWGCNum() {
+		return WGCNum;
+	}
+
+	public void setWGCNum(String wGCNum) {
+		WGCNum = wGCNum;
+	}
+
 	public String getWNickName() {
 		return WNickName;
 	}
 
 	public void setWNickName(String wNickName) {
 		WNickName = wNickName;
+	}
+
+	public int getWSex() {
+		return WSex;
+	}
+
+	public void setWSex(int wSex) {
+		WSex = wSex;
 	}
 
 	public String getWUserNum() {
@@ -74,6 +73,14 @@ public class WUser implements Serializable {
 
 	public void setWPassWord(String wPassWord) {
 		WPassWord = wPassWord;
+	}
+
+	public int getWAge() {
+		return WAge;
+	}
+
+	public void setWAge(int wAge) {
+		WAge = wAge;
 	}
 
 	public Date getWDate() {
@@ -100,27 +107,4 @@ public class WUser implements Serializable {
 		WSuperManager = wSuperManager;
 	}
 
-	public String getWSex() {
-		return WSex;
-	}
-
-	public void setWSex(String wSex) {
-		WSex = wSex;
-	}
-
-	public String getWAge() {
-		return WAge;
-	}
-
-	public void setWAge(String wAge) {
-		WAge = wAge;
-	}
-
-	public String getWGCNum() {
-		return WGCNum;
-	}
-
-	public void setWGCNum(String wGCNum) {
-		WGCNum = wGCNum;
-	}
 }
