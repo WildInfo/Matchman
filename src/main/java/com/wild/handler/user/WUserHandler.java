@@ -33,6 +33,10 @@ import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
 import com.wild.enums.message.StatusEnum;
+import com.wild.enums.user.AgeEnum;
+import com.wild.enums.user.SexEnum;
+import com.wild.enums.user.AgeEnum;
+import com.wild.enums.user.SexEnum;
 import com.wild.enums.user.UserVersioniEnum;
 import com.wild.service.user.WUserService;
 import com.wild.utils.SessionAttribute;
@@ -82,15 +86,41 @@ public class WUserHandler implements Serializable {
 		if (StringUtils.isNotBlank(loginName) && StringUtils.isNotBlank(password)
 				&& StringUtils.isNotBlank(validateCode) && StringUtils.isNotBlank(age) && StringUtils.isNotBlank(sex)
 				&& StringUtils.isNotBlank(NickName)) {
-			user.setWUserNum(loginName);
+			user.setWID(UUIDUtil.createUUID());
+			user.setWNickName(NickName);
+			user.setWUserNum(loginName);// 用户电话号码
 			user.setWPassWord(password);
+			user.setWDate(new Date());
+			user.setWStatus(StatusEnum.normal);
+			user.setWSuperManager(UserVersioniEnum.common);// 普通权限
+			// 判断性别
+			if (0 == (Integer.valueOf(sex))) {
+				user.setWSex(SexEnum.man.getDesc());
+			} else {
+				user.setWSex(SexEnum.woman.getDesc());
+			}
+			// 判断年龄
+			switch (Integer.valueOf(age)) {
+			case 1:
+				user.setWAge(AgeEnum.seventy.getDesc());
+				break;
+			case 2:
+				user.setWAge(AgeEnum.eighty.getDesc());
+				break;
+			case 3:
+				user.setWAge(AgeEnum.ninety.getDesc());
+				break;
+			case 4:
+				user.setWAge(AgeEnum.zero.getDesc());
+				break;
+			}
+
 			String telForOnly = userService.telForOnly(loginName);
 			if (StringUtils.isBlank(telForOnly)) {// 如果电话重复
 				CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
 				if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
 					if (validateCode.equals(checkCodeSer.getCheckCode())) {
-						int resultRegister = userService.register(new WUser(UUIDUtil.createUUID(), NickName, sex,
-								loginName, password, age, new Date(), StatusEnum.normal, UserVersioniEnum.common));
+						int resultRegister = userService.register(user);
 						if (resultRegister > 0) {
 							List<WUser> users = userService.login(user);// 查询
 							uploadQR(users.get(0).getWGCNum());
@@ -125,21 +155,33 @@ public class WUserHandler implements Serializable {
 							} else {
 								map.put("result", 0);
 								map.put("desc", "系统错误，请重试！");
-								out.println(gson.toJson(map));
+								map.put("data", map2);
+
+								list.add(map);
+
+								out.println(gson.toJson(list));
 								out.flush();
 								out.close();
 							}
 						} else {
 							map.put("result", 0);
 							map.put("desc", "系统错误，请重试！");
-							out.println(gson.toJson(map));
+							map.put("data", map2);
+
+							list.add(map);
+
+							out.println(gson.toJson(list));
 							out.flush();
 							out.close();
 						}
 					} else {
 						map.put("result", 2);
 						map.put("desc", "验证码错误！");
-						out.println(gson.toJson(map));
+						map.put("data", map2);
+
+						list.add(map);
+
+						out.println(gson.toJson(list));
 						out.flush();
 						out.close();
 					}
@@ -147,21 +189,33 @@ public class WUserHandler implements Serializable {
 					session.removeAttribute("checkCode");
 					map.put("result", 3);
 					map.put("desc", "验证码失效！");
-					out.println(gson.toJson(map));
+					map.put("data", map2);
+
+					list.add(map);
+
+					out.println(gson.toJson(list));
 					out.flush();
 					out.close();
 				}
 			} else {
 				map.put("result", 4);
 				map.put("desc", "该电话号码已经被注册了！");
-				out.println(gson.toJson(map));
+				map.put("data", map2);
+
+				list.add(map);
+
+				out.println(gson.toJson(list));
 				out.flush();
 				out.close();
 			}
 		} else {
 			map.put("result", 5);
 			map.put("desc", "数据不能为空！");
-			out.println(gson.toJson(map));
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 			out.flush();
 			out.close();
 		}
@@ -220,14 +274,22 @@ public class WUserHandler implements Serializable {
 			} else {
 				map.put("result", 0);
 				map.put("desc", "登录失败！");
-				out.println(gson.toJson(map));
+				map.put("data", map2);
+
+				list.add(map);
+
+				out.println(gson.toJson(list));
 				out.flush();
 				out.close();
 			}
 		} else {
 			map.put("result", 2);
 			map.put("desc", "用户名或密码错误！");
-			out.println(gson.toJson(map));
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 			out.flush();
 			out.close();
 		}
@@ -273,7 +335,11 @@ public class WUserHandler implements Serializable {
 			map.put("result", 0);
 			map.put("desc", "验证码发送失败！");
 
-			out.println(gson.toJson(map));
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 			out.flush();
 			out.close();
 		}
@@ -332,14 +398,22 @@ public class WUserHandler implements Serializable {
 					} else {
 						map.put("result", 0);
 						map.put("desc", "修改失败！");
-						out.println(gson.toJson(map));
+						map.put("data", map2);
+
+						list.add(map);
+
+						out.println(gson.toJson(list));
 						out.flush();
 						out.close();
 					}
 				} else {
 					map.put("result", 2);
 					map.put("desc", "验证码错误！");
-					out.println(gson.toJson(map));
+					map.put("data", map2);
+
+					list.add(map);
+
+					out.println(gson.toJson(list));
 					out.flush();
 					out.close();
 				}
@@ -347,7 +421,11 @@ public class WUserHandler implements Serializable {
 				session.removeAttribute("checkCode");
 				map.put("result", 3);
 				map.put("desc", "验证码失效！");
-				out.println(gson.toJson(map));
+				map.put("data", map2);
+
+				list.add(map);
+
+				out.println(gson.toJson(list));
 				out.flush();
 				out.close();
 			}
@@ -400,7 +478,7 @@ public class WUserHandler implements Serializable {
 
 					map.put("result", 1);
 					map.put("desc", "保存成功！");
-					map2.put("", "");
+					//map2.put("", "");
 
 					map.put("data", map2);
 
@@ -412,21 +490,33 @@ public class WUserHandler implements Serializable {
 				} else {
 					map.put("result", 0);
 					map.put("desc", "保存失败！");
-					out.println(gson.toJson(map));
+					map.put("data", map2);
+
+					list.add(map);
+
+					out.println(gson.toJson(list));
 					out.flush();
 					out.close();
 				}
 			} else {
 				map.put("result", 0);
 				map.put("desc", "保存失败！");
-				out.println(gson.toJson(map));
+				map.put("data", map2);
+
+				list.add(map);
+
+				out.println(gson.toJson(list));
 				out.flush();
 				out.close();
 			}
 		} else {
 			map.put("result", 2);
 			map.put("desc", "用户信息验证失败！");
-			out.println(gson.toJson(map));
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 			out.flush();
 			out.close();
 		}
@@ -485,7 +575,7 @@ public class WUserHandler implements Serializable {
 			in.close();
 			map.put("result", 1);
 			map.put("desc", "保存成功！");
-			map2.put("", "");
+			//map2.put("", "");
 
 			map.put("data", map2);
 
@@ -531,6 +621,11 @@ public class WUserHandler implements Serializable {
 		} else {
 			map.put("result", 0);
 			map.put("desc", "解析失败！");
+			map.put("data", map2);
+
+			list.add(map);
+
+			out.println(gson.toJson(list));
 		}
 		out.flush();
 		out.close();
