@@ -3,14 +3,15 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.message.MCommentMapper">
-	<!--查看评论-->
+	<!--查看评论 -->
 	<select id="getComments" parameterType="IInformation"
 		resultType="MComment">
 		select * from m_comment where MID in
-		(select mkcommentid from m_message_comment_relation where
+		(select mkcommentid
+		from m_message_comment_relation where
 		MInformationID=#{IID})
 	</select>
-	<!--插入评论-->
+	<!--插入评论 -->
 	<insert id="insertComment" parameterType="MComment">
 		<selectKey keyProperty="MID" keyColumn="MID" resultType="String"
 			order="AFTER">
@@ -18,7 +19,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</selectKey>
 		INSERT INTO matchman.m_comment (MID, MOwnerUser, MTargetUser,
 		MContent, MLikeCount,
-		MCreatedAt, MParent, MParentType, MMessage1, MMessage2, MMessage3)
+		MCreatedAt, MParent, MParentType, MMessage1,
+		MMessage2, MMessage3)
 		#{MID},#{MOwnerUser},#{MTargetUser},
 		#{MContent},#{MLikeCount},#{MCreatedAt},#{MParent},#{MParentType},
 		#{MMessage1},#{MMessage2},#{MMessage3} FROM m_comment
@@ -27,19 +29,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertMessage" parameterType="MMessage">
 		insert into m_message (
 		MID,MContent,MImage,MAdress,MGrade,MDate,MActivateStatus,MGetStatus,MStatus,MMessage1,MMessage2,MMessage3
-		) values(#{MID},#{MContent},#{MImage},#{MAdress},#{MGrade},#{MDate},#{MActivateStatus},#{MGetStatus},#{MStatus},#{MMessage1},#{MMessage2},#{MMessage3})
+		)
+		values(#{MID},#{MContent},#{MImage},#{MAdress},#{MGrade},#{MDate},#{MActivateStatus},#{MGetStatus},#{MStatus},#{MMessage1},#{MMessage2},#{MMessage3})
 	</insert>
-	
-	<!--插入消息评论关系表-->
+
+	<!--插入消息评论关系表 -->
 	<insert id="insertIMC" parameterType="MMessageCommentRelation">
-		INSERT INTO m_message_comment_relation 
+		INSERT INTO
+		m_message_comment_relation
 		(MID, MInformationID, MKMessageID, WKUserID, MKCommentID)
 		#{MID},#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID}
 	</insert>
 	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
 		select * from m_message where MID=#{MID}
 	</select>
-	
+
 	<!-- 根据条件显示热点 -->
 	<select id="paramterMessage" parameterType="MMessage"
 		resultType="java.util.Map">
@@ -53,8 +57,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		resultType="MMessageCommentRelation">
 		select * from m_message_comment_relation where
 		WKUserID=#{MKUserID}
-</select>
+	</select>
 	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
-			select * from m_message where MID=#{MID}
+		select * from m_message where MID=#{MID}
 	</select>
 </mapper>

@@ -3,13 +3,54 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.message.InformationMapper">
+	<!-- 查看公开消息 -->
 	<select id="getPublicNews" parameterType="String" resultType="IInformation">
 		select * from i_information where 1=1 and iadress=#{adress}
 	</select>
 	
 	<insert id="insertPublicNews" parameterType="IInformation">
-		INSERT INTO i_information (IID, IContent, IImage, IAdress, IDate, IStatus, IInformation1, IInformation2, IInformation3) 
-		 select CONCAT('i',(max(SUBSTR(iid,2))+1)),#{IContent},#{IImage},#{IAdress},#{IDate},
-		 #{IStatus},null,null,null from i_information
+		INSERT INTO i_information (IID, IContent, IImage, IAdress, IDate, IStatus, IUserId, IInformation2, IInformation3) 
+		 #{IID},#{IContent},#{IImage},#{IAdress},#{IDate},
+		 #{IStatus},#{IUserId},#{IInformation2},#{IInformation3} from i_information
 	</insert>
+	
+	<!--当前用户或好友查看消息详情：点赞，评论-->
+	<resultMap id="infoMap" type="IInformation">
+		<id column="IID" property="IID" />
+		<result column="IContent" property="IContent" />
+		<result column="IImage" property="IImage" />
+		<result column="IAdress" property="IAdress" />
+		<result column="IDate" property="IDate" />
+		<result column="IStatus" property="IStatus" />
+		<result column="IUserId" property="IUserId" />
+		<collection property="comments" column="MID" ofType="MComment">
+			<id column="MID" property="MID" />
+			<result column="MOwnerUser" property="MOwnerUser" />
+			<result column="MTargetUser" property="MTargetUser" />
+			<result column="MContent" property="MContent" />
+			<result column="MLikeCount" property="MLikeCount" />
+			<result column="MCreatedAt" property="MCreatedAt" />
+			<result column="MParent" property="MParent" />
+			<result column="MParentType" property="MParentType" />
+		</collection>
+		<collection property="praises" column="MID" ofType="MPraise">
+			<id column="MID" property="MID" />
+			<result column="MKUserID" property="MKUserID" />
+			<result column="MKMessageID" property="MKMessageID" />
+		</collection>
+	</resultMap>
+	<select id="getInfoDetails" parameterType="IInformation" resultMap="infoMap">
+		select c.iid,c.icontent,c.iimage,c.iadress,c.idate,c.istatus,c.iuserid,
+c.mid,c.mkuserid,c.mkmessageid,c.mpraise1,c.mpraise2,a.iid,a.mowneruser,a.mtargetuser,a.mcontent,a.mlikecount,
+a.mcreatedAt,a.mparent,a.mparenttype from (select * from i_information i left join m_praise mp on i.iid=mp.MKMessageID where i.iid=#{IID}) c
+		left join 
+		(SELECT MInformationID iid,mc.* from m_comment mc right join
+		(select MKCommentID,MInformationID from m_message_comment_relation where MInformationID=#{IID}) b
+		on mc.mid = b.MKCommentID) a on a.iid=c.iid 
+	</select>
+	
+	<!--当陌生人查看消息详情-->
+	<select id="getInfoDetailsByStrenger" parameterType="IInformation" resultType="IInformation">
+		select * from i_information where iid=#{IID}
+	</select>
 </mapper>
