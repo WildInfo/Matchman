@@ -122,18 +122,18 @@ public class InformationHandler {
 		String content = request.getParameter("content");
 		String parent = request.getParameter("parent");
 		String parentType = request.getParameter("parentType");
-		String id = UUIDUtil.createUUID();
 		try {
-			MComment comment = new MComment(id, publishUser, targetUser, content, 0, 
+			MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0, 
 						sdf.parse(sdf.format(new Date())), parent, parentType, "", "", "");
 			int result = mCommentService.insertComment(comment);
-			MMessageCommentRelation mcr = new MMessageCommentRelation("", parent, "", comment.getMOwnerUser(),
+			MMessageCommentRelation mcr = new MMessageCommentRelation(UUIDUtil.createUUID(), parent, "", comment.getMOwnerUser(),
 					comment.getMID());
 			Map<String, Object> json = new HashMap<String, Object>();
 			Gson gson = new Gson();
 			json.put("result", result);
-			if (result > 0) {
-				int r = mCommentService.insertIMC(mcr);
+			if (result > 0) {//说明评论成功
+				friendShipService.updateHotNum(targetUser, publishUser);//更新该好友的热度
+				int r = mCommentService.insertIMC(mcr);//插入消息评论关系表
 				if (r > 0)
 					json.put("desc", "插入评论成功");
 				else

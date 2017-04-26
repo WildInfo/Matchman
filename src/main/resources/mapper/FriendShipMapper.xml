@@ -11,4 +11,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="addFriend">
 		insert into f_friendship values(#{fid},#{userId},#{friendId},#{addTime},0,null)
 	</insert>
+	
+	<!--更改好友的热度-->
+	<update id="updateHotNum">
+		update f_friendship set fhotnum = fhotnum+1 where fkuserid = #{userId} and fkfriendid = #{friendId}
+	</update>
+	
 </mapper>
