@@ -26,9 +26,31 @@ public class MMessage implements Serializable {
 	private MActivateStatusEnum MActivateStatus;// 消息激活状态
 	private StatusEnum MStatus;// 消息状态
 	private GetStatusEnum MGetStatus;// 消息状态
-	private String MMessage1;// 备用字段1
-	private String MMessage2;// 备用字段2
-	private String MMessage3;// 备用字段3
+	private String MGetUser;// 备用字段1
+	private String MGetNum;// 备用字段2
+	private String MUserGC;// 备用字段3
+
+	public MMessage(String mID, String mContent, String mImage, int mGrade, String mAdress, Date mDate,
+			MActivateStatusEnum mActivateStatus, StatusEnum mStatus, GetStatusEnum mGetStatus, String mGetUser,
+			String mGetNum, String MUserGC) {
+		super();
+		MID = mID;
+		MContent = mContent;
+		MImage = mImage;
+		MGrade = mGrade;
+		MAdress = mAdress;
+		MDate = mDate;
+		MActivateStatus = mActivateStatus;
+		MStatus = mStatus;
+		MGetStatus = mGetStatus;
+		MGetUser = mGetUser;
+		MGetNum = mGetNum;
+		this.MUserGC = MUserGC;
+	}
+
+	public MMessage() {
+		super();
+	}
 
 	public String getMID() {
 		return MID;
@@ -102,28 +124,36 @@ public class MMessage implements Serializable {
 		MGetStatus = mGetStatus;
 	}
 
-	public String getMMessage1() {
-		return MMessage1;
+	public String getMGetUser() {
+		return MGetUser;
 	}
 
-	public void setMMessage1(String mMessage1) {
-		MMessage1 = mMessage1;
+	public void setMGetUser(String MGetUser) {
+		this.MGetUser = MGetUser;
 	}
 
-	public String getMMessage2() {
-		return MMessage2;
+	public String getMGetNum() {
+		return MGetNum;
 	}
 
-	public void setMMessage2(String mMessage2) {
-		MMessage2 = mMessage2;
+	public void setMGetNum(String MGetNum) {
+		this.MGetNum = MGetNum;
 	}
 
-	public String getMMessage3() {
-		return MMessage3;
+	public String getMUserGC() {
+		return MUserGC;
 	}
 
-	public void setMMessage3(String mMessage3) {
-		MMessage3 = mMessage3;
+	public void setMUserGC(String MUserGC) {
+		this.MUserGC = MUserGC;
+	}
+
+	@Override
+	public String toString() {
+		return "MMessage [MID=" + MID + ", MContent=" + MContent + ", MImage=" + MImage + ", MGrade=" + MGrade
+				+ ", MAdress=" + MAdress + ", MDate=" + MDate + ", MActivateStatus=" + MActivateStatus + ", MStatus="
+				+ MStatus + ", MGetStatus=" + MGetStatus + ", MGetUser=" + MGetUser + ", MGetNum=" + MGetNum
+				+ ", MUserGC=" + MUserGC + "]";
 	}
 
 }
