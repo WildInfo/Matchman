@@ -128,6 +128,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<!-- dbcp2数据源的jar包 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -235,7 +236,6 @@
 			<artifactId>jmagick</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<finalName>matchman_GC_Java</finalName>

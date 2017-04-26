@@ -16,16 +16,21 @@ public class MMessageCommentRelation implements Serializable {
 	private String MInformationID;// 消息ID
 	private String MKMessageID;// 热点ID
 	private String MKUserID;// 用户ID
+	private String MKUserGC;// 当前用户GC号
 	private String MKCommentID;// 评论ID
 
 	public MMessageCommentRelation(String mID, String mInformationID, String mKMessageID, String mKUserID,
-			String mKCommentID) {
+			String mKUserGC, String mKCommentID) {
 		super();
 		MID = mID;
 		MInformationID = mInformationID;
 		MKMessageID = mKMessageID;
 		MKUserID = mKUserID;
+		MKUserGC = mKUserGC;
 		MKCommentID = mKCommentID;
+	}
+
+	public MMessageCommentRelation() {
 	}
 
 	public String getMID() {
@@ -34,6 +39,14 @@ public class MMessageCommentRelation implements Serializable {
 
 	public void setMID(String mID) {
 		MID = mID;
+	}
+
+	public String getMInformationID() {
+		return MInformationID;
+	}
+
+	public void setMInformationID(String mInformationID) {
+		MInformationID = mInformationID;
 	}
 
 	public String getMKMessageID() {
@@ -52,20 +65,20 @@ public class MMessageCommentRelation implements Serializable {
 		MKUserID = mKUserID;
 	}
 
+	public String getMKUserGC() {
+		return MKUserGC;
+	}
+
+	public void setMKUserGC(String mKUserGC) {
+		MKUserGC = mKUserGC;
+	}
+
 	public String getMKCommentID() {
 		return MKCommentID;
 	}
 
 	public void setMKCommentID(String mKCommentID) {
 		MKCommentID = mKCommentID;
-	}
-
-	public String getMInformationID() {
-		return MInformationID;
-	}
-
-	public void setMInformationID(String mInformationID) {
-		MInformationID = mInformationID;
 	}
 
 }

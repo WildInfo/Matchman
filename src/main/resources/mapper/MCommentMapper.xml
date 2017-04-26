@@ -3,11 +3,12 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.message.MCommentMapper">
-	<!--查看评论-->
+	<!--查看评论 -->
 	<select id="getComments" parameterType="IInformation"
 		resultType="MComment">
 		select * from m_comment where MID in
-		(select mkcommentid from m_message_comment_relation where
+		(select mkcommentid
+		from m_message_comment_relation where
 		MInformationID=#{IID})
 	</select>
 	<!--插入评论-->
@@ -19,21 +20,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{MContent},#{MLikeCount},#{MCreatedAt},#{MParent},#{MParentType},
 		#{MMessage1},#{MMessage2},#{MMessage3})
 	</insert>
-
+	<!--插入热点 -->
 	<insert id="insertMessage" parameterType="MMessage">
 		insert into m_message (
-		MID,MContent,MImage,MAdress,MGrade,MDate,MActivateStatus,MGetStatus,MStatus,MMessage1,MMessage2,MMessage3
-		) values(#{MID},#{MContent},#{MImage},#{MAdress},#{MGrade},#{MDate},#{MActivateStatus},#{MGetStatus},#{MStatus},#{MMessage1},#{MMessage2},#{MMessage3})
+		MID,MContent,MImage,MAdress,MGrade,MDate,MActivateStatus,MGetStatus,MStatus,MGetUser,MGetNum,MUserGC
+		)
+		values(#{MID},#{MContent},#{MImage},#{MAdress},#{MGrade},#{MDate},#{MActivateStatus},#{MGetStatus},#{MStatus},#{MGetUser},#{MGetNum},#{MUserGC})
 	</insert>
-	
-	<!--插入消息评论关系表-->
+
+	<!--插入消息评论关系表 -->
 	<insert id="insertIMC" parameterType="MMessageCommentRelation">
 		INSERT INTO m_message_comment_relation 
 		(MID, MInformationID, MKMessageID, WKUserID, MKCommentID) 
 		values
 		(#{MID},#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID})
 	</insert>
+
+	<!-- 根据条件显示热点 -->
+	<select id="paramterMessage" parameterType="MMessage"
+		resultType="java.util.Map">
+		select * from m_message where MStatus='normal'
+		<if test="MActivateStatus != null">
+			AND MActivateStatus = #{MActivateStatus}
+		</if>
+		<if test="MID != null">
+			AND MID = #{MID}
+		</if>
+	</select>
+
+	<!--根据用户id查询热点信息 -->
+	<select id="messageRelation" parameterType="MMessageCommentRelation"
+		resultType="MMessageCommentRelation">
+		select * from m_message_comment_relation where
+		WKUserID=#{MKUserID}
+	</select>
+	
+	<!--根据热点id查询热点信息 -->
 	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
-			select * from m_message where MID=#{MID}
+		select * from m_message where MID=#{MID}
 	</select>
 </mapper>

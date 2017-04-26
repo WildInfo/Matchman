@@ -1,6 +1,7 @@
 package com.wild.service.impl.message;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,18 @@ public class MCommentServiceImpl implements MCommentService {
 	}
 
 	@Override
-	public List<MMessage> selectMessage(MMessage message) {
+	public MMessage selectMessage(MMessage message) {
 		return commentMapper.selectMessage(message);
+	}
+
+	@Override
+	public List<MMessage> paramterMessage(Map<String, Object> params) {
+		return commentMapper.paramterMessage(params);
+	}
+
+	@Override
+	public List<MMessageCommentRelation> messageRelation(MMessageCommentRelation commentRelation) {
+		return commentMapper.messageRelation(commentRelation);
 	}
 
 }

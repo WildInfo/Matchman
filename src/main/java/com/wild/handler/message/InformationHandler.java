@@ -77,7 +77,6 @@ public class InformationHandler {
 			String userid = user.getWGCNum();
 			IInformation info = new IInformation(id, iContent, iImage, address, sdf.parse(sdf.format(new Date())),
 					StatusEnum.normal, userid, "", "");
-			System.out.println(info);
 			int result = informationService.insertPublicNews(info);
 			Map<String,Object> json = new HashMap<String,Object>();
 			Gson gson = new Gson();
@@ -126,7 +125,7 @@ public class InformationHandler {
 			MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0, 
 						sdf.parse(sdf.format(new Date())), parent, parentType, "", "", "");
 			int result = mCommentService.insertComment(comment);
-			MMessageCommentRelation mcr = new MMessageCommentRelation(UUIDUtil.createUUID(), parent, "", comment.getMOwnerUser(),
+			MMessageCommentRelation mcr = new MMessageCommentRelation("", parent, "", comment.getMOwnerUser(),"",
 					comment.getMID());
 			Map<String, Object> json = new HashMap<String, Object>();
 			Gson gson = new Gson();
