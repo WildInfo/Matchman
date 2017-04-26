@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.wild.entity.user.FriendShip;
-import com.wild.entity.user.WUser;
 
 public interface FriendShipService {
 	

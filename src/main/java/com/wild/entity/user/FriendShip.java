@@ -18,7 +18,7 @@ public class FriendShip {
 		FKUserID = fKUserID;
 		FKFriendID = fKFriendID;
 		FCreatedAt = fCreatedAt;
-		FHotNum = FHotNum;
+		this.FHotNum = FHotNum;
 		FFriend2 = fFriend2;
 	}
 
@@ -63,7 +63,7 @@ public class FriendShip {
 	}
 
 	public void setFHotNum(String FHotNum) {
-		FHotNum = FHotNum;
+		this.FHotNum = FHotNum;
 	}
 
 	public String getFFriend2() {
