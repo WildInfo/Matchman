@@ -1,6 +1,7 @@
 package com.wild.service.message;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wild.entity.message.IInformation;
 import com.wild.entity.message.MComment;
@@ -46,6 +47,22 @@ public interface MCommentService {
 	 * @param message
 	 * @return
 	 */
-	public List<MMessage> selectMessage(MMessage message);
+	public MMessage selectMessage(MMessage message);
+
+	/**
+	 * 根据条件显示热点
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public List<MMessage> paramterMessage(Map<String, Object> params);
+
+	/**
+	 * 查看热点
+	 * 
+	 * @param commentRelation
+	 * @return
+	 */
+	public List<MMessageCommentRelation> messageRelation(MMessageCommentRelation commentRelation);
 
 }

@@ -3,13 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.message.MCommentMapper">
+	<!--查看评论-->
 	<select id="getComments" parameterType="IInformation"
 		resultType="MComment">
 		select * from m_comment where MID in
 		(select mkcommentid from m_message_comment_relation where
 		MInformationID=#{IID})
 	</select>
-
+	<!--插入评论-->
 	<insert id="insertComment" parameterType="MComment">
 		<selectKey keyProperty="MID" keyColumn="MID" resultType="String"
 			order="AFTER">
@@ -18,19 +19,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		INSERT INTO matchman.m_comment (MID, MOwnerUser, MTargetUser,
 		MContent, MLikeCount,
 		MCreatedAt, MParent, MParentType, MMessage1, MMessage2, MMessage3)
-		select
-		CONCAT('c',max(substr(mid,2))+1),#{MOwnerUser},#{MTargetUser},
+		#{MID},#{MOwnerUser},#{MTargetUser},
 		#{MContent},#{MLikeCount},#{MCreatedAt},#{MParent},#{MParentType},
 		#{MMessage1},#{MMessage2},#{MMessage3} FROM m_comment
-	</insert>
-
-	<insert id="insertIMC" parameterType="MMessageCommentRelation">
-		INSERT INTO
-		m_message_comment_relation
-		(MID, MInformationID, MKMessageID, WKUserID, MKCommentID)
-		select
-		CONCAT('mc',max(substr(mid,3))+1),#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID}
-		from m_message_comment_relation
 	</insert>
 
 	<insert id="insertMessage" parameterType="MMessage">
@@ -39,6 +30,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		) values(#{MID},#{MContent},#{MImage},#{MAdress},#{MGrade},#{MDate},#{MActivateStatus},#{MGetStatus},#{MStatus},#{MMessage1},#{MMessage2},#{MMessage3})
 	</insert>
 	
+	<!--插入消息评论关系表-->
+	<insert id="insertIMC" parameterType="MMessageCommentRelation">
+		INSERT INTO m_message_comment_relation 
+		(MID, MInformationID, MKMessageID, WKUserID, MKCommentID)
+		#{MID},#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID}
+	</insert>
+	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
+		select * from m_message where MID=#{MID}
+	</select>
+	
+	<!-- 根据条件显示热点 -->
+	<select id="paramterMessage" parameterType="MMessage"
+		resultType="java.util.Map">
+		select * from m_message where MStatus='normal'
+		<if test="MActivateStatus != null">
+			AND MActivateStatus = #{MActivateStatus}
+		</if>
+	</select>
+	<!--根据用户id查询热点信息 -->
+	<select id="messageRelation" parameterType="MMessageCommentRelation"
+		resultType="MMessageCommentRelation">
+		select * from m_message_comment_relation where
+		WKUserID=#{MKUserID}
+</select>
 	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
 			select * from m_message where MID=#{MID}
 	</select>

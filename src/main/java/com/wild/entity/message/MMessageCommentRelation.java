@@ -28,6 +28,9 @@ public class MMessageCommentRelation implements Serializable {
 		MKCommentID = mKCommentID;
 	}
 
+	public MMessageCommentRelation() {
+	}
+
 	public String getMID() {
 		return MID;
 	}

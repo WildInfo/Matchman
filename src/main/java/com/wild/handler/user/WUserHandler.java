@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +39,7 @@ import com.wild.enums.message.StatusEnum;
 import com.wild.enums.user.AgeEnum;
 import com.wild.enums.user.SexEnum;
 import com.wild.enums.user.UserVersioniEnum;
+import com.wild.service.user.FriendShipService;
 import com.wild.service.user.WUserService;
 import com.wild.utils.SessionAttribute;
 import com.wild.utils.UUIDUtil;
@@ -54,7 +58,10 @@ public class WUserHandler implements Serializable {
 
 	@Autowired
 	private WUserService userService;
-
+	
+	@Autowired
+	private FriendShipService friendShipService;
+	
 	/**
 	 * 注册
 	 * 
@@ -232,7 +239,7 @@ public class WUserHandler implements Serializable {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out,
-			HttpSession session) {
+			HttpSession session,ModelMap modelMap) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -248,6 +255,7 @@ public class WUserHandler implements Serializable {
 			List<WUser> users = userService.login(userLogin);// 登录
 			if (users.size() > 0) {
 				session.setAttribute(SessionAttribute.USERLOGIN, users.get(0));
+				modelMap.addAttribute(SessionAttribute.USERLOGIN,users.get(0));
 				WUser userJson = new WUser();
 
 				userJson.setWGCNum(users.get(0).getWGCNum());
@@ -647,6 +655,30 @@ public class WUserHandler implements Serializable {
 		String encoderContent = "Welcome to Watchman!" + gcNum;
 		QRCodeOP handler = new QRCodeOP();
 		handler.encoderQRCode(encoderContent, imgPath, "png");
+	}
+	
+	/**
+	 * 添加好友
+	 * @param out
+	 * @throws ParseException 
+	 */
+	@RequestMapping(value="addFriend",method=RequestMethod.GET)
+	public void addFriend(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,@RequestParam("friendId")String friendId,
+			PrintWriter out) throws ParseException{
+		String fid = UUIDUtil.createUUID();
+		String userId = user.getWGCNum();
+		int result = friendShipService.addFriend(fid, userId, friendId, sdf.parse(sdf.format(new Date())));
+		Map<String, Object> jsonMap = new HashMap<String,Object>();
+		jsonMap.put("result", result);
+		if(result>0){
+			jsonMap.put("desc", "添加好友成功");
+		}else{
+			jsonMap.put("desc", "添加好友失败");
+		}
+		Gson gson = new Gson();
+		out.print(gson.toJson(jsonMap));
+		out.flush();
+		out.close();
 	}
 
 }

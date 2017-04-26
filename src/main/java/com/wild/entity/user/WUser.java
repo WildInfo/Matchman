@@ -27,6 +27,7 @@ public class WUser implements Serializable {
 	private StatusEnum WStatus;// 用户状态
 	private UserVersioniEnum WSuperManager;// 用户角色
 
+	
 	public WUser(String wID, String wGCNum, String wNickName, int wSex, String wUserNum, String wPassWord, int wAge,
 			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager) {
 		super();
@@ -132,5 +133,4 @@ public class WUser implements Serializable {
 				+ ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord + ", WAge=" + WAge + ", WDate=" + WDate
 				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
 	}
-
 }
