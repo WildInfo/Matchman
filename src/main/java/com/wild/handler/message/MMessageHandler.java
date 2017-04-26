@@ -54,7 +54,6 @@ public class MMessageHandler {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		List<Map<String, Object>> list = new ArrayList<>();
 		String tokenId = request.getParameter("tokenId");// 用户id
 		String currency = request.getParameter("currency");// 游戏币数量
 		String contents = "";// 热点内容
@@ -76,7 +75,7 @@ public class MMessageHandler {
 
 			int messageResult = commentService.insertMessage(message);// 插入热点
 			MMessageCommentRelation commentRelation = new MMessageCommentRelation(UUIDUtil.createUUID(), null,
-					message.getMID(), tokenId, null);
+					message.getMID(), null,tokenId, null);
 			int commentRelationResult = commentService.insertIMC(commentRelation);// 添加热点与用户关系
 			if ((messageResult > 0) && (commentRelationResult > 0)) {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
@@ -88,9 +87,7 @@ public class MMessageHandler {
 				map.put("desc", "添加成功!");
 				map.put("data", map2);
 
-				list.add(map);
-
-				out.println(gson.toJson(list));
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			} else {
@@ -98,9 +95,7 @@ public class MMessageHandler {
 				map.put("desc", "添加失败!");
 				map.put("data", map2);
 
-				list.add(map);
-
-				out.println(gson.toJson(list));
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			}
@@ -121,7 +116,6 @@ public class MMessageHandler {
 		WDetails details = new WDetails();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		List<Map<String, Object>> list = new ArrayList<>();
 		String tokenId = request.getParameter("tokenId");// 用户id
 		if (StringUtils.isNotBlank(tokenId)) {
 			detailsRelation.setWKUserID(tokenId);
@@ -140,9 +134,7 @@ public class MMessageHandler {
 				map.put("desc", "查询成功!");
 				map.put("data", map2);
 
-				list.add(map);
-
-				out.println(gson.toJson(list));
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			} else {
@@ -150,9 +142,7 @@ public class MMessageHandler {
 				map.put("desc", "查询失败!");
 				map.put("data", map2);
 
-				list.add(map);
-
-				out.println(gson.toJson(list));
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			}
@@ -161,9 +151,7 @@ public class MMessageHandler {
 			map.put("desc", "查询失败!");
 			map.put("data", map2);
 
-			list.add(map);
-
-			out.println(gson.toJson(list));
+			out.println(gson.toJson(map));
 			out.flush();
 			out.close();
 		}
@@ -181,9 +169,6 @@ public class MMessageHandler {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		Map<String, Object> map3 = new HashMap<String, Object>();
-		List<Map<String, Object>> list = new ArrayList<>();
-		List<Map<String, Object>> list2 = new ArrayList<>();
 		MMessageCommentRelation messageRelation = new MMessageCommentRelation();
 		String tokenId = request.getParameter("tokenId");// 用户id
 		if (StringUtils.isNotBlank(tokenId)) {
@@ -194,16 +179,13 @@ public class MMessageHandler {
 					MMessage message = new MMessage();
 					message.setMID(messageUser.get(i).getMKMessageID());
 					MMessage messageDetails = commentService.selectMessage(message);// 根据热点id查询热点
-					map3.put("message" + i + "", messageDetails);
+					map2.put("message" + i + "", messageDetails);
 				}
 				map.put("result", 1);
 				map.put("desc", "查询成功!");
-				map.put("data", list2);
-				list2.add(map3);
+				map.put("data", map2);
 
-				list.add(map);
-
-				out.println(gson.toJson(list));
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			} else {
@@ -211,13 +193,94 @@ public class MMessageHandler {
 				map.put("desc", "查询失败!");
 				map.put("data", map2);
 
-				list.add(map);
-
-				out.println(gson.toJson(list));
+				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
 			}
 		}
 	}
 
+	/**
+	 * 显示热点详情
+	 * 
+	 * @param out
+	 * @param session
+	 * @param request
+	 */
+	@RequestMapping("/deDailsMessage")
+	public void deDailsMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
+		Gson gson = new Gson();
+		MMessage message = new MMessage();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		String tokenId = request.getParameter("tokenId");// 热点id
+		if (StringUtils.isNotBlank(tokenId)) {
+			message.setMID(tokenId);
+			MMessage messageResult = commentService.selectMessage(message);
+			if (null != messageResult) {
+				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
+
+				map2.put("messageinfo", messageJson);
+				map2.put("tokenId", message.getMID());
+
+				map.put("result", 1);
+				map.put("desc", "查询成功!");
+				map.put("data", map2);
+
+				out.println(gson.toJson(map));
+				out.flush();
+				out.close();
+			} else {
+				map.put("result", 0);
+				map.put("desc", "查询失败!");
+				map.put("data", map2);
+
+				out.println(gson.toJson(map));
+				out.flush();
+				out.close();
+			}
+		}
+	}
+
+	/**
+	 * 领取热点
+	 * 
+	 * @param out
+	 * @param session
+	 * @param request
+	 */
+	@RequestMapping("/recviedMessage")
+	public void recviedMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
+		Gson gson = new Gson();
+		MMessage message = new MMessage();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		String tokenId = request.getParameter("tokenId");// 热点id
+		if (StringUtils.isNotBlank(tokenId)) {
+			message.setMID(tokenId);
+			MMessage messageResult = commentService.selectMessage(message);
+			if (null != messageResult) {
+				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
+
+				map2.put("messageinfo", messageJson);
+				map2.put("tokenId", message.getMID());
+
+				map.put("result", 1);
+				map.put("desc", "查询成功!");
+				map.put("data", map2);
+
+				out.println(gson.toJson(map));
+				out.flush();
+				out.close();
+			} else {
+				map.put("result", 0);
+				map.put("desc", "查询失败!");
+				map.put("data", map2);
+
+				out.println(gson.toJson(map));
+				out.flush();
+				out.close();
+			}
+		}
+	}
 }

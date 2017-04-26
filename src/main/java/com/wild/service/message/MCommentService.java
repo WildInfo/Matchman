@@ -64,5 +64,5 @@ public interface MCommentService {
 	 * @return
 	 */
 	public List<MMessageCommentRelation> messageRelation(MMessageCommentRelation commentRelation);
-
+	
 }
