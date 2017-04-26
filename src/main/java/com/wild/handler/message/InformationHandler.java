@@ -37,7 +37,7 @@ import com.wild.utils.UUIDUtil;
 public class InformationHandler {
 	@Autowired
 	private InformationService informationService;
-	
+
 	@Autowired
 	private MCommentService mCommentService;
 	
@@ -45,23 +45,24 @@ public class InformationHandler {
 	private FriendShipService friendShipService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-	
+
 	/**
 	 * 查询公开信息
+	 * 
 	 * @param map
 	 * @param out
 	 * @param request
 	 * @param response
 	 */
 	@RequestMapping("/getInfos")
-	public void getPublicNews(ModelMap map,PrintWriter out,HttpServletRequest request,HttpServletResponse response){
+	public void getPublicNews(ModelMap map, PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
 		List<IInformation> infos = informationService.getPublicNews("湖南工学院");
 		Gson gson = new Gson();
 		out.print(gson.toJson(infos));
 		out.flush();
 		out.close();
 	}
-	
+
 	/**
 	 * 插入公开信息
 	 */
@@ -93,12 +94,13 @@ public class InformationHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 查询评论
 	 */
-	@RequestMapping(value="/getComments",method=RequestMethod.GET)
-	public void getComments(@RequestParam("iid")String iid, ModelMap map,PrintWriter out,HttpServletRequest request){
+	@RequestMapping(value = "/getComments", method = RequestMethod.GET)
+	public void getComments(@RequestParam("iid") String iid, ModelMap map, PrintWriter out,
+			HttpServletRequest request) {
 		IInformation information = new IInformation();
 		information.setIID(iid);
 		List<MComment> infos = mCommentService.getComments(information);
@@ -106,14 +108,15 @@ public class InformationHandler {
 		out.flush();
 		out.close();
 	}
-	
+
 	/**
 	 * 插入评论
+	 * 
 	 * @param map
 	 * @param out
 	 */
-	@RequestMapping(value="/insertComment",method=RequestMethod.GET)
-	public void insertComment(ModelMap map,PrintWriter out,HttpServletRequest request){
+	@RequestMapping(value = "/insertComment", method = RequestMethod.GET)
+	public void insertComment(ModelMap map, PrintWriter out, HttpServletRequest request) {
 		String publishUser = request.getParameter("publishUser");
 		String targetUser = request.getParameter("targetUser");
 		String content = request.getParameter("content");
@@ -124,17 +127,18 @@ public class InformationHandler {
 			MComment comment = new MComment(id, publishUser, targetUser, content, 0, 
 						sdf.parse(sdf.format(new Date())), parent, parentType, "", "", "");
 			int result = mCommentService.insertComment(comment);
-			MMessageCommentRelation mcr = new MMessageCommentRelation("", parent, "", comment.getMOwnerUser(), comment.getMID());
+			MMessageCommentRelation mcr = new MMessageCommentRelation("", parent, "", comment.getMOwnerUser(),
+					comment.getMID());
 			Map<String, Object> json = new HashMap<String, Object>();
 			Gson gson = new Gson();
 			json.put("result", result);
-			if(result>0){
+			if (result > 0) {
 				int r = mCommentService.insertIMC(mcr);
-				if(r>0)
+				if (r > 0)
 					json.put("desc", "插入评论成功");
 				else
 					json.put("desc", "插入评论失败");
-			}else{
+			} else {
 				json.put("desc", "插入评论失败");
 			}
 			out.println(gson.toJson(json));
@@ -142,7 +146,7 @@ public class InformationHandler {
 			out.close();
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}	
+		}
 	}
 	
 	/**

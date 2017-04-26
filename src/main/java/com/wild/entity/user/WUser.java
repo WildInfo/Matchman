@@ -133,5 +133,4 @@ public class WUser implements Serializable {
 				+ ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord + ", WAge=" + WAge + ", WDate=" + WDate
 				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
 	}
-
 }

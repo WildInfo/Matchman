@@ -1,5 +1,6 @@
 package com.wild.service.impl.user;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,11 @@ public class FriendShipServiceImpl implements FriendShipService {
 	@Override
 	public List<FriendShip> getFriends(String userid) {
 		return friendShipMapper.getFriends(userid);
+	}
+
+	@Override
+	public int addFriend(String fid, String userId, String friendId, Date addTime) {
+		return friendShipMapper.addFriend(fid, userId, friendId, addTime);
 	}
 
 }

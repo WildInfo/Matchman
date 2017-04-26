@@ -8,17 +8,17 @@ public class FriendShip {
 	private String FKUserID;
 	private String FKFriendID;
 	private Date FCreatedAt;
-	private String FFriend1;
+	private String FHotNum;
 	private String FFriend2;
 	
-	public FriendShip(String fID, String fKUserID, String fKFriendID, Date fCreatedAt, String fFriend1,
+	public FriendShip(String fID, String fKUserID, String fKFriendID, Date fCreatedAt, String FHotNum,
 			String fFriend2) {
 		super();
 		FID = fID;
 		FKUserID = fKUserID;
 		FKFriendID = fKFriendID;
 		FCreatedAt = fCreatedAt;
-		FFriend1 = fFriend1;
+		FHotNum = FHotNum;
 		FFriend2 = fFriend2;
 	}
 
@@ -58,12 +58,12 @@ public class FriendShip {
 		FCreatedAt = fCreatedAt;
 	}
 
-	public String getFFriend1() {
-		return FFriend1;
+	public String getFHotNum() {
+		return FHotNum;
 	}
 
-	public void setFFriend1(String fFriend1) {
-		FFriend1 = fFriend1;
+	public void setFHotNum(String FHotNum) {
+		FHotNum = FHotNum;
 	}
 
 	public String getFFriend2() {
@@ -77,7 +77,7 @@ public class FriendShip {
 	@Override
 	public String toString() {
 		return "FriendShip [FID=" + FID + ", FKUserID=" + FKUserID + ", FKFriendID=" + FKFriendID + ", FCreatedAt="
-				+ FCreatedAt + ", FFriend1=" + FFriend1 + ", FFriend2=" + FFriend2 + "]";
+				+ FCreatedAt + ", FHotNum=" + FHotNum + ", FFriend2=" + FFriend2 + "]";
 	}
 	
 }
