@@ -26,4 +26,11 @@ public interface FriendShipMapper {
 	 */
 	public int addFriend(@Param("fid")String fid,@Param("userId")String userId,@Param("friendId")String friendId,@Param("addTime")Date addTime);
 	
+	/**
+	 * 更改好友热度
+	 * @param userId：用户GC号
+	 * @param friendId：好友GC号
+	 * @return
+	 */
+	public int updateHotNum(@Param("userId")String userId,@Param("friendId")String friendId);
 }

@@ -25,4 +25,9 @@ public class FriendShipServiceImpl implements FriendShipService {
 	public int addFriend(String fid, String userId, String friendId, Date addTime) {
 		return friendShipMapper.addFriend(fid, userId, friendId, addTime);
 	}
+
+	@Override
+	public int updateHotNum(String userId, String friendId) {
+		return friendShipMapper.updateHotNum(userId, friendId);
+	}
 }
