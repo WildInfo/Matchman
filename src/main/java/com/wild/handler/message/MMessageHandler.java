@@ -2,7 +2,6 @@ package com.wild.handler.message;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +74,7 @@ public class MMessageHandler {
 
 			int messageResult = commentService.insertMessage(message);// 插入热点
 			MMessageCommentRelation commentRelation = new MMessageCommentRelation(UUIDUtil.createUUID(), null,
-					message.getMID(), null,tokenId, null);
+					message.getMID(), tokenId,null, null);
 			int commentRelationResult = commentService.insertIMC(commentRelation);// 添加热点与用户关系
 			if ((messageResult > 0) && (commentRelationResult > 0)) {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
