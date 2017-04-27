@@ -82,8 +82,10 @@ public class InformationHandler {
 			Gson gson = new Gson();
 			json.put("result", result);
 			if(result>0){
+				json.put("result", 1);
 				json.put("desc", "发布消息成功");
 			}else{
+				json.put("result", 0);
 				json.put("desc", "发布消息失败");
 			}
 			out.print(gson.toJson(json));
