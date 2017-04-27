@@ -40,10 +40,10 @@ public class InformationHandler {
 
 	@Autowired
 	private MCommentService mCommentService;
-	
+
 	@Autowired
 	private FriendShipService friendShipService;
-	
+
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
 	/**
@@ -56,7 +56,7 @@ public class InformationHandler {
 	 */
 	@RequestMapping("/getInfos")
 	public void getPublicNews(ModelMap map, PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-		List<IInformation> infos = informationService.getPublicNews("湖南工学院");
+		List<IInformation> infos = informationService.getPublicNews("adress");
 		Gson gson = new Gson();
 		out.print(gson.toJson(infos));
 		out.flush();
@@ -66,8 +66,8 @@ public class InformationHandler {
 	/**
 	 * 插入公开信息
 	 */
-	@RequestMapping(value="/insertInfo",method=RequestMethod.GET)
-	public void insertInfo(ModelMap map,PrintWriter out,HttpServletRequest request,HttpSession session){
+	@RequestMapping(value = "/insertInfo", method = RequestMethod.GET)
+	public void insertInfo(ModelMap map, PrintWriter out, HttpServletRequest request, HttpSession session) {
 		String iContent = request.getParameter("iContent");
 		String iImage = request.getParameter("iImage");
 		String address = request.getParameter("address");
@@ -78,14 +78,12 @@ public class InformationHandler {
 			IInformation info = new IInformation(id, iContent, iImage, address, sdf.parse(sdf.format(new Date())),
 					StatusEnum.normal, userid, "", "");
 			int result = informationService.insertPublicNews(info);
-			Map<String,Object> json = new HashMap<String,Object>();
+			Map<String, Object> json = new HashMap<String, Object>();
 			Gson gson = new Gson();
 			json.put("result", result);
-			if(result>0){
-				json.put("result", 1);
+			if (result > 0) {
 				json.put("desc", "发布消息成功");
-			}else{
-				json.put("result", 0);
+			} else {
 				json.put("desc", "发布消息失败");
 			}
 			out.print(gson.toJson(json));
@@ -124,17 +122,17 @@ public class InformationHandler {
 		String parent = request.getParameter("parent");
 		String parentType = request.getParameter("parentType");
 		try {
-			MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0, 
-						sdf.parse(sdf.format(new Date())), parent, parentType, "", "", "");
+			MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0,
+					sdf.parse(sdf.format(new Date())), parent, parentType, "", "", "");
 			int result = mCommentService.insertComment(comment);
-			MMessageCommentRelation mcr = new MMessageCommentRelation("", parent, "", comment.getMOwnerUser(),"",
+			MMessageCommentRelation mcr = new MMessageCommentRelation("", parent, "", comment.getMOwnerUser(), "",
 					comment.getMID());
 			Map<String, Object> json = new HashMap<String, Object>();
 			Gson gson = new Gson();
 			json.put("result", result);
-			if (result > 0) {//说明评论成功
-				friendShipService.updateHotNum(targetUser, publishUser);//更新该好友的热度
-				int r = mCommentService.insertIMC(mcr);//插入消息评论关系表
+			if (result > 0) {// 说明评论成功
+				friendShipService.updateHotNum(targetUser, publishUser);// 更新该好友的热度
+				int r = mCommentService.insertIMC(mcr);// 插入消息评论关系表
 				if (r > 0)
 					json.put("desc", "插入评论成功");
 				else
@@ -149,40 +147,49 @@ public class InformationHandler {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 获取信息详情
+	 * 
 	 * @param map
 	 * @param out
 	 * @param request
 	 */
-	@RequestMapping(value="/getInfoDetail",method=RequestMethod.GET)
-	public void getInfoDetail(ModelMap map,PrintWriter out,HttpServletRequest request,HttpSession session){
-		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);  //当前登陆用户
-		System.out.println(user);
-		String iid = request.getParameter("IID");  //消息ID
-		String userid = request.getParameter("IUserId");   //发的消息的用户ID
-		List<FriendShip> friends = friendShipService.getFriends(userid);   //要查看的消息的用户的好友
+	@RequestMapping(value = "/getInfoDetail", method = RequestMethod.GET)
+	public void getInfoDetail(ModelMap map, PrintWriter out, HttpServletRequest request, HttpSession session) {
+		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN); // 当前登陆用户
+		Map<String, Object> json = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		String iid = request.getParameter("IID"); // 消息ID
+		String userid = request.getParameter("IUserId"); // 发的消息的用户ID
+		List<FriendShip> friends = friendShipService.getFriends(userid); // 要查看的消息的用户的好友
 		IInformation information = new IInformation();
 		information.setIID(iid);
 		information.setIUserId(userid);
-		//判断当前用户是否是要查看的信息的用户的好友
+		// 判断当前用户是否是要查看的信息的用户的好友
 		boolean isFriend = false;
 		List<IInformation> infos;
-		for(FriendShip fs:friends){
-			if(fs.getFKFriendID().equals(user.getWGCNum())){
+		for (FriendShip fs : friends) {
+			if (fs.getFKFriendID().equals(user.getWGCNum())) {
 				isFriend = true;
 				break;
 			}
 		}
-		if(userid.equals(user.getWGCNum()) || isFriend){//该条信息是否是当前用户发送的或查看的用户是该条消息的好友
+
+		if (userid.equals(user.getWGCNum()) || isFriend) {// 该条信息是否是当前用户发送的或查看的用户是该条消息的好友
 			infos = informationService.getInfoDetails(information);
-		}else{//说明是陌生人
+			json.put("result", 1);
+			json.put("desc", "查看成功");
+			json.put("data", infos);
+		} else {// 说明是陌生人
 			infos = informationService.getInfoDetailsByStrenger(information);
+			json.put("result", 1);
+			json.put("desc", "查看成功");
+			json.put("data", infos);
 		}
-		out.print(infos);
+		out.print(gson.toJson(json));
 		out.flush();
 		out.close();
 	}
-	
+
 }
