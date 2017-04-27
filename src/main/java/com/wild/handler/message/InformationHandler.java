@@ -116,16 +116,16 @@ public class InformationHandler {
 	 */
 	@RequestMapping(value = "/insertComment", method = RequestMethod.GET)
 	public void insertComment(ModelMap map, PrintWriter out, HttpServletRequest request) {
-		String publishUser = request.getParameter("publishUser");
-		String targetUser = request.getParameter("targetUser");
-		String content = request.getParameter("content");
-		String parent = request.getParameter("parent");
-		String parentType = request.getParameter("parentType");
+		String publishUser = request.getParameter("publishUser");// 发布评论的那个用户的gc号
+		String targetUser = request.getParameter("targetUser");// 被评论的那个用户的gc号
+		String content = request.getParameter("content");// 评论内容
+		String parent = request.getParameter("parent");// 被评论的消息ID
+		String parentType = request.getParameter("parentType");// 消息类型（发送或接收）
 		try {
 			MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0,
 					sdf.parse(sdf.format(new Date())), parent, parentType, "", "", "");
 			int result = mCommentService.insertComment(comment);
-			MMessageCommentRelation mcr = new MMessageCommentRelation("", parent, "", comment.getMOwnerUser(), "",
+			MMessageCommentRelation mcr = new MMessageCommentRelation(UUIDUtil.createUUID(), parent, "", comment.getMOwnerUser(), "",
 					comment.getMID());
 			Map<String, Object> json = new HashMap<String, Object>();
 			Gson gson = new Gson();
@@ -134,11 +134,11 @@ public class InformationHandler {
 				friendShipService.updateHotNum(targetUser, publishUser);// 更新该好友的热度
 				int r = mCommentService.insertIMC(mcr);// 插入消息评论关系表
 				if (r > 0)
-					json.put("desc", "插入评论成功");
+					json.put("desc", "评论成功");
 				else
-					json.put("desc", "插入评论失败");
+					json.put("desc", "评论失败");
 			} else {
-				json.put("desc", "插入评论失败");
+				json.put("desc", "评论失败");
 			}
 			out.println(gson.toJson(json));
 			out.flush();
@@ -161,8 +161,8 @@ public class InformationHandler {
 		Map<String, Object> json = new HashMap<String, Object>();
 		Gson gson = new Gson();
 		String iid = request.getParameter("IID"); // 消息ID
-		String userid = request.getParameter("IUserId"); // 发的消息的用户ID
-		List<FriendShip> friends = friendShipService.getFriends(userid); // 要查看的消息的用户的好友
+		String userid = request.getParameter("IUserId"); // 发消息的用户ID
+		List<FriendShip> friends = friendShipService.getFriends(userid); 
 		IInformation information = new IInformation();
 		information.setIID(iid);
 		information.setIUserId(userid);
