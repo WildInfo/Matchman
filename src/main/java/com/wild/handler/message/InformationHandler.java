@@ -24,11 +24,13 @@ import com.wild.entity.message.IInformation;
 import com.wild.entity.message.MComment;
 import com.wild.entity.message.MMessageCommentRelation;
 import com.wild.entity.user.FriendShip;
+import com.wild.entity.user.LastOccur;
 import com.wild.entity.user.WUser;
 import com.wild.enums.message.StatusEnum;
 import com.wild.service.message.InformationService;
 import com.wild.service.message.MCommentService;
 import com.wild.service.user.FriendShipService;
+import com.wild.service.user.LastOccurService;
 import com.wild.utils.SessionAttribute;
 import com.wild.utils.UUIDUtil;
 
@@ -43,7 +45,10 @@ public class InformationHandler {
 
 	@Autowired
 	private FriendShipService friendShipService;
-
+	
+	@Autowired
+	private LastOccurService lastOccurService;
+	
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
 	/**
@@ -66,8 +71,8 @@ public class InformationHandler {
 	/**
 	 * 插入公开信息
 	 */
-	@RequestMapping(value = "/insertInfo", method = RequestMethod.GET)
-	public void insertInfo(ModelMap map, PrintWriter out, HttpServletRequest request, HttpSession session) {
+	@RequestMapping(value="/insertInfo",method=RequestMethod.GET)
+	public void insertInfo(ModelMap map,PrintWriter out,HttpServletRequest request,HttpSession session){
 		String iContent = request.getParameter("iContent");//消息内容
 		String iImage = request.getParameter("iImage");//消息附带的图片
 		String address = request.getParameter("address");//发送消息时的地址
@@ -96,7 +101,7 @@ public class InformationHandler {
 					lastOccurService.updateLastOccur(lo);
 				}
 				//end
-			} else {
+			}else{
 				json.put("desc", "发布消息失败");
 			}
 			out.print(gson.toJson(json));

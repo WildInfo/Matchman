@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wild.entity.user.FriendList;
 import com.wild.entity.user.FriendShip;
 import com.wild.mapper.user.FriendShipMapper;
 import com.wild.service.user.FriendShipService;
@@ -29,5 +30,10 @@ public class FriendShipServiceImpl implements FriendShipService {
 	@Override
 	public int updateHotNum(String userId, String friendId) {
 		return friendShipMapper.updateHotNum(userId, friendId);
+	}
+
+	@Override
+	public List<FriendList> getFriendList(String userid) {
+		return friendShipMapper.getFriendList(userid);
 	}
 }

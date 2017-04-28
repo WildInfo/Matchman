@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.wild.entity.user.FriendList;
 import com.wild.entity.user.FriendShip;
 
 public interface FriendShipService {
@@ -33,4 +34,11 @@ public interface FriendShipService {
 	 * @return
 	 */
 	public int updateHotNum(@Param("userId")String userId,@Param("friendId")String friendId);
+	
+	/**
+	 * 查询好友列表
+	 * @param userid：用户GC号
+	 * @return
+	 */
+	public List<FriendList> getFriendList(@Param("userid")String userid);
 }

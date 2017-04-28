@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wild.mapper.user.LastOccurMapper">
+	<!-- 查询lastOccur-->
+	<select id="selectLastOccur" parameterType="String" resultType="LastOccur">
+		select * from l_lastoccur where lusergc=#{userGC}
+	</select>
+	
+	<!--插入lastOccur-->
+	<insert id="insertLastOccur" parameterType="LastOccur">
+		insert into l_lastoccur (lid,lusergc,ltime,laddress)
+		values(#{LID},#{LUserGC},#{LTime},#{LAddress})
+	</insert>
+	
+	<!--更新最新动态-->
+	<update id="updateLastOccur" parameterType="LastOccur">
+		update l_lastoccur set ltime=#{LTime},laddress=#{LAddress} where lusergc = #{LUserGC}
+	</update>
+	
+</mapper>

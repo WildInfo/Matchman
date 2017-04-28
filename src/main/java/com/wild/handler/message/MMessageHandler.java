@@ -86,7 +86,6 @@ public class MMessageHandler {
 
 				map2.put("messageinfo", messageJson);
 				map2.put("tokenId", message.getMID());
-
 				map.put("result", 1);
 				map.put("desc", "添加成功!");
 				map.put("data", map2);
