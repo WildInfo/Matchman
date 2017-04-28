@@ -64,5 +64,12 @@ public interface MCommentService {
 	 * @return
 	 */
 	public List<MMessageCommentRelation> messageRelation(MMessageCommentRelation commentRelation);
-	
+
+	/**
+	 * 更新热点状态
+	 * 
+	 * @param message
+	 * @return
+	 */
+	public int updateMessageRev(MMessage message);
 }

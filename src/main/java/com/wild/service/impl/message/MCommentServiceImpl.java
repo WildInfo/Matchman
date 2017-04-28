@@ -54,4 +54,9 @@ public class MCommentServiceImpl implements MCommentService {
 		return commentMapper.messageRelation(commentRelation);
 	}
 
+	@Override
+	public int updateMessageRev(MMessage message) {
+		return commentMapper.updateMessageRev(message);
+	}
+
 }

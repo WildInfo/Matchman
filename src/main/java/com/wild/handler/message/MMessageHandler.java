@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.wild.entity.message.MMessage;
 import com.wild.entity.message.MMessageCommentRelation;
 import com.wild.entity.user.WDetails;
+import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
 import com.wild.enums.message.GetStatusEnum;
 import com.wild.enums.message.StatusEnum;
@@ -55,26 +56,30 @@ public class MMessageHandler {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		String tokenId = request.getParameter("tokenId");// 用户id
 		String currency = request.getParameter("currency");// 游戏币数量
+		String adress = request.getParameter("adress");// 热点地址
 		String contents = "";// 热点内容
 		try {
 			contents = new String(request.getParameter("contents").getBytes("ISO-8859-1"), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		if (StringUtils.isNotBlank(tokenId) && StringUtils.isNotBlank(currency) && StringUtils.isNotBlank(contents)) {
-
+		if (StringUtils.isNotBlank(tokenId) && StringUtils.isNotBlank(currency) && StringUtils.isNotBlank(contents)
+				&& StringUtils.isNotBlank(adress)) {
+			List<WUser> userDetils = userService.userDetils(tokenId);// 根据用户id查询用户详细
 			MMessage message = new MMessage();
 
 			message.setMID(UUIDUtil.createUUID());
 			message.setMContent(contents);
 			message.setMGrade(Integer.parseInt(currency));
 			message.setMDate(new Date());
+			message.setMAdress(adress);
 			message.setMGetStatus(GetStatusEnum.unreceived);
 			message.setMStatus(StatusEnum.normal);
+			message.setMUserGC(userDetils.get(0).getWGCNum());// 存入用户GC号
 
 			int messageResult = commentService.insertMessage(message);// 插入热点
 			MMessageCommentRelation commentRelation = new MMessageCommentRelation(UUIDUtil.createUUID(), null,
-					message.getMID(), tokenId,null, null);
+					message.getMID(), tokenId, null, null);
 			int commentRelationResult = commentService.insertIMC(commentRelation);// 添加热点与用户关系
 			if ((messageResult > 0) && (commentRelationResult > 0)) {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
@@ -254,18 +259,22 @@ public class MMessageHandler {
 		MMessage message = new MMessage();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String tokenId = request.getParameter("tokenId");// 热点id
-		if (StringUtils.isNotBlank(tokenId)) {
-			message.setMID(tokenId);
-			MMessage messageResult = commentService.selectMessage(message);
-			if (null != messageResult) {
+		String tokenId = request.getParameter("tokenId");// 用户id
+		String messageid = request.getParameter("messageid");// 热点id
+		if (StringUtils.isNotBlank(tokenId) && StringUtils.isNotBlank(messageid)) {
+			List<WUser> userDetils = userService.userDetils(tokenId);// 根据用户id查询用户详细
+			message.setMID(messageid);
+			message.setMGetUser(userDetils.get(0).getWGCNum());
+			message.setMGetStatus(GetStatusEnum.received);// 将热点状态改为收到
+			int messageResult = commentService.updateMessageRev(message);
+			if (messageResult > 0) {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
 
 				map2.put("messageinfo", messageJson);
 				map2.put("tokenId", message.getMID());
 
 				map.put("result", 1);
-				map.put("desc", "查询成功!");
+				map.put("desc", "更新成功!");
 				map.put("data", map2);
 
 				out.println(gson.toJson(map));
@@ -273,7 +282,7 @@ public class MMessageHandler {
 				out.close();
 			} else {
 				map.put("result", 0);
-				map.put("desc", "查询失败!");
+				map.put("desc", "更新失败!");
 				map.put("data", map2);
 
 				out.println(gson.toJson(map));

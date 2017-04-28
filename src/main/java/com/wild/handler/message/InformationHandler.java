@@ -68,9 +68,9 @@ public class InformationHandler {
 	 */
 	@RequestMapping(value = "/insertInfo", method = RequestMethod.GET)
 	public void insertInfo(ModelMap map, PrintWriter out, HttpServletRequest request, HttpSession session) {
-		String iContent = request.getParameter("iContent");
-		String iImage = request.getParameter("iImage");
-		String address = request.getParameter("address");
+		String iContent = request.getParameter("iContent");//消息内容
+		String iImage = request.getParameter("iImage");//消息附带的图片
+		String address = request.getParameter("address");//发送消息时的地址
 		String id = UUIDUtil.createUUID();
 		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 		try {
@@ -83,6 +83,19 @@ public class InformationHandler {
 			json.put("result", result);
 			if (result > 0) {
 				json.put("desc", "发布消息成功");
+				
+				//更新用户最近出现的动态begin:
+				LastOccur lo = lastOccurService.selectLastOccur(user.getWGCNum());
+				if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
+					lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
+							sdf.parse(sdf.format(new Date())), address);
+					lastOccurService.insertLastOccur(lo);
+				}else{//否则更新该用户的最新动态
+					lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
+							sdf.parse(sdf.format(new Date())), address);
+					lastOccurService.updateLastOccur(lo);
+				}
+				//end
 			} else {
 				json.put("desc", "发布消息失败");
 			}

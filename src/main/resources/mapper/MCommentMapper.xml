@@ -11,11 +11,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from m_message_comment_relation where
 		MInformationID=#{IID})
 	</select>
-	<!--插入评论-->
-	<insert id="insertComment" parameterType="MComment" useGeneratedKeys="true" keyProperty="mid">
-		INSERT INTO m_comment (MID, MOwnerUser, MTargetUser,
+	<!--插入评论 -->
+	<insert id="insertComment" parameterType="MComment"
+		useGeneratedKeys="true" keyProperty="mid">
+		INSERT INTO m_comment (MID,
+		MOwnerUser, MTargetUser,
 		MContent, MLikeCount,
-		MCreatedAt, MParent, MParentType, MMessage1, MMessage2, MMessage3) 
+		MCreatedAt, MParent,
+		MParentType, MMessage1, MMessage2, MMessage3)
 		values(#{MID},#{MOwnerUser},#{MTargetUser},
 		#{MContent},#{MLikeCount},#{MCreatedAt},#{MParent},#{MParentType},
 		#{MMessage1},#{MMessage2},#{MMessage3})
@@ -30,8 +33,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!--插入消息评论关系表 -->
 	<insert id="insertIMC" parameterType="MMessageCommentRelation">
-		INSERT INTO m_message_comment_relation 
-		(MID, MInformationID, MKMessageID, WKUserID, MKCommentID) 
+		INSERT INTO
+		m_message_comment_relation
+		(MID, MInformationID, MKMessageID, WKUserID,
+		MKCommentID)
 		values
 		(#{MID},#{MInformationID},#{MKMessageID},#{MKUserID},#{MKCommentID})
 	</insert>
@@ -54,9 +59,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from m_message_comment_relation where
 		WKUserID=#{MKUserID}
 	</select>
-	
+
 	<!--根据热点id查询热点信息 -->
 	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
 		select * from m_message where MID=#{MID}
 	</select>
+
+	<!-- 更新热点领取状态 -->
+	<update id="updateMessageRev" parameterType="MMessage">
+		update m_message set
+		<if test="MGetStatus != null">
+			MGetStatus=#{MGetStatus}
+		</if>
+		<if test="MGetUser != null">
+			, MGetUser=#{MGetUser} 
+		</if>
+		where MID = #{MID}
+	</update>
 </mapper>
