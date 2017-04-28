@@ -55,6 +55,7 @@ public class MMessageHandler {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		String tokenId = request.getParameter("tokenId");// 用户id
 		String currency = request.getParameter("currency");// 游戏币数量
+		String address = request.getParameter("address");
 		String contents = "";// 热点内容
 		try {
 			contents = new String(request.getParameter("contents").getBytes("ISO-8859-1"), "UTF-8");
@@ -81,7 +82,6 @@ public class MMessageHandler {
 
 				map2.put("messageinfo", messageJson);
 				map2.put("tokenId", message.getMID());
-
 				map.put("result", 1);
 				map.put("desc", "添加成功!");
 				map.put("data", map2);

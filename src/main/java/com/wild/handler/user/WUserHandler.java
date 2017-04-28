@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.Gson;
+import com.wild.entity.user.FriendList;
 import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
@@ -624,6 +625,28 @@ public class WUserHandler implements Serializable {
 			jsonMap.put("desc", "添加好友失败");
 		}
 		Gson gson = new Gson();
+		out.print(gson.toJson(jsonMap));
+		out.flush();
+		out.close();
+	}
+	
+	/**
+	 * 获取用户好友列表
+	 * @param user：当前登陆用户
+	 */
+	@RequestMapping("/getFriendList")
+	public void getFriendList(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,PrintWriter out){
+		List<FriendList> list = friendShipService.getFriendList(user.getWGCNum());
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		if(null!=list && list.size()>0){
+			jsonMap.put("result", 1);
+			jsonMap.put("data", list);
+			
+		}else{
+			jsonMap.put("result", 0);
+			jsonMap.put("data", null);
+		}
 		out.print(gson.toJson(jsonMap));
 		out.flush();
 		out.close();
