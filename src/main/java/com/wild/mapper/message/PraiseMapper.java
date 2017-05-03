@@ -8,6 +8,6 @@ import com.wild.entity.user.WUser;
 
 public interface PraiseMapper {
 
-	int addPraise(@Param("id")String id, @Param("userLogin")WUser userLogin, @Param("inId")String inId,@Param("MPraise1")Date date);
+	int addPraise(@Param("id")String id, @Param("userLogin")WUser userLogin, @Param("inId")String inId,@Param("date")Date date);
 
 }

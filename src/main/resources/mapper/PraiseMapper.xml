@@ -5,6 +5,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.wild.mapper.message.PraiseMapper">
 	<!-- 注册 -->
 	<insert id="addPraise">
-		insert into m_praise values(#{id},#{userLogin.WGCNum},#{inId},#{MPraise1},null)
+		insert into m_praise values(#{id},#{userLogin.WGCNum},#{inId},#{date},null)
 	</insert>
 </mapper>

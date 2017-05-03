@@ -25,4 +25,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		left join l_lastoccur ll on a.wgcnum=ll.lusergc
 	</select>
 	
+	<!--查询最热好友信息-->
+	<select id="getHotFriend" parameterType="String" resultType="HotFriend">
+		select fkuserid,fkfriendid,fcreatedat,wnickname from f_friendship ff left join w_user wu on wu.wgcnum=ff.fkfriendid
+		where fkuserid=#{userid} order by fhotnum desc limit 1
+	</select>
+	
+	<!--查询最近最热好友查看用户个人消息-->
+	<select id="getHotCheck" parameterType="String" resultType="CheckUserInfo">
+		select checkusergc,targetusergc,checktime from checkPInfo where targetusergc=#{userid} 
+		and checkusergc=(select fkfriendid from f_friendship where fkuserid=#{userid} 
+		order by fhotnum desc limit 1)
+		order by checktime desc limit 1
+	</select>
+	
+	<!--查询最热好友最近点赞当前用户：公开消息-->
+	<select id="hotPraiseNew"  parameterType="String" resultType="HotPraise">
+		select mkmessageid,mkuserid,mpraise1 from m_praise mp left join i_information ii on ii.iid=mp.mkmessageid
+		where mkuserid=(select fkfriendid from f_friendship where fkuserid=#{userid} order by fhotnum desc limit 1)
+		and iuserid=#{userid}
+	</select>
+	
+	<!--查询最热好友最近点赞当前用户：热点消息-->
+	<select id="hotPraiseMessage"  parameterType="String" resultType="HotPraise">
+		select mkmessageid,mkuserid,mpraise1 from m_praise mp left join m_message mm on mm.mid=mp.mkmessageid
+		where mkuserid=(select fkfriendid from f_friendship where fkuserid=#{userid} order by fhotnum desc limit 1)
+		and musergc=#{userid}
+	</select>
+	
+	<!--查询最热好友最近评论当前用户：公开消息-->
+	<select id="hotCommentNew"  parameterType="String" resultType="HotComment">
+		select mowneruser,mcreatedat from m_comment mc left join i_information ii on ii.iid=mc.mparent
+		where mowneruser=(select fkfriendid from f_friendship where fkuserid=#{userid} order by fhotnum desc limit 1)
+		and iuserid=#{userid} order by mcreatedat desc limit 1
+	</select>
+	
+	<!--查询最热好友最近评论当前用户：热点消息-->
+	<select id="hotCommentMessage"  parameterType="String" resultType="HotComment">
+		select mowneruser,mcreatedat from m_comment mc left join m_message mm on mm.mid=mc.mparent
+		where mowneruser=(select fkfriendid from f_friendship where fkuserid=#{userid} order by fhotnum desc limit 1)
+		and musergc=#{userid} order by mcreatedat desc limit 1
+	</select>
+	
+	<select id="hotFriendMessage" parameterType="String" resultType="Date">
+		select mdate from m_message where musergc='100000002' 
+		and mgetuser = (select fkfriendid from f_friendship where fkuserid='100000002' order by fhotnum desc limit 1) 
+		order by mdate desc limit 1
+	</select>
+	
 </mapper>

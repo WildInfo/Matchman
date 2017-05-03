@@ -16,8 +16,8 @@ public class PraiseServiceImpl implements PraiseService {
 	private PraiseMapper praiseMapper;
 	
 	@Override
-	public int addPraise(String id, WUser userLogin, String inId,Date MPraise1) {
-		return praiseMapper.addPraise(id,userLogin,inId,MPraise1);
+	public int addPraise(String id, WUser userLogin, String inId,Date date) {
+		return praiseMapper.addPraise(id,userLogin,inId,date);
 	}
 
 }

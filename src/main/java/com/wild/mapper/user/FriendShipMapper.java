@@ -5,8 +5,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.wild.entity.user.CheckUserInfo;
 import com.wild.entity.user.FriendList;
 import com.wild.entity.user.FriendShip;
+import com.wild.entity.user.HotComment;
+import com.wild.entity.user.HotFriend;
+import com.wild.entity.user.HotPraise;
+import com.wild.entity.user.WUser;
 
 public interface FriendShipMapper {
 	
@@ -41,4 +46,55 @@ public interface FriendShipMapper {
 	 * @return
 	 */
 	public List<FriendList> getFriendList(@Param("userid")String userid);
+	
+	/**
+	 * 查询最热好友
+	 * @param userid：当前用户GC号
+	 * @return
+	 */
+	public HotFriend getHotFriend(@Param("userid")String userid);
+	
+	/**
+	 * 查询最近最热好友查看用户个人消息
+	 * @param userid：当前用户GC号
+	 * @return
+	 */
+	public CheckUserInfo getHotCheck(@Param("userid")String userid);
+	
+	/**
+	 * 查询最热好友最近点赞当前用户：公开消息
+	 * @param userid：当前用户GC号
+	 * @return
+	 */
+	public HotPraise hotPraiseNew(@Param("userid")String userid);
+	
+	/**
+	 * 查询最热好友最近点赞当前用户：热点消息
+	 * @param userid：当前用户GC号
+	 * @return
+	 */
+	public HotPraise hotPraiseMessage(@Param("userid")String userid);
+	
+	/**
+	 * 查询最热好友最近评论当前用户：公开消息
+	 * @param userid：当前用户GC号
+	 * @return
+	 */
+	public HotComment hotCommentNew(@Param("userid")String userid);
+	
+	/**
+	 * 查询最热好友最近评论当前用户：热点消息
+	 * @param userid：当前用户GC号
+	 * @return
+	 */
+	public HotComment hotCommentMessage(@Param("userid")String userid);
+	
+	/**
+	 * 查询最热好友最近完成的热点任务
+	 * @param userid
+	 * @return
+	 */
+	public Date hotFriendMessage(@Param("userid")String userid);
+	
+	
 }

@@ -2,6 +2,8 @@ package com.wild.handler.message;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ import com.google.gson.Gson;
 import com.wild.entity.message.MComment;
 import com.wild.entity.message.MMessage;
 import com.wild.entity.message.MMessageCommentRelation;
+import com.wild.entity.user.LastOccur;
 import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
@@ -29,6 +32,7 @@ import com.wild.enums.message.MessageTypeEnum;
 import com.wild.enums.message.StatusEnum;
 import com.wild.service.message.MCommentService;
 import com.wild.service.user.FriendShipService;
+import com.wild.service.user.LastOccurService;
 import com.wild.service.user.WUserService;
 import com.wild.utils.UUIDUtil;
 
@@ -46,6 +50,9 @@ public class MMessageHandler {
 
 	@Autowired
 	private WUserService userService;
+	
+	@Autowired
+	private LastOccurService lastOccurService;
 
 	@Autowired
 	private MCommentService mCommentService;
@@ -100,7 +107,19 @@ public class MMessageHandler {
 				map.put("result", 1);
 				map.put("desc", "添加成功!");
 				map.put("data", map2);
-
+				
+				//更新用户最近出现的动态begin:
+				LastOccur lo = lastOccurService.selectLastOccur(userDetils.get(0).getWGCNum());
+				if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
+					lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), 
+							new Date(), adress);
+					lastOccurService.insertLastOccur(lo);
+				}else{//否则更新该用户的最新动态
+					lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), 
+							new Date(), adress);
+					lastOccurService.updateLastOccur(lo);
+				}
+				
 				out.println(gson.toJson(map));
 				out.flush();
 				out.close();
