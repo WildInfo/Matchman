@@ -59,4 +59,9 @@ public class MCommentServiceImpl implements MCommentService {
 		return commentMapper.updateMessageRev(message);
 	}
 
+	@Override
+	public List<MComment> getMessageComments(MMessage message) {
+		return commentMapper.getMessageComments(message);
+	}
+
 }

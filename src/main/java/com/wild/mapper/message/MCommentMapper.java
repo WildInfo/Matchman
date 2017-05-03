@@ -72,4 +72,11 @@ public interface MCommentMapper {
 	 * @return
 	 */
 	public int updateMessageRev(MMessage message);
+
+	/**
+	 * 根据热点ID查询该消息的评论
+	 * 
+	 * @return
+	 */
+	public List<MComment> getMessageComments(MMessage message);
 }

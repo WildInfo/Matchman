@@ -3,6 +3,8 @@ package com.wild.entity.message;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.wild.enums.message.MessageTypeEnum;
+
 /**
  * 热点评论表
  * 
@@ -20,13 +22,13 @@ public class MComment implements Serializable {
 	private int MLikeCount;// 该热点被点赞的数量
 	private Date MCreatedAt;// 消息创建时间
 	private String MParent;// 评论目标ID
-	private String MParentType;// 评论目标类型
+	private MessageTypeEnum MParentType;// 评论目标类型
 	private String MMessage1;// 备用字段1
 	private String MMessage2;// 备用字段2
 	private String MMessage3;// 备用字段3
 
 	public MComment(String mID, String mOwnerUser, String mTargetUser, String mContent, int mLikeCount, Date mCreatedAt,
-			String mParent, String mParentType, String mMessage1, String mMessage2, String mMessage3) {
+			String mParent, MessageTypeEnum mParentType, String mMessage1, String mMessage2, String mMessage3) {
 		super();
 		MID = mID;
 		MOwnerUser = mOwnerUser;
@@ -101,11 +103,11 @@ public class MComment implements Serializable {
 		MParent = mParent;
 	}
 
-	public String getMParentType() {
+	public MessageTypeEnum getMParentType() {
 		return MParentType;
 	}
 
-	public void setMParentType(String mParentType) {
+	public void setMParentType(MessageTypeEnum mParentType) {
 		MParentType = mParentType;
 	}
 
@@ -135,10 +137,9 @@ public class MComment implements Serializable {
 
 	@Override
 	public String toString() {
-		return "\nMComment [MID=" + MID + ", MOwnerUser=" + MOwnerUser + ", MTargetUser=" + MTargetUser + ", MContent="
+		return "MComment [MID=" + MID + ", MOwnerUser=" + MOwnerUser + ", MTargetUser=" + MTargetUser + ", MContent="
 				+ MContent + ", MLikeCount=" + MLikeCount + ", MCreatedAt=" + MCreatedAt + ", MParent=" + MParent
 				+ ", MParentType=" + MParentType + ", MMessage1=" + MMessage1 + ", MMessage2=" + MMessage2
 				+ ", MMessage3=" + MMessage3 + "]";
 	}
-
 }

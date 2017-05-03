@@ -1,5 +1,7 @@
 package com.wild.service.impl.message;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,8 @@ public class PraiseServiceImpl implements PraiseService {
 	private PraiseMapper praiseMapper;
 	
 	@Override
-	public int addPraise(String id, WUser userLogin, String inId) {
-		return praiseMapper.addPraise(id,userLogin,inId);
+	public int addPraise(String id, WUser userLogin, String inId,Date MPraise1) {
+		return praiseMapper.addPraise(id,userLogin,inId,MPraise1);
 	}
 
 }

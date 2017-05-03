@@ -3,13 +3,22 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.message.MCommentMapper">
-	<!--查看评论 -->
+	<!--消息查看评论 -->
 	<select id="getComments" parameterType="IInformation"
 		resultType="MComment">
 		select * from m_comment where MID in
 		(select mkcommentid
 		from m_message_comment_relation where
 		MInformationID=#{IID})
+	</select>
+	
+	<!--热点查看评论 -->
+	<select id="getMessageComments" parameterType="MMessage"
+		resultType="MComment">
+		select * from m_comment where MID in
+		(select mkcommentid
+		from m_message_comment_relation where
+		MKMessageID=#{MID})
 	</select>
 	<!--插入评论 -->
 	<insert id="insertComment" parameterType="MComment"
@@ -72,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			MGetStatus=#{MGetStatus}
 		</if>
 		<if test="MGetUser != null">
-			, MGetUser=#{MGetUser} 
+			, MGetUser=#{MGetUser}
 		</if>
 		where MID = #{MID}
 	</update>
