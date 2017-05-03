@@ -1,6 +1,7 @@
 package com.wild.handler.message;
 
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class PraiseHandler {
 	@RequestMapping("/addPraise")
 	public void addPraise(String inId,String infoUser,PrintWriter out,HttpSession session){
 		WUser userLogin = (WUser)session.getAttribute(SessionAttribute.USERLOGIN);
-		String result = String.valueOf(praiseService.addPraise(UUIDUtil.createUUID(),userLogin,inId));
+		String result = String.valueOf(praiseService.addPraise(UUIDUtil.createUUID(),userLogin,inId,new Date()));
 		Map<String,String> map = new HashMap<String,String>();
 		friendShipService.updateHotNum(userLogin.getWGCNum(), infoUser);//更新该好友的热度
 		map.put("result",result);

@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.Gson;
 import com.wild.entity.user.FriendList;
+import com.wild.entity.user.HotComment;
+import com.wild.entity.user.HotFriend;
+import com.wild.entity.user.HotPraise;
 import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
@@ -636,20 +640,68 @@ public class WUserHandler implements Serializable {
 	 */
 	@RequestMapping("/getFriendList")
 	public void getFriendList(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,PrintWriter out){
+		String userid = user.getWGCNum();
 		List<FriendList> list = friendShipService.getFriendList(user.getWGCNum());
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		
+		//最热好友
+		HotFriend hotFriend = friendShipService.getHotFriend(userid);
+		//好友最近点赞--公开消息
+		HotPraise hotNew = friendShipService.hotPraiseNew(userid);
+		//好友最近点赞--热点消息
+		HotPraise hotMessage = friendShipService.hotPraiseNew(userid);
+		//好友最近评论--公开消息
+		HotComment hotCommentNew = friendShipService.hotCommentMessage(userid);
+		//好友最近评论--热点消息
+		HotComment hotCommentMessage = friendShipService.hotCommentMessage(userid);
+		List<Map<String,Object>> listMap = new ArrayList<Map<String,Object>>();
+		Map<String,Object> mapData = new HashMap<String,Object>();
+		Date hotPoint = friendShipService.hotFriendMessage(userid);
+		mapData.put("hotFriend", hotFriend);//最热好友
+		mapData.put("friendList", list);//好友列表
+		mapData.put("hotPoint", hotPoint);
+		Date praiseDate,commentDate; 
+		if(hotNew!=null && hotMessage!=null && hotCommentNew!=null && hotCommentMessage!=null){
+			if(hotNew.getMpraise1().getTime()-hotMessage.getMpraise1().getTime()>0){
+				praiseDate = hotNew.getMpraise1();
+			}else{
+				praiseDate = hotMessage.getMpraise1();
+			}
+			if(hotCommentNew.getMcreatedat().getTime()-hotCommentMessage.getMcreatedat().getTime()>0){
+				commentDate = hotCommentNew.getMcreatedat();
+			}else{
+				commentDate = hotCommentMessage.getMcreatedat();
+			}
+			if(praiseDate.getTime()-commentDate.getTime()>0){
+				mapData.put("closePraise", praiseDate);//最近一次赞你
+			}else{
+				mapData.put("closeComment", praiseDate);//最近一次评论了你
+			}
+		}
+		if(hotNew==null && hotMessage!=null){
+			mapData.put("closePraise", hotMessage.getMpraise1());//最近一次赞你
+		}else if(hotNew!=null && hotMessage==null){
+			mapData.put("closePraise", hotNew.getMpraise1());//最近一次赞你
+		}else{
+			mapData.put("closePraise", new HotPraise());//最近一次赞你
+		}
+		if(hotCommentMessage==null && hotCommentNew!=null){
+			mapData.put("closeComment", hotCommentNew.getMcreatedat());//最近一次评论你
+		}else if(hotCommentMessage!=null && hotCommentNew==null){
+			mapData.put("closeComment", hotCommentMessage.getMcreatedat());//最近一次评论你
+		}else{
+			mapData.put("closeComment", new HotComment());//最近一次评论你
+		}
+		listMap.add(mapData);
 		Gson gson = new Gson();
 		if(null!=list && list.size()>0){
 			jsonMap.put("result", 1);
-			jsonMap.put("data", list);
-			
 		}else{
 			jsonMap.put("result", 0);
-			jsonMap.put("data", null);
 		}
+		jsonMap.put("data", listMap);
 		out.print(gson.toJson(jsonMap));
 		out.flush();
 		out.close();
 	}
-
 }
