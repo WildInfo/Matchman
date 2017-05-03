@@ -11,7 +11,6 @@ import com.wild.entity.user.FriendShip;
 import com.wild.entity.user.HotComment;
 import com.wild.entity.user.HotFriend;
 import com.wild.entity.user.HotPraise;
-import com.wild.entity.user.WUser;
 
 public interface FriendShipMapper {
 	
