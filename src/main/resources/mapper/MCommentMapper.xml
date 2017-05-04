@@ -112,4 +112,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT * FROM m_message m WHERE m.MStatus='normal' and
 		m.MUserGC=#{MUserGC} ORDER BY MDate DESC LIMIT 8;
 	</select>
+	
+	<!--查看当前用户发送的公开消息-->
+	<select id="getUserNews" parameterType="String" resultType="IInformation">
+		select iid,iuserid,icontent,iimage,iadress,idate,istatus from i_information 
+		where iuserid=#{userid} order by idate desc
+	</select>
+	
+	<!--查看当前用户发送的热点消息-->
+	<select id="getUserMessages" parameterType="String" resultType="MMessage">
+		select * from m_message where musergc=#{userid} order by mdate desc
+	</select>
+	
 </mapper>

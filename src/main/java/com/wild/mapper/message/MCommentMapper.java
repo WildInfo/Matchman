@@ -3,6 +3,8 @@ package com.wild.mapper.message;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.wild.entity.message.IInformation;
 import com.wild.entity.message.MComment;
 import com.wild.entity.message.MMessage;
@@ -104,4 +106,19 @@ public interface MCommentMapper {
 	 */
 	public List<MMessage> limitMessage(String UserId);
 
+	
+	/**
+	 * 查看当前用户发送的公开消息
+	 * @param userid：当前登陆用户的GC号
+	 * @return
+	 */
+	public List<IInformation> getUserNews(@Param("userid")String userid);
+	
+	/**
+	 * 查看当前用户发送的热点消息
+	 * @param userid：当前登陆用户的GC号
+	 * @return
+	 */
+	public List<MMessage> getUserMessages(@Param("userid")String userid);
+	
 }
