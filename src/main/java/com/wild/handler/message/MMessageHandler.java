@@ -511,6 +511,12 @@ public class MMessageHandler {
 		out.close();
 	}
 
+	/**
+	 * 获取发送的消息
+	 * 
+	 * @param user
+	 * @param out
+	 */
 	@RequestMapping("/getNAndM")
 	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN) WUser user, PrintWriter out) {
 		String userid = user.getWUserNum();
