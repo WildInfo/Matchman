@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.Gson;
 import com.wild.entity.user.WUser;
@@ -37,7 +38,7 @@ public class PraiseHandler {
 	 * @param out
 	 * @param session
 	 */
-	@RequestMapping("/addPraise")
+	@RequestMapping(value ="/addPraise", method = RequestMethod.POST)
 	public void addPraise(String typeId, String userId, PrintWriter out, HttpSession session) {
 		WUser userLogin = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 		Map<String, Object> map = new HashMap<String, Object>();

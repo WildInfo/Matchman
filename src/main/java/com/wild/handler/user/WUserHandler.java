@@ -72,7 +72,7 @@ public class WUserHandler implements Serializable {
 	 * @param user：用户
 	 * @return
 	 */
-	@RequestMapping(value = "/register", method = RequestMethod.GET)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public void register(PrintWriter out, WUser user, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -236,7 +236,7 @@ public class WUserHandler implements Serializable {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out,
 			HttpSession session, ModelMap modelMap) {
 		Gson gson = new Gson();
@@ -300,7 +300,7 @@ public class WUserHandler implements Serializable {
 	 * @param request
 	 * @param session
 	 */
-	@RequestMapping(value = "/smsVerificationCode", method = RequestMethod.GET)
+	@RequestMapping(value = "/smsVerificationCode", method = RequestMethod.POST)
 	public void MessageResiter(PrintWriter out, HttpServletRequest request, HttpServletResponse response,
 			HttpSession session) {
 		Gson gson = new Gson();
@@ -344,7 +344,7 @@ public class WUserHandler implements Serializable {
 	 * 
 	 * @param userLogin：用户手机号码
 	 */
-	@RequestMapping(value = "/lostPassWord", method = RequestMethod.GET)
+	@RequestMapping(value = "/lostPassWord", method = RequestMethod.POST)
 	public void LostPassWord(WUser userLogin, HttpServletRequest request, HttpSession session, PrintWriter out) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -424,7 +424,7 @@ public class WUserHandler implements Serializable {
 	 * @param session
 	 * @param out
 	 */
-	@RequestMapping(value = "/detailsResult", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailsResult", method = RequestMethod.POST)
 	public void DetailsResult(WDetails details, HttpServletRequest request, HttpSession session, PrintWriter out) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -517,7 +517,7 @@ public class WUserHandler implements Serializable {
 	 * @param session
 	 * @param out
 	 */
-	@RequestMapping(value = "/uploadIcon", method = RequestMethod.GET)
+	@RequestMapping(value = "/uploadIcon", method = RequestMethod.POST)
 	public void uploadHeadIcon(@RequestParam("iconPath") String iconPath, HttpServletRequest request,
 			HttpSession session, PrintWriter out) {
 		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
@@ -567,7 +567,7 @@ public class WUserHandler implements Serializable {
 	 * 
 	 * @param map
 	 */
-	@RequestMapping("/decodeQR")
+	@RequestMapping(value="/decodeQR", method = RequestMethod.POST)
 	public void deQR(@RequestParam("gcNum") String gcNum, PrintWriter out) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -623,7 +623,7 @@ public class WUserHandler implements Serializable {
 	 * @param out
 	 * @throws ParseException
 	 */
-	@RequestMapping(value = "addFriend", method = RequestMethod.GET)
+	@RequestMapping(value = "addFriend", method = RequestMethod.POST)
 	public void addFriend(@ModelAttribute(SessionAttribute.USERLOGIN) WUser user,
 			@RequestParam("friendId") String friendId, PrintWriter out) throws ParseException {
 		String fid = UUIDUtil.createUUID();

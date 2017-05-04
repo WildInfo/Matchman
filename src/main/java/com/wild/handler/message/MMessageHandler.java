@@ -68,7 +68,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/insertMessage")
+	@RequestMapping(value="/insertMessage", method = RequestMethod.POST)
 	public void insertMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -141,7 +141,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/selectCurrey")
+	@RequestMapping(value="/selectCurrey", method = RequestMethod.POST)
 	public void selectCurrey(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
@@ -196,7 +196,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/messageUser")
+	@RequestMapping(value="/messageUser", method = RequestMethod.POST)
 	public void messageRelation(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -239,7 +239,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/deDailsMessage")
+	@RequestMapping(value="/deDailsMessage", method = RequestMethod.POST)
 	public void deDailsMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		MMessage message = new MMessage();
@@ -281,7 +281,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/recviedMessage")
+	@RequestMapping(value="/recviedMessage", method = RequestMethod.POST)
 	public void recviedMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		MMessage message = new MMessage();
@@ -323,7 +323,7 @@ public class MMessageHandler {
 	/**
 	 * 查询评论
 	 */
-	@RequestMapping(value = "/getMessageComments", method = RequestMethod.GET)
+	@RequestMapping(value = "/getMessageComments", method = RequestMethod.POST)
 	public void getMessageComments(@RequestParam("mid") String mid, PrintWriter out, HttpServletRequest request) {
 		MMessage message = new MMessage();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -358,7 +358,7 @@ public class MMessageHandler {
 	 * @param map
 	 * @param out
 	 */
-	@RequestMapping(value = "/insertMessageComment", method = RequestMethod.GET)
+	@RequestMapping(value = "/insertMessageComment", method = RequestMethod.POST)
 	public void insertMessageComment(PrintWriter out, HttpServletRequest request) {
 		String publishUser = request.getParameter("publishUser");// 发布评论的那个用户的gc号
 		String targetUser = request.getParameter("targetUser");// 被评论的那个用户的gc号
@@ -403,7 +403,7 @@ public class MMessageHandler {
 	 * @param out
 	 * @param request
 	 */
-	@RequestMapping(value = "/selectWithMessage", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectWithMessage", method = RequestMethod.POST)
 	public void selectWithMessage(PrintWriter out, HttpServletRequest request) {
 		String tokenId = request.getParameter("tokenId");// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -433,7 +433,7 @@ public class MMessageHandler {
 	 * @param out
 	 * @param request
 	 */
-	@RequestMapping(value = "/selectCountMessage", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectCountMessage", method = RequestMethod.POST)
 	public void selectCountMessage(PrintWriter out, HttpServletRequest request) {
 		String tokenId = request.getParameter("tokenId");// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -463,7 +463,7 @@ public class MMessageHandler {
 	 * @param out
 	 * @param request
 	 */
-	@RequestMapping(value = "/limitMessage", method = RequestMethod.GET)
+	@RequestMapping(value = "/limitMessage", method = RequestMethod.POST)
 	public void limitMessage(PrintWriter out, HttpServletRequest request) {
 		String tokenId = request.getParameter("tokenId");// 用户id
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
@@ -517,7 +517,7 @@ public class MMessageHandler {
 	 * @param user
 	 * @param out
 	 */
-	@RequestMapping("/getNAndM")
+	@RequestMapping(value ="/getNAndM",method = RequestMethod.POST)
 	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN) WUser user, PrintWriter out) {
 		String userid = user.getWUserNum();
 		List<IInformation> infos = mCommentService.getUserNews(userid);// 当前用户发表的公开信息

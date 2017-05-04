@@ -58,7 +58,7 @@ public class InformationHandler {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("/getInfos")
+	@RequestMapping(value="/getInfos", method = RequestMethod.POST)
 	public void getPublicNews(ModelMap map, PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
 		List<IInformation> infos = informationService.getPublicNews("adress");
 		Gson gson = new Gson();
@@ -70,7 +70,7 @@ public class InformationHandler {
 	/**
 	 * 插入公开信息
 	 */
-	@RequestMapping(value="/insertInfo",method=RequestMethod.GET)
+	@RequestMapping(value="/insertInfo",method=RequestMethod.POST)
 	public void insertInfo(ModelMap map,PrintWriter out,HttpServletRequest request,HttpSession session){
 		String iContent = request.getParameter("iContent");//消息内容
 		String iImage = request.getParameter("iImage");//消息附带的图片
@@ -111,7 +111,7 @@ public class InformationHandler {
 	/**
 	 * 查询评论
 	 */
-	@RequestMapping(value = "/getComments", method = RequestMethod.GET)
+	@RequestMapping(value = "/getComments", method = RequestMethod.POST)
 	public void getComments(@RequestParam("iid") String iid, PrintWriter out, HttpServletRequest request) {
 		IInformation information = new IInformation();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -142,7 +142,7 @@ public class InformationHandler {
 	 * @param map
 	 * @param out
 	 */
-	@RequestMapping(value = "/insertComment", method = RequestMethod.GET)
+	@RequestMapping(value = "/insertComment", method = RequestMethod.POST)
 	public void insertComment(ModelMap map, PrintWriter out, HttpServletRequest request) {
 		String publishUser = request.getParameter("publishUser");// 发布评论的那个用户的gc号
 		String targetUser = request.getParameter("targetUser");// 被评论的那个用户的gc号
@@ -183,7 +183,7 @@ public class InformationHandler {
 	 * @param out
 	 * @param request
 	 */
-	@RequestMapping(value = "/getInfoDetail", method = RequestMethod.GET)
+	@RequestMapping(value = "/getInfoDetail", method = RequestMethod.POST)
 	public void getInfoDetail(ModelMap map, PrintWriter out, HttpServletRequest request, HttpSession session) {
 		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN); // 当前登陆用户
 		Map<String, Object> json = new HashMap<String, Object>();
