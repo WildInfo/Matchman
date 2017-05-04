@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from m_message_comment_relation where
 		MInformationID=#{IID})
 	</select>
-	
+
 	<!--热点查看评论 -->
 	<select id="getMessageComments" parameterType="MMessage"
 		resultType="MComment">
@@ -85,4 +85,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		where MID = #{MID}
 	</update>
+
+	<!-- 查询与我相关的热点任务 -->
+	<select id="selectWithMessage" parameterType="String"
+		resultType="MMessage">
+		SELECT * FROM m_message WHERE m_message.MID in(
+		select
+		MKMessageID from m_message_comment_relation
+		where MKMessageID in
+		(select MKMessageID from m_praise) AND WKUserID =
+		=#{WKUserID})
+	</select>
+	
+	<!-- 计算与我相关的热点任务数量 -->
+	<select id="selectCountMessage" parameterType="String"
+		resultType="String">
+		SELECT COUNT(1) FROM m_message WHERE m_message.MID in(
+		select
+		MKMessageID from m_message_comment_relation
+		where MKMessageID in
+		(select MKMessageID from m_praise) AND WKUserID =
+		=#{WKUserID})
+	</select>
+	
+	
 </mapper>
