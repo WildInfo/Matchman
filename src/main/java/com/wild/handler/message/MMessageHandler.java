@@ -2,8 +2,6 @@ package com.wild.handler.message;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,8 +54,6 @@ public class MMessageHandler {
 
 	@Autowired
 	private LastOccurService lastOccurService;
-
-	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
 	@Autowired
 	private MCommentService mCommentService;
