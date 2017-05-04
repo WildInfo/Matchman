@@ -1,6 +1,7 @@
 package com.wild.entity.message;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 点赞
@@ -14,11 +15,11 @@ public class MPraise implements Serializable {
 
 	private String MID;// 主键ID
 	private String MKUserID;// 用户ID
-	private String MKMessageID;// 热点ID
-	private String MPraise1;// 备用字段
+	private String MKMessageID;// 热点或消息ID
+	private Date MPraise1;// 备用字段(点赞时间)
 	private String MPraise2;// 备用字段
 
-	public MPraise(String mID, String mKUserID, String mKMessageID, String mPraise1, String mPraise2) {
+	public MPraise(String mID, String mKUserID, String mKMessageID, Date mPraise1, String mPraise2) {
 		super();
 		MID = mID;
 		MKUserID = mKUserID;
@@ -55,11 +56,11 @@ public class MPraise implements Serializable {
 		MKMessageID = mKMessageID;
 	}
 
-	public String getMPraise1() {
+	public Date getMPraise1() {
 		return MPraise1;
 	}
 
-	public void setMPraise1(String mPraise1) {
+	public void setMPraise1(Date mPraise1) {
 		MPraise1 = mPraise1;
 	}
 

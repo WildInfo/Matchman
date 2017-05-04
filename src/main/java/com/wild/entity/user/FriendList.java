@@ -7,14 +7,16 @@ public class FriendList {
 	private String wheadImage;//用户头像地址
 	private String lTime;//最近一次出现的时间
 	private String laddress;//最近一次出现的地址
+	private int wage;//年龄段
 	
-	public FriendList(String wgcNum, String wnickName, String wheadImage, String lTime, String laddress) {
+	public FriendList(String wgcNum, String wnickName, String wheadImage, String lTime, String laddress, int wage) {
 		super();
 		this.wgcNum = wgcNum;
 		this.wnickName = wnickName;
 		this.wheadImage = wheadImage;
 		this.lTime = lTime;
 		this.laddress = laddress;
+		this.wage = wage;
 	}
 
 	public FriendList() {
@@ -61,12 +63,17 @@ public class FriendList {
 		this.laddress = laddress;
 	}
 
+	public int getWage() {
+		return wage;
+	}
+
+	public void setWage(int wage) {
+		this.wage = wage;
+	}
+
 	@Override
 	public String toString() {
 		return "FriendList [wgcNum=" + wgcNum + ", wnickName=" + wnickName + ", wheadImage=" + wheadImage + ", lTime="
-				+ lTime + ", laddress=" + laddress + "]";
+				+ lTime + ", laddress=" + laddress + ", wage=" + wage + "]";
 	}
-	
-	
-	
 }

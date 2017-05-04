@@ -1,8 +1,6 @@
 package com.wild.handler.message;
 
 import java.io.PrintWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,6 +25,7 @@ import com.wild.entity.message.MMessageCommentRelation;
 import com.wild.entity.user.FriendShip;
 import com.wild.entity.user.LastOccur;
 import com.wild.entity.user.WUser;
+import com.wild.enums.message.MessageTypeEnum;
 import com.wild.enums.message.StatusEnum;
 import com.wild.service.message.InformationService;
 import com.wild.service.message.MCommentService;
@@ -49,7 +49,6 @@ public class InformationHandler {
 	@Autowired
 	private LastOccurService lastOccurService;
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
 	/**
 	 * 查询公开信息
@@ -78,50 +77,61 @@ public class InformationHandler {
 		String address = request.getParameter("address");//发送消息时的地址
 		String id = UUIDUtil.createUUID();
 		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
-		try {
-			String userid = user.getWGCNum();
-			IInformation info = new IInformation(id, iContent, iImage, address, sdf.parse(sdf.format(new Date())),
-					StatusEnum.normal, userid, "", "");
-			int result = informationService.insertPublicNews(info);
-			Map<String, Object> json = new HashMap<String, Object>();
-			Gson gson = new Gson();
-			json.put("result", result);
-			if (result > 0) {
-				json.put("desc", "发布消息成功");
-				
-				//更新用户最近出现的动态begin:
-				LastOccur lo = lastOccurService.selectLastOccur(user.getWGCNum());
-				if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
-					lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
-							sdf.parse(sdf.format(new Date())), address);
-					lastOccurService.insertLastOccur(lo);
-				}else{//否则更新该用户的最新动态
-					lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
-							sdf.parse(sdf.format(new Date())), address);
-					lastOccurService.updateLastOccur(lo);
-				}
-				//end
-			}else{
-				json.put("desc", "发布消息失败");
+		String userid = user.getWGCNum();
+		IInformation info = new IInformation(id, iContent, iImage, address, new Date(),
+				StatusEnum.normal, userid, "", "");
+		int result = informationService.insertPublicNews(info);
+		Map<String, Object> json = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		json.put("result", result);
+		if (result > 0) {
+			json.put("desc", "发布消息成功");
+			
+			//更新用户最近出现的动态begin:
+			LastOccur lo = lastOccurService.selectLastOccur(user.getWGCNum());
+			if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
+				lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
+						new Date(), address);
+				lastOccurService.insertLastOccur(lo);
+			}else{//否则更新该用户的最新动态
+				lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
+						new Date(), address);
+				lastOccurService.updateLastOccur(lo);
 			}
-			out.print(gson.toJson(json));
-			out.flush();
-			out.close();
-		} catch (ParseException e) {
-			e.printStackTrace();
+			//end
+		}else{
+			json.put("desc", "发布消息失败");
 		}
+		out.print(gson.toJson(json));
+		out.flush();
+		out.close();
 	}
+
 
 	/**
 	 * 查询评论
 	 */
 	@RequestMapping(value = "/getComments", method = RequestMethod.GET)
-	public void getComments(@RequestParam("iid") String iid, ModelMap map, PrintWriter out,
-			HttpServletRequest request) {
+	public void getComments(@RequestParam("iid") String iid, PrintWriter out, HttpServletRequest request) {
 		IInformation information = new IInformation();
-		information.setIID(iid);
-		List<MComment> infos = mCommentService.getComments(information);
-		out.print(infos);
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		if (StringUtils.isNotBlank(iid)) {
+			information.setIID(iid);
+			List<MComment> infos = mCommentService.getComments(information);
+			map.put("result", 1);
+			map.put("desc", "查看成功");
+			map2.put("commentinfo", infos);
+			map.put("data", map2);
+			out.print(gson.toJson(map));
+		} else {
+			map.put("result", 0);
+			map.put("desc", "查看失败!");
+			map.put("data", map2);
+			out.println(gson.toJson(map));
+		}
+
 		out.flush();
 		out.close();
 	}
@@ -138,32 +148,32 @@ public class InformationHandler {
 		String targetUser = request.getParameter("targetUser");// 被评论的那个用户的gc号
 		String content = request.getParameter("content");// 评论内容
 		String parent = request.getParameter("parent");// 被评论的消息ID
-		String parentType = request.getParameter("parentType");// 消息类型（发送或接收）
-		try {
-			MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0,
-					sdf.parse(sdf.format(new Date())), parent, parentType, "", "", "");
-			int result = mCommentService.insertComment(comment);
-			MMessageCommentRelation mcr = new MMessageCommentRelation(UUIDUtil.createUUID(), parent, "", comment.getMOwnerUser(), "",
-					comment.getMID());
-			Map<String, Object> json = new HashMap<String, Object>();
-			Gson gson = new Gson();
-			json.put("result", result);
-			if (result > 0) {// 说明评论成功
-				friendShipService.updateHotNum(targetUser, publishUser);// 更新该好友的热度
-				int r = mCommentService.insertIMC(mcr);// 插入消息评论关系表
-				if (r > 0)
-					json.put("desc", "评论成功");
-				else
-					json.put("desc", "评论失败");
-			} else {
+		MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0,
+				new Date(), parent, MessageTypeEnum.infomation, "", "", "");
+		int result = mCommentService.insertComment(comment);
+		MMessageCommentRelation mcr = new MMessageCommentRelation(UUIDUtil.createUUID(), parent, "", comment.getMOwnerUser(), targetUser,
+				comment.getMID());
+		Map<String, Object> json = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		json.put("result", result);
+		if (result > 0) {// 说明评论成功
+			friendShipService.updateHotNum(targetUser, publishUser);// 更新该好友的热度
+			int r = mCommentService.insertIMC(mcr);// 插入消息评论关系表
+			if (r > 0) {
+				json.put("desc", "评论成功");
+				json.put("data", map2);
+			} else
 				json.put("desc", "评论失败");
-			}
-			out.println(gson.toJson(json));
-			out.flush();
-			out.close();
-		} catch (ParseException e) {
-			e.printStackTrace();
+				json.put("data", map2);
+
+		} else {
+			json.put("desc", "评论失败");
+			json.put("data", map2);
 		}
+		out.println(gson.toJson(json));
+		out.flush();
+		out.close();
 	}
 
 	/**

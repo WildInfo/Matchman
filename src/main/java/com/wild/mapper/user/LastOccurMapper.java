@@ -1,7 +1,5 @@
 package com.wild.mapper.user;
 
-import java.util.Date;
-
 import org.apache.ibatis.annotations.Param;
 
 import com.wild.entity.user.LastOccur;

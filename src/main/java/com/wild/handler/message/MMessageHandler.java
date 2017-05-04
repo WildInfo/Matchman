@@ -16,8 +16,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
+import com.wild.entity.message.MComment;
 import com.wild.entity.message.MMessage;
 import com.wild.entity.message.MMessageCommentRelation;
 import com.wild.entity.user.LastOccur;
@@ -25,8 +28,10 @@ import com.wild.entity.user.WDetails;
 import com.wild.entity.user.WUser;
 import com.wild.entity.user.WUserDetailsRelation;
 import com.wild.enums.message.GetStatusEnum;
+import com.wild.enums.message.MessageTypeEnum;
 import com.wild.enums.message.StatusEnum;
 import com.wild.service.message.MCommentService;
+import com.wild.service.user.FriendShipService;
 import com.wild.service.user.LastOccurService;
 import com.wild.service.user.WUserService;
 import com.wild.utils.UUIDUtil;
@@ -50,6 +55,12 @@ public class MMessageHandler {
 	private LastOccurService lastOccurService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+
+	@Autowired
+	private MCommentService mCommentService;
+
+	@Autowired
+	private FriendShipService friendShipService;
 
 	/**
 	 * 发布热点
@@ -187,7 +198,7 @@ public class MMessageHandler {
 	}
 
 	/**
-	 * 根据user查看消息列表
+	 * 根据用户查看消息列表
 	 * 
 	 * @param out
 	 * @param session
@@ -315,5 +326,82 @@ public class MMessageHandler {
 				out.close();
 			}
 		}
+	}
+
+	/**
+	 * 查询评论
+	 */
+	@RequestMapping(value = "/getMessageComments", method = RequestMethod.GET)
+	public void getMessageComments(@RequestParam("mid") String mid, PrintWriter out, HttpServletRequest request) {
+		MMessage message = new MMessage();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		if (StringUtils.isNotBlank(mid)) {
+			message.setMID(mid);
+			List<MComment> infos = mCommentService.getMessageComments(message);
+			if (infos.size() > 0) {
+				map.put("result", 1);
+				map.put("desc", "查看成功");
+				map2.put("commentinfo", infos);
+				map.put("data", map2);
+			} else
+				map.put("result", 0);
+				map.put("desc", "查看失败!");
+				map.put("data", map2);
+			out.println(gson.toJson(map));
+		} else {
+			map.put("result", 0);
+			map.put("desc", "查看失败!");
+			map.put("data", map2);
+			out.println(gson.toJson(map));
+		}
+		out.flush();
+		out.close();
+	}
+
+	/**
+	 * 插入评论
+	 * 
+	 * @param map
+	 * @param out
+	 */
+	@RequestMapping(value = "/insertMessageComment", method = RequestMethod.GET)
+	public void insertMessageComment(PrintWriter out, HttpServletRequest request) {
+		String publishUser = request.getParameter("publishUser");// 发布评论的那个用户的gc号
+		String targetUser = request.getParameter("targetUser");// 被评论的那个用户的gc号
+		String parent = request.getParameter("parent");// 被评论的热点ID
+		String content = "";// 评论内容
+		try {
+			content = new String(request.getParameter("content").getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		MComment comment = new MComment(UUIDUtil.createUUID(), publishUser, targetUser, content, 0, new Date(), parent,
+				MessageTypeEnum.message, "", "", "");
+		int result = mCommentService.insertComment(comment);
+		MMessageCommentRelation mcr = new MMessageCommentRelation(UUIDUtil.createUUID(), "", parent,
+				comment.getMOwnerUser(), targetUser, comment.getMID());
+		Map<String, Object> json = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		json.put("result", result);
+		if (result > 0) {// 说明评论成功
+			friendShipService.updateHotNum(targetUser, publishUser);// 更新该好友的热度
+			int r = mCommentService.insertIMC(mcr);// 插入消息评论关系表
+			if (r > 0) {
+				json.put("desc", "评论成功");
+				json.put("data", map2);
+			} else
+				json.put("desc", "评论失败");
+			json.put("data", map2);
+
+		} else {
+			json.put("desc", "评论失败");
+			json.put("data", map2);
+		}
+		out.println(gson.toJson(json));
+		out.flush();
+		out.close();
 	}
 }
