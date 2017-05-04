@@ -133,7 +133,7 @@ public class WUserHandler implements Serializable {
 							List<WUser> users = userService.login(user);// 查询
 							uploadQR(users.get(0).getWGCNum());
 							detailsRelation.setWID(UUIDUtil.createUUID());
-							detailsRelation.setWKUserID(users.get(0).getWID());
+							detailsRelation.setWKUserID(users.get(0).getWGCNum());//存放gc号
 							detailsRelation.setWKDetailsID(UUIDUtil.createUUID());
 							int relations = userService.userDetailsDelation(detailsRelation);// 插入用户详情与用户数据表
 							int details = userService.insertDtails(new WDetails(detailsRelation.getWKDetailsID(), null,
@@ -151,7 +151,7 @@ public class WUserHandler implements Serializable {
 								map2.put("userInfo", userJson);
 								map2.put("tokenId", users.get(0).getWID());
 
-								map.put("result", 1);
+								map.put("result", "1");
 								map.put("desc", "注册成功！");
 								map.put("data", map2);
 
@@ -160,7 +160,7 @@ public class WUserHandler implements Serializable {
 								out.flush();
 								out.close();
 							} else {
-								map.put("result", 0);
+								map.put("result","0");
 								map.put("desc", "系统错误，请重试！");
 								map.put("data", map2);
 
@@ -169,7 +169,7 @@ public class WUserHandler implements Serializable {
 								out.close();
 							}
 						} else {
-							map.put("result", 0);
+							map.put("result", "0");
 							map.put("desc", "系统错误，请重试！");
 							map.put("data", map2);
 
@@ -178,7 +178,7 @@ public class WUserHandler implements Serializable {
 							out.close();
 						}
 					} else {
-						map.put("result", 2);
+						map.put("result", "2");
 						map.put("desc", "验证码错误！");
 						map.put("data", map2);
 
@@ -188,7 +188,7 @@ public class WUserHandler implements Serializable {
 					}
 				} else {
 					session.removeAttribute("checkCode");
-					map.put("result", 3);
+					map.put("result", "3");
 					map.put("desc", "验证码失效！");
 					map.put("data", map2);
 
@@ -197,7 +197,7 @@ public class WUserHandler implements Serializable {
 					out.close();
 				}
 			} else {
-				map.put("result", 4);
+				map.put("result", "4");
 				map.put("desc", "该电话号码已经被注册了！");
 				map.put("data", map2);
 
@@ -206,7 +206,7 @@ public class WUserHandler implements Serializable {
 				out.close();
 			}
 		} else {
-			map.put("result", 5);
+			map.put("result", "5");
 			map.put("desc", "数据不能为空！");
 			map.put("data", map2);
 
@@ -257,7 +257,7 @@ public class WUserHandler implements Serializable {
 				map2.put("userInfo", userJson);
 				map2.put("tokenId", users.get(0).getWID());
 
-				map.put("result", 1);
+				map.put("result", "1");
 				map.put("desc", "登录成功！");
 				map.put("data", map2);
 
@@ -266,7 +266,7 @@ public class WUserHandler implements Serializable {
 				out.flush();
 				out.close();
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "登录失败！");
 				map.put("data", map2);
 
@@ -275,7 +275,7 @@ public class WUserHandler implements Serializable {
 				out.close();
 			}
 		} else {
-			map.put("result", 2);
+			map.put("result", "2");
 			map.put("desc", "用户名或密码错误！");
 			map.put("data", map2);
 
@@ -301,7 +301,6 @@ public class WUserHandler implements Serializable {
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
 		String verificationCode = getCharAndNumr();
-		System.out.println(verificationCode);
 		session.setAttribute(SessionAttribute.TELRLOGIN, verificationCode);
 		boolean result = cl.CouldMessageContent(tel, verificationCode);
 		long date = System.currentTimeMillis();
@@ -312,7 +311,7 @@ public class WUserHandler implements Serializable {
 
 			map2.put("verificationCode", verificationCode);
 
-			map.put("result", 1);
+			map.put("result", "1");
 			map.put("desc", "验证码发送成功！");
 			map.put("data", map2);
 
@@ -320,7 +319,7 @@ public class WUserHandler implements Serializable {
 			out.flush();
 			out.close();
 		} else {
-			map.put("result", 0);
+			map.put("result", "0");
 			map.put("desc", "验证码发送失败！");
 
 			map.put("data", map2);
@@ -371,7 +370,7 @@ public class WUserHandler implements Serializable {
 						map2.put("userInfo", userJson);
 						map2.put("tokenId", users.get(0).getWID());
 
-						map.put("result", 1);
+						map.put("result", "1");
 						map.put("desc", "修改成功！");
 						map.put("data", map2);
 
@@ -379,7 +378,7 @@ public class WUserHandler implements Serializable {
 						out.flush();
 						out.close();
 					} else {
-						map.put("result", 0);
+						map.put("result", "0");
 						map.put("desc", "修改失败！");
 						map.put("data", map2);
 
@@ -388,7 +387,7 @@ public class WUserHandler implements Serializable {
 						out.close();
 					}
 				} else {
-					map.put("result", 2);
+					map.put("result", "2");
 					map.put("desc", "验证码错误！");
 					map.put("data", map2);
 
@@ -398,7 +397,7 @@ public class WUserHandler implements Serializable {
 				}
 			} else {
 				session.removeAttribute("checkCode");
-				map.put("result", 3);
+				map.put("result", "3");
 				map.put("desc", "验证码失效！");
 				map.put("data", map2);
 
@@ -452,7 +451,7 @@ public class WUserHandler implements Serializable {
 				int updetails = userService.updateUserDetails(details);
 				if (updetails > 0) {
 
-					map.put("result", 1);
+					map.put("result", "1");
 					map.put("desc", "保存成功！");
 					//map2.put("", "");
 
@@ -462,7 +461,7 @@ public class WUserHandler implements Serializable {
 					out.flush();
 					out.close();
 				} else {
-					map.put("result", 0);
+					map.put("result", "0");
 					map.put("desc", "保存失败！");
 					map.put("data", map2);
 
@@ -471,7 +470,7 @@ public class WUserHandler implements Serializable {
 					out.close();
 				}
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "保存失败！");
 				map.put("data", map2);
 
@@ -480,7 +479,7 @@ public class WUserHandler implements Serializable {
 				out.close();
 			}
 		} else {
-			map.put("result", 2);
+			map.put("result", "2");
 			map.put("desc", "用户信息验证失败！");
 			map.put("data", map2);
 
@@ -539,7 +538,7 @@ public class WUserHandler implements Serializable {
 			output.flush();
 			output.close();
 			in.close();
-			map.put("result", 1);
+			map.put("result", "1");
 			map.put("desc", "保存成功！");
 			//map2.put("", "");
 
@@ -572,7 +571,7 @@ public class WUserHandler implements Serializable {
 		QRCodeOP qr = new QRCodeOP();
 		String content = qr.decoderQRCode(path);
 		if (null != content && content.length() > 0) {
-			map.put("result", 1);
+			map.put("result", "1");
 			map.put("desc", "保存成功！");
 			map2.put("content", content);
 
@@ -580,7 +579,7 @@ public class WUserHandler implements Serializable {
 
 			out.println(gson.toJson(map));
 		} else {
-			map.put("result", 0);
+			map.put("result", "0");
 			map.put("desc", "解析失败！");
 			map.put("data", map2);
 
@@ -695,9 +694,9 @@ public class WUserHandler implements Serializable {
 		listMap.add(mapData);
 		Gson gson = new Gson();
 		if(null!=list && list.size()>0){
-			jsonMap.put("result", 1);
+			jsonMap.put("result", "1");
 		}else{
-			jsonMap.put("result", 0);
+			jsonMap.put("result", "0");
 		}
 		jsonMap.put("data", listMap);
 		out.print(gson.toJson(jsonMap));

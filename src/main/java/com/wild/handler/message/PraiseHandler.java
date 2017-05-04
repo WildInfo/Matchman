@@ -47,18 +47,18 @@ public class PraiseHandler {
 			String result = String.valueOf(praiseService.addPraise(UUIDUtil.createUUID(), userLogin, typeId,new Date()));
 			if (StringUtils.isNotBlank(result)) {
 				friendShipService.updateHotNum(userLogin.getWGCNum(), userId);// 更新该好友的热度
-				map.put("result", result);
+				map.put("result", result+"");
 				map.put("desc", "点赞成功");
 				map.put("data", map2);
 				out.print(gson.toJson(map));
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "点赞失败");
 				map.put("data", map2);
 				out.print(gson.toJson(map));
 			}
 		} else {
-			map.put("result", 0);
+			map.put("result", "0");
 			map.put("desc", "点赞失败");
 			map.put("data", map2);
 			out.print(gson.toJson(map));
