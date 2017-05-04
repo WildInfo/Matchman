@@ -300,7 +300,7 @@ public class WUserHandler implements Serializable {
 	 * @param request
 	 * @param session
 	 */
-	@RequestMapping(value = "/smsVerificationCode", method = RequestMethod.POST)
+	@RequestMapping(value = "/smsVerificationCode", method = RequestMethod.GET)
 	public void MessageResiter(PrintWriter out, HttpServletRequest request, HttpServletResponse response,
 			HttpSession session) {
 		Gson gson = new Gson();
