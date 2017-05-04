@@ -64,4 +64,14 @@ public class MCommentServiceImpl implements MCommentService {
 		return commentMapper.getMessageComments(message);
 	}
 
+	@Override
+	public List<IInformation> getUserNews(String userid) {
+		return commentMapper.getUserNews(userid);
+	}
+
+	@Override
+	public List<MMessage> getUserMessages(String userid) {
+		return commentMapper.getUserMessages(userid);
+	}
+
 }

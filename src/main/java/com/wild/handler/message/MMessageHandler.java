@@ -15,11 +15,13 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
+import com.wild.entity.message.IInformation;
 import com.wild.entity.message.MComment;
 import com.wild.entity.message.MMessage;
 import com.wild.entity.message.MMessageCommentRelation;
@@ -34,6 +36,7 @@ import com.wild.service.message.MCommentService;
 import com.wild.service.user.FriendShipService;
 import com.wild.service.user.LastOccurService;
 import com.wild.service.user.WUserService;
+import com.wild.utils.SessionAttribute;
 import com.wild.utils.UUIDUtil;
 
 /**
@@ -404,4 +407,36 @@ public class MMessageHandler {
 		out.flush();
 		out.close();
 	}
+	
+	@RequestMapping("/getNAndM")
+	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,PrintWriter out){
+		String userid = user.getWUserNum();
+		List<IInformation> infos = mCommentService.getUserNews(userid);//当前用户发表的公开信息
+		List<MMessage> mess = mCommentService.getUserMessages(userid);//当前用户发表的热点信息
+		Map<String,Object> mapData = new HashMap<String,Object>();
+		Map<String,Object> jsonMap = new HashMap<String,Object>();
+		Gson gson = new Gson();
+		jsonMap.put("result", 1);
+		if(null != infos && infos.size()>0){
+			mapData.put("infoNum", infos.size());//发表的公开消息数量
+			mapData.put("infos", infos);
+		}else{
+			mapData.put("infoNum", 0);//发表的公开消息数量
+			mapData.put("infos", new IInformation());
+		}
+		if(null != mess && mess.size()>0){
+			mapData.put("messNum", mess.size());//发布的热点数量
+			mapData.put("mess", mess);
+		}else{
+			mapData.put("messNum", 0);//发布的热点数量
+			mapData.put("mess", new MMessage());
+		}
+		jsonMap.put("data", mapData);
+		out.print(gson.toJson(jsonMap));
+		out.flush();
+		out.close();
+		
+	}
+	
+	
 }
