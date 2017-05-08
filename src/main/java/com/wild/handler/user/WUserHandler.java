@@ -81,8 +81,7 @@ public class WUserHandler implements Serializable {
 		if (StringUtils.isNotBlank(user.getLoginName())) {
 			// 数据不为空
 			if (StringUtils.isNotBlank(user.getLoginName()) && StringUtils.isNotBlank(user.getPassword())
-					&& StringUtils.isNotBlank(user.getValidateCode())
-					&&(user.getSex()>0) && StringUtils.isNotBlank(user.getNickName())) {
+					&& StringUtils.isNotBlank(user.getValidateCode()) && StringUtils.isNotBlank(user.getNickName())) {
 				user.setWID(UUIDUtil.createUUID());
 				user.setWDate(new Date());
 				user.setWStatus(StatusEnum.normal);
@@ -220,16 +219,16 @@ public class WUserHandler implements Serializable {
 	 * @param map
 	 * @param session
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public void Login(PrintWriter out,WUser userLogin, ModelMap modelMap,HttpSession session) throws IOException {
+	public void Login(PrintWriter out, WUser userLogin, ModelMap modelMap, HttpSession session) throws IOException {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 
 		// 数据不为空
-		if (null!=userLogin) {
+		if (null != userLogin) {
 			List<WUser> users = userService.login(userLogin);// 登录
 			if (users.size() > 0) {
 				session.setAttribute(SessionAttribute.USERLOGIN, users.get(0));
@@ -288,11 +287,11 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
-		//String verificationCode = getCharAndNumr();
-		String verificationCode ="1111";
+		// String verificationCode = getCharAndNumr();
+		String verificationCode = "1111";
 		session.setAttribute(SessionAttribute.TELRLOGIN, verificationCode);
-		//boolean result = cl.CouldMessageContent(tel, verificationCode);
-		boolean result=true;
+		// boolean result = cl.CouldMessageContent(tel, verificationCode);
+		boolean result = true;
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(verificationCode, time, tel);
@@ -549,7 +548,7 @@ public class WUserHandler implements Serializable {
 	 * 
 	 * @param map
 	 */
-	@RequestMapping(value="/decodeQR", method = RequestMethod.POST)
+	@RequestMapping(value = "/decodeQR", method = RequestMethod.POST)
 	public void deQR(@RequestParam("gcNum") String gcNum, PrintWriter out) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
