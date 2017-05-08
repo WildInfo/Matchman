@@ -5,10 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,39 +78,34 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
-		String NickName = "";
-		if (StringUtils.isNotBlank(user.getWNickName())) {
-			try {
-				NickName = new String(user.getWNickName().getBytes("ISO-8859-1"), "UTF-8");
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
+		if (StringUtils.isNotBlank(user.getLoginName())) {
 			// 数据不为空
-			if (StringUtils.isNotBlank(user.getWGCNum()) && StringUtils.isNotBlank(user.getWPassWord())
-					&& StringUtils.isNotBlank(user.getValidateCode()) && (user.getWAge()>0)
-					&&(user.getWSex()>0) && StringUtils.isNotBlank(user.getWNickName())) {
-				user.setWNickName(NickName);
+			if (StringUtils.isNotBlank(user.getLoginName()) && StringUtils.isNotBlank(user.getPassword())
+					&& StringUtils.isNotBlank(user.getValidateCode()) && (user.getAge()>0)
+					&&(user.getSex()>0) && StringUtils.isNotBlank(user.getNickName())) {
+				user.setWID(UUIDUtil.createUUID());
+				user.setWDate(new Date());
 				user.setWStatus(StatusEnum.normal);
 				user.setWSuperManager(UserVersioniEnum.common);// 普通权限
 				// 判断性别
-				if (0 == (Integer.valueOf(user.getWSex()))) {
-					user.setWSex(SexEnum.man.getDesc());
+				if (0 == (Integer.valueOf(user.getSex()))) {
+					user.setSex(SexEnum.man.getDesc());
 				} else {
-					user.setWSex(SexEnum.woman.getDesc());
+					user.setSex(SexEnum.woman.getDesc());
 				}
 				// 判断年龄
-				switch (Integer.valueOf(user.getWAge())) {
+				switch (Integer.valueOf(user.getAge())) {
 				case 1:
-					user.setWAge(AgeEnum.seventy.getDesc());
+					user.setAge(AgeEnum.seventy.getDesc());
 					break;
 				case 2:
-					user.setWAge(AgeEnum.eighty.getDesc());
+					user.setAge(AgeEnum.eighty.getDesc());
 					break;
 				case 3:
-					user.setWAge(AgeEnum.ninety.getDesc());
+					user.setAge(AgeEnum.ninety.getDesc());
 					break;
 				case 4:
-					user.setWAge(AgeEnum.zero.getDesc());
+					user.setAge(AgeEnum.zero.getDesc());
 					break;
 				}
 
@@ -135,10 +128,10 @@ public class WUserHandler implements Serializable {
 									WUser userJson = new WUser();
 
 									userJson.setWGCNum(users.get(0).getWGCNum());
-									userJson.setWNickName(users.get(0).getWNickName());
-									userJson.setWSex(users.get(0).getWSex());
-									userJson.setWUserNum(users.get(0).getWUserNum());
-									userJson.setWAge(users.get(0).getWAge());
+									userJson.setNickName(users.get(0).getNickName());
+									userJson.setSex(users.get(0).getSex());
+									userJson.setLoginName((users.get(0).getLoginName()));
+									userJson.setAge(users.get(0).getAge());
 									userJson.setWDate(users.get(0).getWDate());
 
 									map2.put("userInfo", userJson);
@@ -244,10 +237,10 @@ public class WUserHandler implements Serializable {
 				WUser userJson = new WUser();
 
 				userJson.setWGCNum(users.get(0).getWGCNum());
-				userJson.setWNickName(users.get(0).getWNickName());
-				userJson.setWSex(users.get(0).getWSex());
-				userJson.setWUserNum(users.get(0).getWUserNum());
-				userJson.setWAge(users.get(0).getWAge());
+				userJson.setNickName(users.get(0).getNickName());
+				userJson.setSex(users.get(0).getSex());
+				userJson.setLoginName(users.get(0).getLoginName());
+				userJson.setAge(users.get(0).getAge());
 				userJson.setWDate(users.get(0).getWDate());
 
 				map2.put("userInfo", userJson);
@@ -297,6 +290,7 @@ public class WUserHandler implements Serializable {
 		String tel = request.getParameter("loginName");// 获取短信验证码
 		String verificationCode = getCharAndNumr();
 		session.setAttribute(SessionAttribute.TELRLOGIN, verificationCode);
+		System.out.println(verificationCode);
 		boolean result = cl.CouldMessageContent(tel, verificationCode);
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
@@ -346,8 +340,8 @@ public class WUserHandler implements Serializable {
 			CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
 			if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
 				if (validateCode.equals(checkCodeSer.getCheckCode())) {
-					userLogin.setWPassWord(password);
-					userLogin.setWUserNum(loginName);
+					userLogin.setPassword(password);
+					userLogin.setLoginName(loginName);
 
 					int usersResult = userService.lostPassWord(userLogin);// 修改
 
@@ -356,10 +350,10 @@ public class WUserHandler implements Serializable {
 						WUser userJson = new WUser();
 
 						userJson.setWGCNum(users.get(0).getWGCNum());
-						userJson.setWNickName(users.get(0).getWNickName());
-						userJson.setWSex(users.get(0).getWSex());
-						userJson.setWUserNum(users.get(0).getWUserNum());
-						userJson.setWAge(users.get(0).getWAge());
+						userJson.setNickName(users.get(0).getNickName());
+						userJson.setSex(users.get(0).getSex());
+						userJson.setLoginName(users.get(0).getLoginName());
+						userJson.setAge(users.get(0).getAge());
 						userJson.setWDate(users.get(0).getWDate());
 
 						map2.put("userInfo", userJson);
