@@ -18,34 +18,15 @@ public class WUser implements Serializable {
 
 	private String WID;// 用户id
 	private String WGCNum;// GC号
-	private String WNickName;// 用户昵称
-	private int WSex;// 用户性别
-	private String WUserNum;// 用户帐号
-	private String WPassWord;// 用户密码
-	private int WAge;// 用户年龄
+	private String NickName;// 用户昵称
+	private int Sex;// 用户性别
+	private String loginName;// 用户帐号
+	private String password;// 用户密码
+	private int Age;// 用户年龄
 	private Date WDate;// 注册时间
 	private StatusEnum WStatus;// 用户状态
 	private UserVersioniEnum WSuperManager;// 用户角色
-
-	
-	public WUser(String wID, String wGCNum, String wNickName, int wSex, String wUserNum, String wPassWord, int wAge,
-			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager) {
-		super();
-		WID = wID;
-		WGCNum = wGCNum;
-		WNickName = wNickName;
-		WSex = wSex;
-		WUserNum = wUserNum;
-		WPassWord = wPassWord;
-		WAge = wAge;
-		WDate = wDate;
-		WStatus = wStatus;
-		WSuperManager = wSuperManager;
-	}
-
-	public WUser() {
-		super();
-	}
+	private String validateCode;
 
 	public String getWID() {
 		return WID;
@@ -63,44 +44,44 @@ public class WUser implements Serializable {
 		WGCNum = wGCNum;
 	}
 
-	public String getWNickName() {
-		return WNickName;
+	public String getNickName() {
+		return NickName;
 	}
 
-	public void setWNickName(String wNickName) {
-		WNickName = wNickName;
+	public void setNickName(String nickName) {
+		NickName = nickName;
 	}
 
-	public int getWSex() {
-		return WSex;
+	public int getSex() {
+		return Sex;
 	}
 
-	public void setWSex(int wSex) {
-		WSex = wSex;
+	public void setSex(int sex) {
+		Sex = sex;
 	}
 
-	public String getWUserNum() {
-		return WUserNum;
+	public String getLoginName() {
+		return loginName;
 	}
 
-	public void setWUserNum(String wUserNum) {
-		WUserNum = wUserNum;
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
 	}
 
-	public String getWPassWord() {
-		return WPassWord;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setWPassWord(String wPassWord) {
-		WPassWord = wPassWord;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public int getWAge() {
-		return WAge;
+	public int getAge() {
+		return Age;
 	}
 
-	public void setWAge(int wAge) {
-		WAge = wAge;
+	public void setAge(int age) {
+		Age = age;
 	}
 
 	public Date getWDate() {
@@ -127,10 +108,39 @@ public class WUser implements Serializable {
 		WSuperManager = wSuperManager;
 	}
 
+	public String getValidateCode() {
+		return validateCode;
+	}
+
+	public void setValidateCode(String validateCode) {
+		this.validateCode = validateCode;
+	}
+
+	public WUser(String wID, String wGCNum, String nickName, int sex, String loginName, String password, int age,
+			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager, String validateCode) {
+		super();
+		WID = wID;
+		WGCNum = wGCNum;
+		NickName = nickName;
+		Sex = sex;
+		this.loginName = loginName;
+		this.password = password;
+		Age = age;
+		WDate = wDate;
+		WStatus = wStatus;
+		WSuperManager = wSuperManager;
+		this.validateCode = validateCode;
+	}
+
+	public WUser() {
+		super();
+	}
+
 	@Override
 	public String toString() {
-		return "WUser [WID=" + WID + ", WGCNum=" + WGCNum + ", WNickName=" + WNickName + ", WSex=" + WSex
-				+ ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord + ", WAge=" + WAge + ", WDate=" + WDate
-				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
+		return "WUser [WID=" + WID + ", WGCNum=" + WGCNum + ", NickName=" + NickName + ", Sex=" + Sex + ", loginName="
+				+ loginName + ", password=" + password + ", Age=" + Age + ", WDate=" + WDate + ", WStatus=" + WStatus
+				+ ", WSuperManager=" + WSuperManager + ", validateCode=" + validateCode + "]";
 	}
+
 }
