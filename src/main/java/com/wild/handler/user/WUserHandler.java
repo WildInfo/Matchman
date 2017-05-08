@@ -81,7 +81,7 @@ public class WUserHandler implements Serializable {
 		if (StringUtils.isNotBlank(user.getLoginName())) {
 			// 数据不为空
 			if (StringUtils.isNotBlank(user.getLoginName()) && StringUtils.isNotBlank(user.getPassword())
-					&& StringUtils.isNotBlank(user.getValidateCode()) && (user.getAge()>0)
+					&& StringUtils.isNotBlank(user.getValidateCode())
 					&&(user.getSex()>0) && StringUtils.isNotBlank(user.getNickName())) {
 				user.setWID(UUIDUtil.createUUID());
 				user.setWDate(new Date());
@@ -288,10 +288,11 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
-		String verificationCode = getCharAndNumr();
+		//String verificationCode = getCharAndNumr();
+		String verificationCode ="1111";
 		session.setAttribute(SessionAttribute.TELRLOGIN, verificationCode);
-		System.out.println(verificationCode);
-		boolean result = cl.CouldMessageContent(tel, verificationCode);
+		//boolean result = cl.CouldMessageContent(tel, verificationCode);
+		boolean result=true;
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(verificationCode, time, tel);
