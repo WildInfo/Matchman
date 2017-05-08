@@ -410,7 +410,7 @@ public class MMessageHandler {
 	
 	@RequestMapping("/getNAndM")
 	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,PrintWriter out){
-		String userid = user.getWUserNum();
+		String userid = user.getWUserNum();//当前用户GC号
 		List<IInformation> infos = mCommentService.getUserNews(userid);//当前用户发表的公开信息
 		List<MMessage> mess = mCommentService.getUserMessages(userid);//当前用户发表的热点信息
 		Map<String,Object> mapData = new HashMap<String,Object>();
