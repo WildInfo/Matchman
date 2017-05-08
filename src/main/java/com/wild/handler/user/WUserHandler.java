@@ -237,13 +237,11 @@ public class WUserHandler implements Serializable {
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out,
+	public void Login(WUser userLogin,String loginName,String password ,HttpServletRequest request, HttpServletResponse response, PrintWriter out,
 			HttpSession session, ModelMap modelMap) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String loginName = request.getParameter("loginName");// 用户名（手机号码）
-		String password = request.getParameter("password");
 		// 数据不为空
 		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)) {
 			userLogin.setWPassWord(password);
