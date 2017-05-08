@@ -65,6 +65,21 @@ public class MCommentServiceImpl implements MCommentService {
 	}
 
 	@Override
+	public List<MMessage> selectWithMessage(String UserId) {
+		return commentMapper.selectWithMessage(UserId);
+	}
+
+	@Override
+	public int selectCountMessage(String UserId) {
+		return commentMapper.selectCountMessage(UserId);
+	}
+
+	@Override
+	public List<MMessage> limitMessage(String UserId) {
+		return commentMapper.limitMessage(UserId);
+	}
+
+	@Override
 	public List<IInformation> getUserNews(String userid) {
 		return commentMapper.getUserNews(userid);
 	}

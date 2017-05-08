@@ -53,7 +53,7 @@ public class MMessageHandler {
 
 	@Autowired
 	private WUserService userService;
-	
+
 	@Autowired
 	private LastOccurService lastOccurService;
 	
@@ -72,7 +72,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/insertMessage")
+	@RequestMapping(value="/insertMessage", method = RequestMethod.POST)
 	public void insertMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -109,11 +109,11 @@ public class MMessageHandler {
 
 				map2.put("messageinfo", messageJson);
 				map2.put("tokenId", message.getMID());
-				map.put("result", 1);
+				map.put("result", "1");
 				map.put("desc", "添加成功!");
 				map.put("data", map2);
-				
-				//更新用户最近出现的动态begin:
+
+				// 更新用户最近出现的动态begin:
 				LastOccur lo = lastOccurService.selectLastOccur(userDetils.get(0).getWGCNum());
 				try {
 					if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
@@ -127,14 +127,12 @@ public class MMessageHandler {
 					}
 				}catch (ParseException e) {
 					e.printStackTrace();
+					out.println(gson.toJson(map));
+					out.flush();
+					out.close();
 				}
-				//end
-				
-				out.println(gson.toJson(map));
-				out.flush();
-				out.close();
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "添加失败!");
 				map.put("data", map2);
 
@@ -152,7 +150,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/selectCurrey")
+	@RequestMapping(value="/selectCurrey", method = RequestMethod.POST)
 	public void selectCurrey(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
@@ -173,7 +171,7 @@ public class MMessageHandler {
 
 				map2.put("currency", updetails.get(0).getWCurrency());
 
-				map.put("result", 1);
+				map.put("result", "1");
 				map.put("desc", "查询成功!");
 				map.put("data", map2);
 
@@ -181,7 +179,7 @@ public class MMessageHandler {
 				out.flush();
 				out.close();
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "查询失败!");
 				map.put("data", map2);
 
@@ -190,7 +188,7 @@ public class MMessageHandler {
 				out.close();
 			}
 		} else {
-			map.put("result", 0);
+			map.put("result", "0");
 			map.put("desc", "查询失败!");
 			map.put("data", map2);
 
@@ -207,7 +205,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/messageUser")
+	@RequestMapping(value="/messageUser", method = RequestMethod.POST)
 	public void messageRelation(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -224,7 +222,7 @@ public class MMessageHandler {
 					MMessage messageDetails = commentService.selectMessage(message);// 根据热点id查询热点
 					map2.put("message" + i + "", messageDetails);
 				}
-				map.put("result", 1);
+				map.put("result", "1");
 				map.put("desc", "查询成功!");
 				map.put("data", map2);
 
@@ -232,7 +230,7 @@ public class MMessageHandler {
 				out.flush();
 				out.close();
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "查询失败!");
 				map.put("data", map2);
 
@@ -250,7 +248,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/deDailsMessage")
+	@RequestMapping(value="/deDailsMessage", method = RequestMethod.POST)
 	public void deDailsMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		MMessage message = new MMessage();
@@ -266,7 +264,7 @@ public class MMessageHandler {
 				map2.put("messageinfo", messageJson);
 				map2.put("tokenId", message.getMID());
 
-				map.put("result", 1);
+				map.put("result", "1");
 				map.put("desc", "查询成功!");
 				map.put("data", map2);
 
@@ -274,7 +272,7 @@ public class MMessageHandler {
 				out.flush();
 				out.close();
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "查询失败!");
 				map.put("data", map2);
 
@@ -292,7 +290,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping("/recviedMessage")
+	@RequestMapping(value="/recviedMessage", method = RequestMethod.POST)
 	public void recviedMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		MMessage message = new MMessage();
@@ -312,7 +310,7 @@ public class MMessageHandler {
 				map2.put("messageinfo", messageJson);
 				map2.put("tokenId", message.getMID());
 
-				map.put("result", 1);
+				map.put("result", "1");
 				map.put("desc", "更新成功!");
 				map.put("data", map2);
 
@@ -320,7 +318,7 @@ public class MMessageHandler {
 				out.flush();
 				out.close();
 			} else {
-				map.put("result", 0);
+				map.put("result", "0");
 				map.put("desc", "更新失败!");
 				map.put("data", map2);
 
@@ -334,7 +332,7 @@ public class MMessageHandler {
 	/**
 	 * 查询评论
 	 */
-	@RequestMapping(value = "/getMessageComments", method = RequestMethod.GET)
+	@RequestMapping(value = "/getMessageComments", method = RequestMethod.POST)
 	public void getMessageComments(@RequestParam("mid") String mid, PrintWriter out, HttpServletRequest request) {
 		MMessage message = new MMessage();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -344,17 +342,17 @@ public class MMessageHandler {
 			message.setMID(mid);
 			List<MComment> infos = mCommentService.getMessageComments(message);
 			if (infos.size() > 0) {
-				map.put("result", 1);
+				map.put("result", "1");
 				map.put("desc", "查看成功");
 				map2.put("commentinfo", infos);
 				map.put("data", map2);
 			} else
-				map.put("result", 0);
-				map.put("desc", "查看失败!");
-				map.put("data", map2);
+				map.put("result", "0");
+			map.put("desc", "查看失败!");
+			map.put("data", map2);
 			out.println(gson.toJson(map));
 		} else {
-			map.put("result", 0);
+			map.put("result", "0");
 			map.put("desc", "查看失败!");
 			map.put("data", map2);
 			out.println(gson.toJson(map));
@@ -369,7 +367,7 @@ public class MMessageHandler {
 	 * @param map
 	 * @param out
 	 */
-	@RequestMapping(value = "/insertMessageComment", method = RequestMethod.GET)
+	@RequestMapping(value = "/insertMessageComment", method = RequestMethod.POST)
 	public void insertMessageComment(PrintWriter out, HttpServletRequest request) {
 		String publishUser = request.getParameter("publishUser");// 发布评论的那个用户的gc号
 		String targetUser = request.getParameter("targetUser");// 被评论的那个用户的gc号
@@ -388,7 +386,7 @@ public class MMessageHandler {
 		Map<String, Object> json = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
-		json.put("result", result);
+		json.put("result", result + "");
 		if (result > 0) {// 说明评论成功
 			friendShipService.updateHotNum(targetUser, publishUser);// 更新该好友的热度
 			int r = mCommentService.insertIMC(mcr);// 插入消息评论关系表
@@ -407,7 +405,6 @@ public class MMessageHandler {
 		out.flush();
 		out.close();
 	}
-	
 	@RequestMapping("/getNAndM")
 	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,PrintWriter out){
 		String userid = user.getWUserNum();//当前用户GC号
@@ -437,6 +434,118 @@ public class MMessageHandler {
 		out.close();
 		
 	}
-	
-	
+
+	/**
+	 * 与我相关的热点任务
+	 * 
+	 * @param out
+	 * @param request
+	 */
+	@RequestMapping(value = "/selectWithMessage", method = RequestMethod.POST)
+	public void selectWithMessage(PrintWriter out, HttpServletRequest request) {
+		String tokenId = request.getParameter("tokenId");// 用户id
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		if (StringUtils.isNotBlank(tokenId)) {
+			List<MMessage> result = mCommentService.selectWithMessage(tokenId);
+			if (result.size() > 0) {// 说明评论成功
+				map.put("result", "1");
+				map2.put("messageinfo", result);
+				map.put("desc", "查看成功");
+				map.put("data", map2);
+			} else {
+				map.put("result", "0");
+				map.put("desc", "查看失败");
+				map.put("data", map2);
+			}
+			out.println(gson.toJson(map));
+			out.flush();
+			out.close();
+		}
+	}
+
+	/**
+	 * 查看与我相关的热点任务数量
+	 * 
+	 * @param out
+	 * @param request
+	 */
+	@RequestMapping(value = "/selectCountMessage", method = RequestMethod.POST)
+	public void selectCountMessage(PrintWriter out, HttpServletRequest request) {
+		String tokenId = request.getParameter("tokenId");// 用户id
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		if (StringUtils.isNotBlank(tokenId)) {
+			int result = mCommentService.selectCountMessage(tokenId);
+			if (result > 0) {// 说明评论成功
+				map.put("result", "1");
+				map2.put("messageinfo", result);
+				map.put("desc", "查看成功");
+				map.put("data", map2);
+			} else {
+				map.put("result", "0");
+				map.put("desc", "查看失败");
+				map.put("data", map2);
+			}
+			out.println(gson.toJson(map));
+			out.flush();
+			out.close();
+		}
+	}
+
+	/**
+	 * 查看前8条与我相关的有效消息
+	 * 
+	 * @param out
+	 * @param request
+	 */
+	@RequestMapping(value = "/limitMessage", method = RequestMethod.POST)
+	public void limitMessage(PrintWriter out, HttpServletRequest request) {
+		String tokenId = request.getParameter("tokenId");// 用户id
+		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
+		WDetails details = new WDetails();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		Gson gson = new Gson();
+		if (StringUtils.isNotBlank(tokenId)) {
+			detailsRelation.setWKUserID(tokenId);
+			List<WUserDetailsRelation> detailsRelationList = userService.userDetilsById(detailsRelation);
+			if (detailsRelationList.size() > 0) {
+				details.setWID(detailsRelationList.get(0).getWKDetailsID());
+				List<WDetails> detailsList = userService.selectDetils(details);
+
+				if (detailsList.size() > 0) {
+					List<MMessage> result = mCommentService.limitMessage(tokenId);
+					if (result.size() > 0) {// 说明评论成功
+						map.put("result", "1");
+						map2.put("messageinfo", result);
+						map2.put("images", detailsList.get(0).getWHeadImage());
+						map.put("desc", "查看成功");
+						map.put("data", map2);
+					} else {
+						map.put("result", "0");
+						map.put("desc", "查看失败");
+						map.put("data", map2);
+					}
+				} else {
+					map.put("result", "0");
+					map.put("desc", "查看失败");
+					map.put("data", map2);
+				}
+			} else {
+				map.put("result", "0");
+				map.put("desc", "查看失败");
+				map.put("data", map2);
+			}
+		} else {
+			map.put("result", "0");
+			map.put("desc", "查看失败");
+			map.put("data", map2);
+		}
+		out.println(gson.toJson(map));
+		out.flush();
+		out.close();
+	}
 }

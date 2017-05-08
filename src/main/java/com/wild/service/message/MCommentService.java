@@ -83,6 +83,33 @@ public interface MCommentService {
 	public List<MComment> getMessageComments(MMessage message);
 	
 	/**
+<<<<<<< HEAD
+=======
+	 * 查询与我相关的热点
+	 * 
+	 * @param UserId：用户id
+	 * @return
+	 */
+	public List<MMessage> selectWithMessage(String UserId);
+
+	/**
+	 * 计算与我热点数量
+	 * 
+	 * @param UserId
+	 * @return
+	 */
+	public int selectCountMessage(String UserId);
+	
+	/**
+	 * 查看与我相关的前8条有效消息
+	 * 
+	 * @param UserId
+	 * @return
+	 */
+	public List<MMessage> limitMessage(String UserId);
+	
+	/**
+>>>>>>> refs/remotes/origin/master
 	 * 查看当前用户发送的公开消息
 	 * @param userid：当前登陆用户的GC号
 	 * @return

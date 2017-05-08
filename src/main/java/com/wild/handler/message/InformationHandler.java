@@ -58,7 +58,7 @@ public class InformationHandler {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping("/getInfos")
+	@RequestMapping(value="/getInfos", method = RequestMethod.POST)
 	public void getPublicNews(ModelMap map, PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
 		List<IInformation> infos = informationService.getPublicNews("adress");
 		Gson gson = new Gson();
@@ -70,7 +70,7 @@ public class InformationHandler {
 	/**
 	 * 插入公开信息
 	 */
-	@RequestMapping(value="/insertInfo",method=RequestMethod.GET)
+	@RequestMapping(value="/insertInfo",method=RequestMethod.POST)
 	public void insertInfo(ModelMap map,PrintWriter out,HttpServletRequest request,HttpSession session){
 		String iContent = request.getParameter("iContent");//消息内容
 		String iImage = request.getParameter("iImage");//消息附带的图片
@@ -83,7 +83,7 @@ public class InformationHandler {
 		int result = informationService.insertPublicNews(info);
 		Map<String, Object> json = new HashMap<String, Object>();
 		Gson gson = new Gson();
-		json.put("result", result);
+		json.put("result", result+"");
 		if (result > 0) {
 			json.put("desc", "发布消息成功");
 			
@@ -111,7 +111,7 @@ public class InformationHandler {
 	/**
 	 * 查询评论
 	 */
-	@RequestMapping(value = "/getComments", method = RequestMethod.GET)
+	@RequestMapping(value = "/getComments", method = RequestMethod.POST)
 	public void getComments(@RequestParam("iid") String iid, PrintWriter out, HttpServletRequest request) {
 		IInformation information = new IInformation();
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -120,13 +120,13 @@ public class InformationHandler {
 		if (StringUtils.isNotBlank(iid)) {
 			information.setIID(iid);
 			List<MComment> infos = mCommentService.getComments(information);
-			map.put("result", 1);
+			map.put("result", "1");
 			map.put("desc", "查看成功");
 			map2.put("commentinfo", infos);
 			map.put("data", map2);
 			out.print(gson.toJson(map));
 		} else {
-			map.put("result", 0);
+			map.put("result", "0");
 			map.put("desc", "查看失败!");
 			map.put("data", map2);
 			out.println(gson.toJson(map));
@@ -142,7 +142,7 @@ public class InformationHandler {
 	 * @param map
 	 * @param out
 	 */
-	@RequestMapping(value = "/insertComment", method = RequestMethod.GET)
+	@RequestMapping(value = "/insertComment", method = RequestMethod.POST)
 	public void insertComment(ModelMap map, PrintWriter out, HttpServletRequest request) {
 		String publishUser = request.getParameter("publishUser");// 发布评论的那个用户的gc号
 		String targetUser = request.getParameter("targetUser");// 被评论的那个用户的gc号
@@ -156,7 +156,7 @@ public class InformationHandler {
 		Map<String, Object> json = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
-		json.put("result", result);
+		json.put("result", result+"");
 		if (result > 0) {// 说明评论成功
 			friendShipService.updateHotNum(targetUser, publishUser);// 更新该好友的热度
 			int r = mCommentService.insertIMC(mcr);// 插入消息评论关系表
@@ -183,7 +183,7 @@ public class InformationHandler {
 	 * @param out
 	 * @param request
 	 */
-	@RequestMapping(value = "/getInfoDetail", method = RequestMethod.GET)
+	@RequestMapping(value = "/getInfoDetail", method = RequestMethod.POST)
 	public void getInfoDetail(ModelMap map, PrintWriter out, HttpServletRequest request, HttpSession session) {
 		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN); // 当前登陆用户
 		Map<String, Object> json = new HashMap<String, Object>();
@@ -206,12 +206,12 @@ public class InformationHandler {
 
 		if (userid.equals(user.getWGCNum()) || isFriend) {// 该条信息是否是当前用户发送的或查看的用户是该条消息的好友
 			infos = informationService.getInfoDetails(information);
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("desc", "查看成功");
 			json.put("data", infos);
 		} else {// 说明是陌生人
 			infos = informationService.getInfoDetailsByStrenger(information);
-			json.put("result", 1);
+			json.put("result", "1");
 			json.put("desc", "查看成功");
 			json.put("data", infos);
 		}
