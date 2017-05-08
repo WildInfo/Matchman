@@ -26,7 +26,7 @@ public class WUser implements Serializable {
 	private Date WDate;// 注册时间
 	private StatusEnum WStatus;// 用户状态
 	private UserVersioniEnum WSuperManager;// 用户角色
-
+	private String validateCode;
 	
 	public WUser(String wID, String wGCNum, String wNickName, int wSex, String wUserNum, String wPassWord, int wAge,
 			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager) {
@@ -127,10 +127,19 @@ public class WUser implements Serializable {
 		WSuperManager = wSuperManager;
 	}
 
+	public String getValidateCode() {
+		return validateCode;
+	}
+
+	public void setValidateCode(String validateCode) {
+		this.validateCode = validateCode;
+	}
+
 	@Override
 	public String toString() {
 		return "WUser [WID=" + WID + ", WGCNum=" + WGCNum + ", WNickName=" + WNickName + ", WSex=" + WSex
 				+ ", WUserNum=" + WUserNum + ", WPassWord=" + WPassWord + ", WAge=" + WAge + ", WDate=" + WDate
-				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + "]";
+				+ ", WStatus=" + WStatus + ", WSuperManager=" + WSuperManager + ", validateCode=" + validateCode + "]";
 	}
+	
 }

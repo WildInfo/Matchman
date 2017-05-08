@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -79,37 +80,28 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
-		String loginName = request.getParameter("loginName");// 用户名（手机号码）
-		String password = request.getParameter("password");
-		String validateCode = request.getParameter("validateCode");// 验证码
-		String sex = request.getParameter("Sex");// 性别
-		String age = request.getParameter("Age");// 年龄
 		String NickName = "";
-		if (StringUtils.isNotBlank(request.getParameter("NickName"))) {
+		if (StringUtils.isNotBlank(user.getWNickName())) {
 			try {
-				NickName = new String(request.getParameter("NickName").getBytes("ISO-8859-1"), "UTF-8");
+				NickName = new String(user.getWNickName().getBytes("ISO-8859-1"), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
 			// 数据不为空
-			if (StringUtils.isNotBlank(loginName) && StringUtils.isNotBlank(password)
-					&& StringUtils.isNotBlank(validateCode) && StringUtils.isNotBlank(age)
-					&& StringUtils.isNotBlank(sex) && StringUtils.isNotBlank(NickName)) {
-				user.setWID(UUIDUtil.createUUID());
+			if (StringUtils.isNotBlank(user.getWGCNum()) && StringUtils.isNotBlank(user.getWPassWord())
+					&& StringUtils.isNotBlank(user.getValidateCode()) && (user.getWAge()>0)
+					&&(user.getWSex()>0) && StringUtils.isNotBlank(user.getWNickName())) {
 				user.setWNickName(NickName);
-				user.setWUserNum(loginName);// 用户电话号码
-				user.setWPassWord(password);
-				user.setWDate(new Date());
 				user.setWStatus(StatusEnum.normal);
 				user.setWSuperManager(UserVersioniEnum.common);// 普通权限
 				// 判断性别
-				if (0 == (Integer.valueOf(sex))) {
+				if (0 == (Integer.valueOf(user.getWSex()))) {
 					user.setWSex(SexEnum.man.getDesc());
 				} else {
 					user.setWSex(SexEnum.woman.getDesc());
 				}
 				// 判断年龄
-				switch (Integer.valueOf(age)) {
+				switch (Integer.valueOf(user.getWAge())) {
 				case 1:
 					user.setWAge(AgeEnum.seventy.getDesc());
 					break;
@@ -124,11 +116,11 @@ public class WUserHandler implements Serializable {
 					break;
 				}
 
-				String telForOnly = userService.telForOnly(loginName);
+				String telForOnly = userService.telForOnly(user.getWGCNum());
 				if (StringUtils.isBlank(telForOnly)) {// 如果电话重复
 					CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
 					if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
-						if (validateCode.equals(checkCodeSer.getCheckCode())) {
+						if (user.getValidateCode().equals(checkCodeSer.getCheckCode())) {
 							int resultRegister = userService.register(user);
 							if (resultRegister > 0) {
 								List<WUser> users = userService.login(user);// 查询
@@ -235,21 +227,16 @@ public class WUserHandler implements Serializable {
 	 * @param map
 	 * @param session
 	 * @return
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public void Login(WUser userLogin, HttpServletRequest request, HttpServletResponse response, PrintWriter out,
-			HttpSession session, ModelMap modelMap) {
+	public void Login(PrintWriter out,WUser userLogin, ModelMap modelMap,HttpSession session) throws IOException {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String loginName = request.getParameter("loginName");// 用户名（手机号码）
-		String password = request.getParameter("password");
+
 		// 数据不为空
-		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)) {
-			userLogin.setWPassWord(password);
-			if (StringUtils.isNotBlank(loginName)) {
-				userLogin.setWUserNum(loginName);
-			}
+		if (null!=userLogin) {
 			List<WUser> users = userService.login(userLogin);// 登录
 			if (users.size() > 0) {
 				session.setAttribute(SessionAttribute.USERLOGIN, users.get(0));
