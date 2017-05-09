@@ -408,27 +408,16 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
-		String tokenId = request.getParameter("tokenId");// 用户id
-		String signature = request.getParameter("signature");// 用户签名
-		String interest = request.getParameter("interest");// 用户兴趣
-		String introduce = request.getParameter("introduce");// 自我介绍
-		String headImage = request.getParameter("headImage");// 头像地址
+		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 
+		/*String signature = details.getSignature();// 用户签名
+		String interest = details.getInterest();// 用户兴趣
+		String introduce = details.getIntroduce();// 自我介绍
+		String headImage =details.getHeadImage();// 头像地址
+*/
 		// 数据不为空
-		if (StringUtils.isNotBlank(tokenId)) {
-			detailsRelation.setWKUserID(tokenId);
-			if (StringUtils.isNotBlank(headImage)) {
-				details.setWHeadImage(headImage);
-			}
-			if (StringUtils.isNotBlank(interest)) {
-				details.setWHobbies(interest);
-			}
-			if (StringUtils.isNotBlank(signature)) {
-				details.setWPersonalized(signature);
-			}
-			if (StringUtils.isNotBlank(introduce)) {
-				details.setWIntroduce(introduce);
-			}
+		if (StringUtils.isNotBlank(wUser.getWID())) {
+			detailsRelation.setWKUserID(wUser.getWID());
 			List<WUserDetailsRelation> relation = userService.userDetilsById(detailsRelation);// 根据用户id查询出详情
 			if (relation.size() > 0) {
 				details.setWID(relation.get(0).getWKDetailsID());// 用户详细id
@@ -438,7 +427,6 @@ public class WUserHandler implements Serializable {
 
 					map.put("result", "1");
 					map.put("desc", "保存成功！");
-					// map2.put("", "");
 
 					map.put("data", map2);
 

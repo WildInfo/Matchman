@@ -483,7 +483,7 @@ public class MMessageHandler {
 					if (result.size() > 0) {// 说明评论成功
 						map.put("result", "1");
 						map2.put("messageinfo", result);
-						map2.put("images", detailsList.get(0).getWHeadImage());
+						map2.put("images", detailsList.get(0).getHeadImage());
 						map.put("desc", "查看成功");
 						map.put("data", map2);
 					} else {

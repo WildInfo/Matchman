@@ -61,8 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 用户详情插入数据 -->
 	<insert id="insertDtails" parameterType="WDetails">
 		insert into w_details (
-		WID,WPersonalized,WHobbies,WIntroduce,WCurrency,WHeadImage,WBarcode)
-		values(#{WID},#{WPersonalized},#{WHobbies},#{WIntroduce},#{WCurrency},#{WHeadImage},#{WBarcode})
+		WID,signature,interest,introduce,WCurrency,headImage,WBarcode)
+		values(#{WID},#{signature},#{interest},#{introduce},#{WCurrency},#{headImage},#{WBarcode})
 	</insert>
 
 	<!--根据用户详情id查询用户详情 -->
@@ -77,17 +77,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<update id="updateUserDetails" parameterType="WDetails">
 		update w_details
 		<set>
-			<if test="WPersonalized != null and WPersonalized != '' ">
-				WPersonalized = #{WPersonalized},
+			<if test="signature != null and signature != '' ">
+				signature = #{signature},
 			</if>
-			<if test="WHobbies != null and WHobbies != '' ">  <!-- 兴趣爱好 -->
-				WHobbies = #{WHobbies},
+			<if test="interest != null and interest != '' ">  <!-- 兴趣爱好 -->
+				interest = #{interest},
 			</if>
-			<if test="WIntroduce != null ">  <!-- 介绍自己 -->
-				WIntroduce = #{WIntroduce},
+			<if test="introduce != null ">  <!-- 介绍自己 -->
+				introduce = #{introduce},
 			</if>
-			<if test="WHeadImage != null ">  <!-- 头像地址 -->
-				WHeadImage = #{WHeadImage},
+			<if test="headImage != null ">  <!-- 头像地址 -->
+				headImage = #{headImage},
 			</if>
 			<if test="WBarcode != '' ">
 				WBarcode = #{WBarcode}
