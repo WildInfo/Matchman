@@ -108,7 +108,7 @@ public class WUserHandler implements Serializable {
 					break;
 				}
 
-				String telForOnly = userService.telForOnly(user.getWGCNum());
+				String telForOnly = userService.telForOnly(user.getLoginName());
 				if (StringUtils.isBlank(telForOnly)) {// 如果电话重复
 					CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
 					if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
@@ -330,9 +330,9 @@ public class WUserHandler implements Serializable {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String loginName = request.getParameter("loginName");// 用户名（手机号码）
-		String password = request.getParameter("password");
-		String validateCode = request.getParameter("validateCode");// 验证码
+		String loginName = userLogin.getLoginName();// 用户名（手机号码）
+		String password =userLogin.getPassword();
+		String validateCode = userLogin.getValidateCode();// 验证码
 
 		// 数据不为空
 		if (StringUtils.isNotBlank(password) && StringUtils.isNotBlank(loginName)
@@ -340,11 +340,7 @@ public class WUserHandler implements Serializable {
 			CheckCodeSer checkCodeSer = (CheckCodeSer) session.getAttribute("checkCode");
 			if (null != checkCodeSer && !SerAndDeser.isTimeOut(checkCodeSer)) {// 判断验证码是否超时
 				if (validateCode.equals(checkCodeSer.getCheckCode())) {
-					userLogin.setPassword(password);
-					userLogin.setLoginName(loginName);
-
 					int usersResult = userService.lostPassWord(userLogin);// 修改
-
 					if (usersResult > 0) {
 						List<WUser> users = userService.login(userLogin);// 查询
 						WUser userJson = new WUser();
