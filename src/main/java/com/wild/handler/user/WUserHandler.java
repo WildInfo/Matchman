@@ -118,7 +118,7 @@ public class WUserHandler implements Serializable {
 								List<WUser> users = userService.login(user);// 查询
 								uploadQR(users.get(0).getWGCNum());
 								detailsRelation.setWID(UUIDUtil.createUUID());
-								detailsRelation.setWKUserID(users.get(0).getWGCNum());// 存放gc号
+								detailsRelation.setWKUserID(users.get(0).getTokenId());// 存放tokenId号
 								detailsRelation.setWKDetailsID(UUIDUtil.createUUID());
 								int relations = userService.userDetailsDelation(detailsRelation);// 插入用户详情与用户数据表
 								int details = userService.insertDtails(new WDetails(detailsRelation.getWKDetailsID(),
@@ -392,6 +392,59 @@ public class WUserHandler implements Serializable {
 	}
 
 	/**
+	 * 根据用户ID查询用户详情
+	 * @param user
+	 * @param details
+	 * @param request
+	 * @param session
+	 * @param out
+	 */
+	@RequestMapping(value = "/DetailsUser", method = RequestMethod.POST)
+	public void DetailsUser(WUser user, WDetails details, HttpServletRequest request, HttpSession session,
+			PrintWriter out) {
+		Gson gson = new Gson();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
+
+		if (StringUtils.isNotBlank(user.getTokenId())) {
+			detailsRelation.setWKUserID(user.getTokenId());
+			List<WUserDetailsRelation> relation = userService.userDetilsById(detailsRelation);// 根据用户id查询出详情
+			if (relation.size() > 0) {
+				details.setWID(relation.get(0).getWKDetailsID());// 用户详细id
+				List<WDetails> detailsUser = userService.selectDetils(details);
+				if (detailsUser.size() > 0) {
+
+					map.put("result", "1");
+					map.put("desc", "查看成功！");
+					map2.put("detailsInfo", detailsUser);
+					map.put("data", map2);
+
+					out.println(gson.toJson(map));
+					out.flush();
+					out.close();
+				} else {
+					map.put("result", "0");
+					map.put("desc", "查看失败！");
+					map.put("data", map2);
+
+					out.println(gson.toJson(map));
+					out.flush();
+					out.close();
+				}
+			} else {
+				map.put("result", "0");
+				map.put("desc", "查看失败！");
+				map.put("data", map2);
+
+				out.println(gson.toJson(map));
+				out.flush();
+				out.close();
+			}
+		}
+	}
+
+	/**
 	 * 用户详情更新
 	 * 
 	 * @param userLogin
@@ -400,23 +453,16 @@ public class WUserHandler implements Serializable {
 	 * @param out
 	 */
 	@RequestMapping(value = "/detailsResult", method = RequestMethod.POST)
-	public void DetailsResult(WDetails details, HttpServletRequest request, HttpSession session, PrintWriter out) {
+	public void DetailsResult(WUser user, WDetails details, HttpServletRequest request, HttpSession session,
+			PrintWriter out) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
-		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
-
-		/*
-		 * String signature = details.getSignature();// 用户签名 String interest =
-		 * details.getInterest();// 用户兴趣 String introduce =
-		 * details.getIntroduce();// 自我介绍 String headImage
-		 * =details.getHeadImage();// 头像地址
-		 */
 		// 数据不为空
-		if (StringUtils.isNotBlank(wUser.getTokenId())) {
-			detailsRelation.setWKUserID(wUser.getTokenId());
+		if (StringUtils.isNotBlank(user.getTokenId())) {
+			detailsRelation.setWKUserID(user.getTokenId());
 			List<WUserDetailsRelation> relation = userService.userDetilsById(detailsRelation);// 根据用户id查询出详情
 			if (relation.size() > 0) {
 				details.setWID(relation.get(0).getWKDetailsID());// 用户详细id
@@ -482,9 +528,8 @@ public class WUserHandler implements Serializable {
 	 * @param out
 	 */
 	@RequestMapping(value = "/uploadIcon", method = RequestMethod.POST)
-	public void uploadHeadIcon(@RequestParam("iconPath") String iconPath, HttpServletRequest request,
+	public void uploadHeadIcon(@RequestParam("iconPath") String iconPath, WUser user, HttpServletRequest request,
 			HttpSession session, PrintWriter out) {
-		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
@@ -497,7 +542,7 @@ public class WUserHandler implements Serializable {
 		if (!fi.exists() && !fi.isFile()) {
 			fi.mkdir();
 		}
-		path = path + "/" + wUser.getWGCNum() + iconPath.substring(iconPath.lastIndexOf("."));
+		path = path + "/" + user.getTokenId() + iconPath.substring(iconPath.lastIndexOf("."));
 		FileInputStream in = null;
 		FileOutputStream output = null;
 		try {
@@ -532,14 +577,14 @@ public class WUserHandler implements Serializable {
 	 * @param map
 	 */
 	@RequestMapping(value = "/decodeQR", method = RequestMethod.POST)
-	public void deQR(@RequestParam("gcNum") String gcNum, PrintWriter out) {
+	public void deQR(WUser user, PrintWriter out) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
 		String relativelyPath = "";
 		relativelyPath = WUserHandler.class.getClassLoader().getResource("/").getPath(); // 项目的根目录
 		relativelyPath = relativelyPath.substring(1, relativelyPath.indexOf("webapps"));
-		String path = relativelyPath + "webapps/iconHead/QR" + gcNum + ".png"; // 头像存储路径
+		String path = relativelyPath + "webapps/iconHead/QR" + user.getTokenId() + ".png"; // 头像存储路径
 		QRCodeOP qr = new QRCodeOP();
 		String content = qr.decoderQRCode(path);
 		if (null != content && content.length() > 0) {

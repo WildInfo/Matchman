@@ -2,6 +2,7 @@ package com.wild.handler.message;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +85,7 @@ public class MMessageHandler {
 			message.setMDate(new Date());
 			message.setMGetStatus(GetStatusEnum.unreceived);
 			message.setMStatus(StatusEnum.normal);
-			message.setMUserGC(userDetils.get(0).getWGCNum());// 存入用户GC号
+			message.setMUserGC(userDetils.get(0).getTokenId());// 存入用户tokenId号
 
 			int messageResult = commentService.insertMessage(message);// 插入热点
 			MMessageCommentRelation commentRelation = new MMessageCommentRelation(UUIDUtil.createUUID(), null,
@@ -191,6 +192,7 @@ public class MMessageHandler {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
+		List<Object> list=new ArrayList<>();
 		MMessageCommentRelation messageRelation = new MMessageCommentRelation();
 		if (StringUtils.isNotBlank(user.getTokenId())) {
 			messageRelation.setMKUserID(user.getTokenId());
@@ -200,7 +202,8 @@ public class MMessageHandler {
 					MMessage message = new MMessage();
 					message.setTokenId(messageUser.get(i).getMKMessageID());
 					MMessage messageDetails = commentService.selectMessage(message);// 根据热点id查询热点
-					map2.put("", messageDetails);
+					list.add(messageDetails);
+					map2.put("messagelist", list);
 				}
 				map.put("result", "1");
 				map.put("desc", "查询成功!");
@@ -229,14 +232,12 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/deDailsMessage", method = RequestMethod.POST)
-	public void deDailsMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
+	public void deDailsMessage(MMessage message,PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
-		MMessage message = new MMessage();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String tokenId = request.getParameter("tokenId");// 热点id
+		String tokenId =message.getTokenId();// 热点id
 		if (StringUtils.isNotBlank(tokenId)) {
-			message.setTokenId(tokenId);
 			MMessage messageResult = commentService.selectMessage(message);
 			if (null != messageResult) {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
@@ -392,14 +393,14 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/selectWithMessage", method = RequestMethod.POST)
-	public void selectWithMessage(PrintWriter out, HttpServletRequest request) {
-		String tokenId = request.getParameter("tokenId");// 用户id
+	public void selectWithMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+		String tokenId = user.getTokenId();// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
 		if (StringUtils.isNotBlank(tokenId)) {
 			List<MMessage> result = mCommentService.selectWithMessage(tokenId);
-			if (result.size() > 0) {// 说明评论成功
+			if (result.size() > 0) {
 				map.put("result", "1");
 				map2.put("messageinfo", result);
 				map.put("desc", "查看成功");
@@ -422,8 +423,8 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/selectCountMessage", method = RequestMethod.POST)
-	public void selectCountMessage(PrintWriter out, HttpServletRequest request) {
-		String tokenId = request.getParameter("tokenId");// 用户id
+	public void selectCountMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+		String tokenId = user.getTokenId();// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
@@ -452,8 +453,8 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/limitMessage", method = RequestMethod.POST)
-	public void limitMessage(PrintWriter out, HttpServletRequest request) {
-		String tokenId = request.getParameter("tokenId");// 用户id
+	public void limitMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+		String tokenId = user.getTokenId();// 用户id
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		WDetails details = new WDetails();
 		Map<String, Object> map = new HashMap<String, Object>();

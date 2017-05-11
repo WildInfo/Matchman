@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND MActivateStatus = #{MActivateStatus}
 		</if>
 		<if test="MID != null">
-			AND MID = #{MID}
+			AND tokenId = #{tokenId}
 		</if>
 	</select>
 
@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!--根据热点id查询热点信息 -->
 	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
-		select * from m_message where MID=#{MID}
+		select * from m_message where tokenId=#{tokenId}
 	</select>
 
 	<!-- 更新热点领取状态 -->
@@ -83,13 +83,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="MGetUser != null">
 			, MGetUser=#{MGetUser}
 		</if>
-		where MID = #{MID}
+		where tokenId = #{tokenId}
 	</update>
 
 	<!-- 查询与我相关的热点任务 -->
 	<select id="selectWithMessage" parameterType="String"
 		resultType="MMessage">
-		SELECT * FROM m_message WHERE m_message.MID in(
+		SELECT * FROM m_message WHERE m_message.tokenId in(
 		select
 		MKMessageID from m_message_comment_relation
 		where MKMessageID in
@@ -100,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 计算与我相关的热点任务数量 -->
 	<select id="selectCountMessage" parameterType="String"
 		resultType="int">
-		SELECT COUNT(1) FROM m_message WHERE m_message.MID in(
+		SELECT COUNT(1) FROM m_message WHERE m_message.tokenId in(
 		select
 		MKMessageID from m_message_comment_relation
 		where MKMessageID in
