@@ -13,11 +13,11 @@ public class WDetails implements Serializable {
 	private static final long serialVersionUID = -5753757172875401160L;
 
 	private String WID;// 用户详情id
-	private String WPersonalized;// 个性签名
-	private String WHobbies;// 兴趣爱好
-	private String WIntroduce;// 介绍自己
+	private String signature;// 个性签名
+	private String interest;// 兴趣爱好
+	private String introduce;// 介绍自己
 	private int WCurrency;// 游戏币
-	private String WHeadImage;// 头像地址
+	private String headImage;// 头像地址
 	private String WBarcode;// 二维码地址
 	private String WDetails1;//备用字段
 	private String WDetails2;//备用字段
@@ -27,19 +27,22 @@ public class WDetails implements Serializable {
 		super();
 	}
 
-	public WDetails(String wID, String wPersonalized, String wHobbies, String wIntroduce, int wCurrency,
-			String wHeadImage, String wBarcode, String wDetails1, String wDetails2, String wDetails3) {
+	
+	public WDetails(String wID, String signature, String interest, String introduce, int wCurrency, String headImage,
+			String wBarcode, String wDetails1, String wDetails2, String wDetails3) {
+		super();
 		WID = wID;
-		WPersonalized = wPersonalized;
-		WHobbies = wHobbies;
-		WIntroduce = wIntroduce;
+		this.signature = signature;
+		this.interest = interest;
+		this.introduce = introduce;
 		WCurrency = wCurrency;
-		WHeadImage = wHeadImage;
+		this.headImage = headImage;
 		WBarcode = wBarcode;
 		WDetails1 = wDetails1;
 		WDetails2 = wDetails2;
 		WDetails3 = wDetails3;
 	}
+
 
 	public String getWID() {
 		return WID;
@@ -49,28 +52,28 @@ public class WDetails implements Serializable {
 		WID = wID;
 	}
 
-	public String getWPersonalized() {
-		return WPersonalized;
+	public String getSignature() {
+		return signature;
 	}
 
-	public void setWPersonalized(String wPersonalized) {
-		WPersonalized = wPersonalized;
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 
-	public String getWHobbies() {
-		return WHobbies;
+	public String getInterest() {
+		return interest;
 	}
 
-	public void setWHobbies(String wHobbies) {
-		WHobbies = wHobbies;
+	public void setInterest(String interest) {
+		this.interest = interest;
 	}
 
-	public String getWIntroduce() {
-		return WIntroduce;
+	public String getIntroduce() {
+		return introduce;
 	}
 
-	public void setWIntroduce(String wIntroduce) {
-		WIntroduce = wIntroduce;
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
 	}
 
 	public int getWCurrency() {
@@ -81,12 +84,12 @@ public class WDetails implements Serializable {
 		WCurrency = wCurrency;
 	}
 
-	public String getWHeadImage() {
-		return WHeadImage;
+	public String getHeadImage() {
+		return headImage;
 	}
 
-	public void setWHeadImage(String wHeadImage) {
-		WHeadImage = wHeadImage;
+	public void setHeadImage(String headImage) {
+		this.headImage = headImage;
 	}
 
 	public String getWBarcode() {
@@ -119,6 +122,13 @@ public class WDetails implements Serializable {
 
 	public void setWDetails3(String wDetails3) {
 		WDetails3 = wDetails3;
+	}
+
+	@Override
+	public String toString() {
+		return "WDetails [WID=" + WID + ", signature=" + signature + ", interest=" + interest + ", introduce="
+				+ introduce + ", WCurrency=" + WCurrency + ", headImage=" + headImage + ", WBarcode=" + WBarcode
+				+ ", WDetails1=" + WDetails1 + ", WDetails2=" + WDetails2 + ", WDetails3=" + WDetails3 + "]";
 	}
 
 }

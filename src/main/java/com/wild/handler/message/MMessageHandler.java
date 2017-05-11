@@ -72,30 +72,21 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping(value="/insertMessage", method = RequestMethod.POST)
-	public void insertMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
+	@RequestMapping(value = "/insertMessage", method = RequestMethod.POST)
+	public void insertMessage(WUser user, MMessage message, PrintWriter out, HttpSession session,
+			HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String tokenId = request.getParameter("tokenId");// 用户id
-		String currency = request.getParameter("currency");// 游戏币数量
-		String adress = request.getParameter("adress");// 热点地址
-		String contents = "";// 热点内容
-		try {
-			contents = new String(request.getParameter("contents").getBytes("ISO-8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		if (StringUtils.isNotBlank(tokenId) && StringUtils.isNotBlank(currency) && StringUtils.isNotBlank(contents)
+		String tokenId = user.getTokenId();// 用户id
+		int currency = message.getMGrade();// 游戏币数量
+		String adress = message.getMAdress();// 热点地址
+		if (StringUtils.isNotBlank(tokenId) && currency > 0
 				&& StringUtils.isNotBlank(adress)) {
 			List<WUser> userDetils = userService.userDetils(tokenId);// 根据用户id查询用户详细
-			MMessage message = new MMessage();
 
 			message.setMID(UUIDUtil.createUUID());
-			message.setMContent(contents);
-			message.setMGrade(Integer.parseInt(currency));
 			message.setMDate(new Date());
-			message.setMAdress(adress);
 			message.setMGetStatus(GetStatusEnum.unreceived);
 			message.setMStatus(StatusEnum.normal);
 			message.setMUserGC(userDetils.get(0).getWGCNum());// 存入用户GC号
@@ -150,7 +141,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping(value="/selectCurrey", method = RequestMethod.POST)
+	@RequestMapping(value = "/selectCurrey", method = RequestMethod.POST)
 	public void selectCurrey(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
@@ -205,22 +196,21 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping(value="/messageUser", method = RequestMethod.POST)
-	public void messageRelation(PrintWriter out, HttpSession session, HttpServletRequest request) {
+	@RequestMapping(value = "/messageUser", method = RequestMethod.POST)
+	public void messageUser(WUser user, PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		MMessageCommentRelation messageRelation = new MMessageCommentRelation();
-		String tokenId = request.getParameter("tokenId");// 用户id
-		if (StringUtils.isNotBlank(tokenId)) {
-			messageRelation.setMKUserID(tokenId);
+		if (StringUtils.isNotBlank(user.getTokenId())) {
+			messageRelation.setMKUserID(user.getTokenId());
 			List<MMessageCommentRelation> messageUser = commentService.messageRelation(messageRelation);// 添加热点与用户关系
 			if ((messageUser.size() > 0)) {
 				for (int i = 0; i < messageUser.size(); i++) {
 					MMessage message = new MMessage();
 					message.setMID(messageUser.get(i).getMKMessageID());
 					MMessage messageDetails = commentService.selectMessage(message);// 根据热点id查询热点
-					map2.put("message" + i + "", messageDetails);
+					map2.put("", messageDetails);
 				}
 				map.put("result", "1");
 				map.put("desc", "查询成功!");
@@ -248,7 +238,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping(value="/deDailsMessage", method = RequestMethod.POST)
+	@RequestMapping(value = "/deDailsMessage", method = RequestMethod.POST)
 	public void deDailsMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		MMessage message = new MMessage();
@@ -290,7 +280,7 @@ public class MMessageHandler {
 	 * @param session
 	 * @param request
 	 */
-	@RequestMapping(value="/recviedMessage", method = RequestMethod.POST)
+	@RequestMapping(value = "/recviedMessage", method = RequestMethod.POST)
 	public void recviedMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		MMessage message = new MMessage();
@@ -521,7 +511,7 @@ public class MMessageHandler {
 					if (result.size() > 0) {// 说明评论成功
 						map.put("result", "1");
 						map2.put("messageinfo", result);
-						map2.put("images", detailsList.get(0).getWHeadImage());
+						map2.put("images", detailsList.get(0).getHeadImage());
 						map.put("desc", "查看成功");
 						map.put("data", map2);
 					} else {
