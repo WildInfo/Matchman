@@ -82,7 +82,7 @@ public class WUserHandler implements Serializable {
 			// 数据不为空
 			if (StringUtils.isNotBlank(user.getLoginName()) && StringUtils.isNotBlank(user.getPassword())
 					&& StringUtils.isNotBlank(user.getValidateCode()) && StringUtils.isNotBlank(user.getNickName())) {
-				user.setWID(UUIDUtil.createUUID());
+				user.setTokenId(UUIDUtil.createUUID());
 				user.setWDate(new Date());
 				user.setWStatus(StatusEnum.normal);
 				user.setWSuperManager(UserVersioniEnum.common);// 普通权限
@@ -134,7 +134,7 @@ public class WUserHandler implements Serializable {
 									userJson.setWDate(users.get(0).getWDate());
 
 									map2.put("userInfo", userJson);
-									map2.put("tokenId", users.get(0).getWID());
+									map2.put("tokenId", users.get(0).getTokenId());
 
 									map.put("result", "1");
 									map.put("desc", "注册成功！");
@@ -243,7 +243,7 @@ public class WUserHandler implements Serializable {
 				userJson.setWDate(users.get(0).getWDate());
 
 				map2.put("userInfo", userJson);
-				map2.put("tokenId", users.get(0).getWID());
+				map2.put("tokenId", users.get(0).getTokenId());
 
 				map.put("result", "1");
 				map.put("desc", "登录成功！");
@@ -287,11 +287,9 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
-		// String verificationCode = getCharAndNumr();
-		String verificationCode = "1111";
+		String verificationCode = getCharAndNumr();
 		session.setAttribute(SessionAttribute.TELRLOGIN, verificationCode);
-		// boolean result = cl.CouldMessageContent(tel, verificationCode);
-		boolean result = true;
+		boolean result = cl.CouldMessageContent(tel, verificationCode);
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(verificationCode, time, tel);
@@ -331,7 +329,7 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		String loginName = userLogin.getLoginName();// 用户名（手机号码）
-		String password =userLogin.getPassword();
+		String password = userLogin.getPassword();
 		String validateCode = userLogin.getValidateCode();// 验证码
 
 		// 数据不为空
@@ -353,7 +351,7 @@ public class WUserHandler implements Serializable {
 						userJson.setWDate(users.get(0).getWDate());
 
 						map2.put("userInfo", userJson);
-						map2.put("tokenId", users.get(0).getWID());
+						map2.put("tokenId", users.get(0).getTokenId());
 
 						map.put("result", "1");
 						map.put("desc", "修改成功！");
@@ -410,14 +408,15 @@ public class WUserHandler implements Serializable {
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		WUser wUser = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 
-		/*String signature = details.getSignature();// 用户签名
-		String interest = details.getInterest();// 用户兴趣
-		String introduce = details.getIntroduce();// 自我介绍
-		String headImage =details.getHeadImage();// 头像地址
-*/
+		/*
+		 * String signature = details.getSignature();// 用户签名 String interest =
+		 * details.getInterest();// 用户兴趣 String introduce =
+		 * details.getIntroduce();// 自我介绍 String headImage
+		 * =details.getHeadImage();// 头像地址
+		 */
 		// 数据不为空
-		if (StringUtils.isNotBlank(wUser.getWID())) {
-			detailsRelation.setWKUserID(wUser.getWID());
+		if (StringUtils.isNotBlank(wUser.getTokenId())) {
+			detailsRelation.setWKUserID(wUser.getTokenId());
 			List<WUserDetailsRelation> relation = userService.userDetilsById(detailsRelation);// 根据用户id查询出详情
 			if (relation.size() > 0) {
 				details.setWID(relation.get(0).getWKDetailsID());// 用户详细id

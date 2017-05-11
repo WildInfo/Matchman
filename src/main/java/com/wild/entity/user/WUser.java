@@ -16,7 +16,7 @@ public class WUser implements Serializable {
 
 	private static final long serialVersionUID = 1632537799039372010L;
 
-	private String WID;// 用户id
+	private String tokenId;// 用户id
 	private String WGCNum;// GC号
 	private String NickName;// 用户昵称
 	private int Sex;// 用户性别
@@ -28,13 +28,28 @@ public class WUser implements Serializable {
 	private UserVersioniEnum WSuperManager;// 用户角色
 	private String validateCode;
 
-	public String getWID() {
-		return WID;
+	public WUser() {
+		super();
 	}
 
-	public void setWID(String wID) {
-		WID = wID;
+	
+	public WUser(String tokenId, String wGCNum, String nickName, int sex, String loginName, String password, int age,
+			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager, String validateCode) {
+		super();
+		this.tokenId = tokenId;
+		WGCNum = wGCNum;
+		NickName = nickName;
+		Sex = sex;
+		this.loginName = loginName;
+		this.password = password;
+		Age = age;
+		WDate = wDate;
+		WStatus = wStatus;
+		WSuperManager = wSuperManager;
+		this.validateCode = validateCode;
 	}
+
+
 
 	public String getWGCNum() {
 		return WGCNum;
@@ -116,31 +131,13 @@ public class WUser implements Serializable {
 		this.validateCode = validateCode;
 	}
 
-	public WUser(String wID, String wGCNum, String nickName, int sex, String loginName, String password, int age,
-			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager, String validateCode) {
-		super();
-		WID = wID;
-		WGCNum = wGCNum;
-		NickName = nickName;
-		Sex = sex;
-		this.loginName = loginName;
-		this.password = password;
-		Age = age;
-		WDate = wDate;
-		WStatus = wStatus;
-		WSuperManager = wSuperManager;
-		this.validateCode = validateCode;
+	public String getTokenId() {
+		return tokenId;
 	}
 
-	public WUser() {
-		super();
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
 	}
 
-	@Override
-	public String toString() {
-		return "WUser [WID=" + WID + ", WGCNum=" + WGCNum + ", NickName=" + NickName + ", Sex=" + Sex + ", loginName="
-				+ loginName + ", password=" + password + ", Age=" + Age + ", WDate=" + WDate + ", WStatus=" + WStatus
-				+ ", WSuperManager=" + WSuperManager + ", validateCode=" + validateCode + "]";
-	}
-
+	
 }
