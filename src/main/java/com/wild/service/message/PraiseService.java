@@ -6,6 +6,6 @@ import com.wild.entity.user.WUser;
 
 public interface PraiseService {
 
-public int addPraise(String id, WUser userLogin, String inId,Date date);
+	public int addPraise(String id, WUser userLogin, String inId,Date date);
 
 }

@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!--查询好友列表-->
 	<select id="getFriendList" parameterType="String" resultType="FriendList">
-		select wgcnum,wnickname,wheadimage,ltime,laddress from (select wgcnum,wnickname,wheadimage from w_user wu 
+		select wgcnum,wnickname,wage,wheadimage,ltime,laddress from (select wgcnum,wnickname,wheadimage,wage from w_user wu 
 		left join w_details wd on wu.wid = wd.wid where wu.wgcnum in 
 		(select fkfriendid from f_friendship where fkuserid=#{userid})) a
 		left join l_lastoccur ll on a.wgcnum=ll.lusergc

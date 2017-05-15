@@ -229,7 +229,6 @@ public class WUserHandler implements Serializable {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-
 		// 数据不为空
 		if (null != userLogin) {
 			List<WUser> users = userService.login(userLogin);// 登录

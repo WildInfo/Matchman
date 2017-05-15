@@ -2,6 +2,8 @@ package com.wild.handler.message;
 
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -55,6 +57,8 @@ public class MMessageHandler {
 
 	@Autowired
 	private LastOccurService lastOccurService;
+	
+	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
 	@Autowired
 	private MCommentService mCommentService;
@@ -102,17 +106,22 @@ public class MMessageHandler {
 
 				// 更新用户最近出现的动态begin:
 				LastOccur lo = lastOccurService.selectLastOccur(userDetils.get(0).getWGCNum());
-				if (null == lo) {// 如果lastoccur中不存在该用户最近动态，则添加
-					lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), new Date(), adress);
-					lastOccurService.insertLastOccur(lo);
-				} else {// 否则更新该用户的最新动态
-					lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), new Date(), adress);
-					lastOccurService.updateLastOccur(lo);
+				try {
+					if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
+						lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), 
+								sdf.parse(sdf.format(new Date())), adress);
+						lastOccurService.insertLastOccur(lo);
+					}else{//否则更新该用户的最新动态
+						lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), 
+								sdf.parse(sdf.format(new Date())), adress);
+						lastOccurService.updateLastOccur(lo);
+					}
+				}catch (ParseException e) {
+					e.printStackTrace();
+					out.println(gson.toJson(map));
+					out.flush();
+					out.close();
 				}
-
-				out.println(gson.toJson(map));
-				out.flush();
-				out.close();
 			} else {
 				map.put("result", "0");
 				map.put("desc", "添加失败!");
@@ -385,6 +394,35 @@ public class MMessageHandler {
 		out.flush();
 		out.close();
 	}
+	@RequestMapping("/getNAndM")
+	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,PrintWriter out){
+		String userid = user.getWGCNum();//当前用户GC号
+		List<IInformation> infos = mCommentService.getUserNews(userid);//当前用户发表的公开信息
+		List<MMessage> mess = mCommentService.getUserMessages(userid);//当前用户发表的热点信息
+		Map<String,Object> mapData = new HashMap<String,Object>();
+		Map<String,Object> jsonMap = new HashMap<String,Object>();
+		Gson gson = new Gson();
+		jsonMap.put("result", 1);
+		if(null != infos && infos.size()>0){
+			mapData.put("infoNum", infos.size());//发表的公开消息数量
+			mapData.put("infos", infos);
+		}else{
+			mapData.put("infoNum", 0);//发表的公开消息数量
+			mapData.put("infos", new IInformation());
+		}
+		if(null != mess && mess.size()>0){
+			mapData.put("messNum", mess.size());//发布的热点数量
+			mapData.put("mess", mess);
+		}else{
+			mapData.put("messNum", 0);//发布的热点数量
+			mapData.put("mess", new MMessage());
+		}
+		jsonMap.put("data", mapData);
+		out.print(gson.toJson(jsonMap));
+		out.flush();
+		out.close();
+		
+	}
 
 	/**
 	 * 与我相关的热点任务
@@ -499,41 +537,4 @@ public class MMessageHandler {
 		out.flush();
 		out.close();
 	}
-
-	/**
-	 * 获取发送的消息
-	 * 
-	 * @param user
-	 * @param out
-	 */
-	@RequestMapping(value = "/getNAndM", method = RequestMethod.POST)
-	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN) WUser user, PrintWriter out) {
-		String userid = user.getLoginName();
-		List<IInformation> infos = mCommentService.getUserNews(userid);// 当前用户发表的公开信息
-		List<MMessage> mess = mCommentService.getUserMessages(userid);// 当前用户发表的热点信息
-		Map<String, Object> mapData = new HashMap<String, Object>();
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-		Gson gson = new Gson();
-		jsonMap.put("result", 1);
-		if (null != infos && infos.size() > 0) {
-			mapData.put("infoNum", infos.size());// 发表的公开消息数量
-			mapData.put("infos", infos);
-		} else {
-			mapData.put("infoNum", 0);// 发表的公开消息数量
-			mapData.put("infos", new IInformation());
-		}
-		if (null != mess && mess.size() > 0) {
-			mapData.put("messNum", mess.size());// 发布的热点数量
-			mapData.put("mess", mess);
-		} else {
-			mapData.put("messNum", 0);// 发布的热点数量
-			mapData.put("mess", new MMessage());
-		}
-		jsonMap.put("data", mapData);
-		out.print(gson.toJson(jsonMap));
-		out.flush();
-		out.close();
-
-	}
-
 }
