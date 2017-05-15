@@ -1,6 +1,9 @@
 package com.wild.entity.user;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.wild.enums.message.StatusEnum;
@@ -32,9 +35,8 @@ public class WUser implements Serializable {
 		super();
 	}
 
-	
 	public WUser(String tokenId, String wGCNum, String nickName, int sex, String loginName, String password, int age,
-			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager, String validateCode) {
+			String wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager, String validateCode) {
 		super();
 		this.tokenId = tokenId;
 		WGCNum = wGCNum;
@@ -43,13 +45,11 @@ public class WUser implements Serializable {
 		this.loginName = loginName;
 		this.password = password;
 		Age = age;
-		WDate = wDate;
+		setWDate(wDate);
 		WStatus = wStatus;
 		WSuperManager = wSuperManager;
 		this.validateCode = validateCode;
 	}
-
-
 
 	public String getWGCNum() {
 		return WGCNum;
@@ -99,13 +99,11 @@ public class WUser implements Serializable {
 		Age = age;
 	}
 
-	public Date getWDate() {
-		return WDate;
-	}
-
-	public void setWDate(Date wDate) {
-		WDate = wDate;
-	}
+	/*
+	 * public void setWDate(String wDate) { SimpleDateFormat f = new
+	 * SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); try { this.WDate =
+	 * f.parse(wDate); } catch (ParseException e) { e.printStackTrace(); } }
+	 */
 
 	public StatusEnum getWStatus() {
 		return WStatus;
@@ -139,5 +137,17 @@ public class WUser implements Serializable {
 		this.tokenId = tokenId;
 	}
 
-	
+	public Date getWDate() {
+		return WDate;
+	}
+
+	public void setWDate(String wDate) {
+		DateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		try {
+			this.WDate = f.parse(wDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
