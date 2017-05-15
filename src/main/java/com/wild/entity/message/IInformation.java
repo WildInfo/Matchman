@@ -22,15 +22,15 @@ public class IInformation implements Serializable {
 	private String IAdress;// 消息地址
 	private Date IDate;// 消息创建时间
 	private StatusEnum IStatus;// 消息状态
-	private String IUserId;// 备用字段1
-	private String IInformation2;// 备用字段2
-	private String IInformation3;// 备用字段3
+	private String IUserId;// 当前用户GC
+	private String IgdID;// 高德定位ID
+	private String IhotID;// 热点编号
 	
 	private List<MComment> comments; //评论
 	private List<MPraise> praises; //评论
 
 	public IInformation(String iID, String iContent, String iImage, String iAdress, Date iDate, StatusEnum iStatus,
-			String IUserId, String iInformation2, String iInformation3) {
+			String IUserId, String IgdID, String IhotID) {
 		super();
 		IID = iID;
 		IContent = iContent;
@@ -39,12 +39,12 @@ public class IInformation implements Serializable {
 		IDate = iDate;
 		IStatus = iStatus;
 		this.IUserId = IUserId;
-		IInformation2 = iInformation2;
-		IInformation3 = iInformation3;
+		this.IgdID = IgdID;
+		this.IhotID = IhotID;
 	}
 
 	public IInformation(String iID, String iContent, String iImage, String iAdress, Date iDate, StatusEnum iStatus,
-			String iUserId, String iInformation2, String iInformation3, List<MComment> comments,
+			String iUserId, String IgdID, String IhotID, List<MComment> comments,
 			List<MPraise> praises) {
 		super();
 		IID = iID;
@@ -54,8 +54,8 @@ public class IInformation implements Serializable {
 		IDate = iDate;
 		IStatus = iStatus;
 		IUserId = iUserId;
-		IInformation2 = iInformation2;
-		IInformation3 = iInformation3;
+		this.IgdID = IgdID;
+		this.IhotID = IhotID;
 		this.comments = comments;
 		this.praises = praises;
 	}
@@ -112,20 +112,20 @@ public class IInformation implements Serializable {
 		this.IUserId = IUserId;
 	}
 
-	public String getIInformation2() {
-		return IInformation2;
+	public String getIgdID() {
+		return IgdID;
 	}
 
-	public void setIInformation2(String iInformation2) {
-		IInformation2 = iInformation2;
+	public void setIgdID(String IgdID) {
+		this.IgdID = IgdID;
 	}
 
-	public String getIInformation3() {
-		return IInformation3;
+	public String getIhotID() {
+		return IhotID;
 	}
 
-	public void setIInformation3(String iInformation3) {
-		IInformation3 = iInformation3;
+	public void setIhotID(String IhotID) {
+		this.IhotID = IhotID;
 	}
 
 	public String getIImage() {
@@ -155,8 +155,8 @@ public class IInformation implements Serializable {
 	@Override
 	public String toString() {
 		return "\nIInformation [IID=" + IID + ", IContent=" + IContent + ", IImage=" + IImage + ", IAdress=" + IAdress
-				+ ", IDate=" + IDate + ", IStatus=" + IStatus + ", IUserId=" + IUserId + ", IInformation2="
-				+ IInformation2 + ", IInformation3=" + IInformation3 + ", \ncomments=" + comments + ", \npraises=" + praises
+				+ ", IDate=" + IDate + ", IStatus=" + IStatus + ", IUserId=" + IUserId + ", IgdID="
+				+ IgdID + ", IhotID=" + IhotID + ", \ncomments=" + comments + ", \npraises=" + praises
 				+ "]";
 	}
 }

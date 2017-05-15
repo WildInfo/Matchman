@@ -10,10 +10,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!--插入公开消息-->
 	<insert id="insertPublicNews" parameterType="IInformation">
-		INSERT INTO i_information (IID, IContent, IImage, IAdress, IDate, IStatus, IUserId, IInformation2, IInformation3) 
+		INSERT INTO i_information (IID, IContent, IImage, IAdress, IDate, IStatus, IUserId, IgdID, IhotID) 
 		 values
 		 (#{IID},#{IContent},#{IImage},#{IAdress},#{IDate},
-		 #{IStatus},#{IUserId},#{IInformation2},#{IInformation3})
+		 #{IStatus},#{IUserId},#{IgdID},#{IhotID})
 	</insert>
 	
 	<!--当前用户或好友查看消息详情：点赞，评论-->

@@ -26,7 +26,6 @@ import com.wild.entity.user.FriendShip;
 import com.wild.entity.user.LastOccur;
 import com.wild.entity.user.WUser;
 import com.wild.enums.message.MessageTypeEnum;
-import com.wild.enums.message.StatusEnum;
 import com.wild.service.message.InformationService;
 import com.wild.service.message.MCommentService;
 import com.wild.service.user.FriendShipService;
@@ -71,15 +70,13 @@ public class InformationHandler {
 	 * 插入公开信息
 	 */
 	@RequestMapping(value="/insertInfo",method=RequestMethod.POST)
-	public void insertInfo(ModelMap map,PrintWriter out,HttpServletRequest request,HttpSession session){
-		String iContent = request.getParameter("iContent");//消息内容
-		String iImage = request.getParameter("iImage");//消息附带的图片
-		String address = request.getParameter("address");//发送消息时的地址
-		String id = UUIDUtil.createUUID();
+	public void insertInfo(ModelMap map,IInformation info,PrintWriter out,HttpServletRequest request,HttpSession session){
+     	String id = UUIDUtil.createUUID();
 		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 		String userid = user.getWGCNum();
-		IInformation info = new IInformation(id, iContent, iImage, address, new Date(),
-				StatusEnum.normal, userid, "", "");
+		info.setIID(id);
+		info.setIUserId(userid);
+		info.setIDate(new Date());
 		int result = informationService.insertPublicNews(info);
 		Map<String, Object> json = new HashMap<String, Object>();
 		Gson gson = new Gson();
@@ -88,16 +85,16 @@ public class InformationHandler {
 			json.put("desc", "发布消息成功");
 			
 			//更新用户最近出现的动态begin:
-			LastOccur lo = lastOccurService.selectLastOccur(user.getWGCNum());
+			/*LastOccur lo = lastOccurService.selectLastOccur(user.getWGCNum());
 			if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
 				lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
-						new Date(), address);
+						new Date(), info.getIAdress());
 				lastOccurService.insertLastOccur(lo);
 			}else{//否则更新该用户的最新动态
 				lo = new LastOccur(UUIDUtil.createUUID(), user.getWGCNum(), 
-						new Date(), address);
+						new Date(), info.getIAdress());
 				lastOccurService.updateLastOccur(lo);
-			}
+			}*/
 			//end
 		}else{
 			json.put("desc", "发布消息失败");
