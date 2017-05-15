@@ -35,9 +35,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!--插入热点 -->
 	<insert id="insertMessage" parameterType="MMessage">
 		insert into m_message (
-		MID,MContent,MImage,MAdress,MGrade,MDate,MActivateStatus,MGetStatus,MStatus,MGetUser,MGetNum,MUserGC
+		tokenId,MContent,MImage,MAdress,MGrade,MDate,MActivateStatus,MGetStatus,MStatus,MGetUser,MGetNum,MUserGC,MgdID
 		)
-		values(#{MID},#{MContent},#{MImage},#{MAdress},#{MGrade},#{MDate},#{MActivateStatus},#{MGetStatus},#{MStatus},#{MGetUser},#{MGetNum},#{MUserGC})
+		values(#{tokenId},#{MContent},#{MImage},#{MAdress},#{MGrade},#{MDate},#{MActivateStatus},#{MGetStatus},#{MStatus},#{MGetUser},#{MGetNum},#{MUserGC},#{MgdID})
 	</insert>
 
 	<!--插入消息评论关系表 -->
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WKUserID=#{MKUserID}
 	</select>
 
-	<!--根据热点id查询热点信息 -->
+	<!--根据热点id或者高德ID查询热点信息 -->
 	<select id="selectMessage" parameterType="MMessage" resultType="MMessage">
 		select * from m_message where tokenId=#{tokenId}
 	</select>

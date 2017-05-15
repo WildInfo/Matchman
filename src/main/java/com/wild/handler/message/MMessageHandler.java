@@ -57,7 +57,7 @@ public class MMessageHandler {
 
 	@Autowired
 	private LastOccurService lastOccurService;
-	
+
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
 	@Autowired
@@ -74,22 +74,22 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/insertMessage", method = RequestMethod.POST)
-	public void insertMessage(WUser user, MMessage message, PrintWriter out, HttpSession session,
-			HttpServletRequest request) {
+	public void insertMessage(MMessage message, PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String tokenId = user.getTokenId();// 用户id
+		WUser user = (WUser) session.getAttribute(SessionAttribute.USERLOGIN);
 		int currency = message.getMGrade();// 游戏币数量
 		String adress = message.getMAdress();// 热点地址
-		if (StringUtils.isNotBlank(tokenId) && currency > 0 && StringUtils.isNotBlank(adress)) {
+		if ((null != user) && currency > 0 && StringUtils.isNotBlank(adress)) {
+			String tokenId = user.getTokenId();// 用户id
 			List<WUser> userDetils = userService.userDetils(tokenId);// 根据用户id查询用户详细
 
 			message.setTokenId(UUIDUtil.createUUID());
 			message.setMDate(new Date());
 			message.setMGetStatus(GetStatusEnum.unreceived);
 			message.setMStatus(StatusEnum.normal);
-			message.setMUserGC(userDetils.get(0).getTokenId());// 存入用户tokenId号
+			message.setMUserGC(user.getTokenId());// 存入用户tokenId号
 
 			int messageResult = commentService.insertMessage(message);// 插入热点
 			MMessageCommentRelation commentRelation = new MMessageCommentRelation(UUIDUtil.createUUID(), null,
@@ -103,25 +103,25 @@ public class MMessageHandler {
 				map.put("result", "1");
 				map.put("desc", "添加成功!");
 				map.put("data", map2);
-
+				out.println(gson.toJson(map));
+				out.flush();
+				out.close();
 				// 更新用户最近出现的动态begin:
 				LastOccur lo = lastOccurService.selectLastOccur(userDetils.get(0).getWGCNum());
 				try {
-					if(null==lo){//如果lastoccur中不存在该用户最近动态，则添加
-						lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), 
+					if (null == lo) {// 如果lastoccur中不存在该用户最近动态，则添加
+						lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(),
 								sdf.parse(sdf.format(new Date())), adress);
 						lastOccurService.insertLastOccur(lo);
-					}else{//否则更新该用户的最新动态
-						lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(), 
+					} else {// 否则更新该用户的最新动态
+						lo = new LastOccur(UUIDUtil.createUUID(), userDetils.get(0).getWGCNum(),
 								sdf.parse(sdf.format(new Date())), adress);
 						lastOccurService.updateLastOccur(lo);
 					}
-				}catch (ParseException e) {
+				} catch (ParseException e) {
 					e.printStackTrace();
-					out.println(gson.toJson(map));
-					out.flush();
-					out.close();
 				}
+				
 			} else {
 				map.put("result", "0");
 				map.put("desc", "添加失败!");
@@ -201,7 +201,7 @@ public class MMessageHandler {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		List<Object> list=new ArrayList<>();
+		List<Object> list = new ArrayList<>();
 		MMessageCommentRelation messageRelation = new MMessageCommentRelation();
 		if (StringUtils.isNotBlank(user.getTokenId())) {
 			messageRelation.setMKUserID(user.getTokenId());
@@ -241,11 +241,11 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/deDailsMessage", method = RequestMethod.POST)
-	public void deDailsMessage(MMessage message,PrintWriter out, HttpSession session, HttpServletRequest request) {
+	public void deDailsMessage(MMessage message, PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String tokenId =message.getTokenId();// 热点id
+		String tokenId = message.getTokenId();// 热点id
 		if (StringUtils.isNotBlank(tokenId)) {
 			MMessage messageResult = commentService.selectMessage(message);
 			if (null != messageResult) {
@@ -394,34 +394,35 @@ public class MMessageHandler {
 		out.flush();
 		out.close();
 	}
+
 	@RequestMapping("/getNAndM")
-	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN)WUser user,PrintWriter out){
-		String userid = user.getWGCNum();//当前用户GC号
-		List<IInformation> infos = mCommentService.getUserNews(userid);//当前用户发表的公开信息
-		List<MMessage> mess = mCommentService.getUserMessages(userid);//当前用户发表的热点信息
-		Map<String,Object> mapData = new HashMap<String,Object>();
-		Map<String,Object> jsonMap = new HashMap<String,Object>();
+	public void getNAndM(@ModelAttribute(SessionAttribute.USERLOGIN) WUser user, PrintWriter out) {
+		String userid = user.getWGCNum();// 当前用户GC号
+		List<IInformation> infos = mCommentService.getUserNews(userid);// 当前用户发表的公开信息
+		List<MMessage> mess = mCommentService.getUserMessages(userid);// 当前用户发表的热点信息
+		Map<String, Object> mapData = new HashMap<String, Object>();
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		Gson gson = new Gson();
 		jsonMap.put("result", 1);
-		if(null != infos && infos.size()>0){
-			mapData.put("infoNum", infos.size());//发表的公开消息数量
+		if (null != infos && infos.size() > 0) {
+			mapData.put("infoNum", infos.size());// 发表的公开消息数量
 			mapData.put("infos", infos);
-		}else{
-			mapData.put("infoNum", 0);//发表的公开消息数量
+		} else {
+			mapData.put("infoNum", 0);// 发表的公开消息数量
 			mapData.put("infos", new IInformation());
 		}
-		if(null != mess && mess.size()>0){
-			mapData.put("messNum", mess.size());//发布的热点数量
+		if (null != mess && mess.size() > 0) {
+			mapData.put("messNum", mess.size());// 发布的热点数量
 			mapData.put("mess", mess);
-		}else{
-			mapData.put("messNum", 0);//发布的热点数量
+		} else {
+			mapData.put("messNum", 0);// 发布的热点数量
 			mapData.put("mess", new MMessage());
 		}
 		jsonMap.put("data", mapData);
 		out.print(gson.toJson(jsonMap));
 		out.flush();
 		out.close();
-		
+
 	}
 
 	/**
@@ -431,7 +432,7 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/selectWithMessage", method = RequestMethod.POST)
-	public void selectWithMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+	public void selectWithMessage(WUser user, PrintWriter out, HttpServletRequest request) {
 		String tokenId = user.getTokenId();// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -461,7 +462,7 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/selectCountMessage", method = RequestMethod.POST)
-	public void selectCountMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+	public void selectCountMessage(WUser user, PrintWriter out, HttpServletRequest request) {
 		String tokenId = user.getTokenId();// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -491,7 +492,7 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/limitMessage", method = RequestMethod.POST)
-	public void limitMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+	public void limitMessage(WUser user, PrintWriter out, HttpServletRequest request) {
 		String tokenId = user.getTokenId();// 用户id
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		WDetails details = new WDetails();
