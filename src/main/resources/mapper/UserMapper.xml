@@ -6,9 +6,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 注册 -->
 	<insert id="register" parameterType="WUser">
 		insert into w_user
-		(WGCNum,WID,NickName,Sex,loginName,password,Age,WDate,WStatus,WSuperManager)
+		(WGCNum,tokenId,NickName,Sex,loginName,password,Age,WDate,WStatus,WSuperManager)
 		select
-		max(WGCNum)+1,#{WID},#{NickName},#{Sex},#{loginName},#{password},#{Age},#{WDate},#{WStatus},#{WSuperManager}
+		max(WGCNum)+1,#{tokenId},#{NickName},#{Sex},#{loginName},#{password},#{Age},#{WDate},#{WStatus},#{WSuperManager}
 		from w_user
 	</insert>
 
@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select
 		*
 		from w_user where
-		WID=#{WID}
+		tokenId=#{tokenId}
 	</select>
 
 	<!-- 忘记密码 -->

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -81,25 +82,24 @@ public class MMessageHandler {
 		String tokenId = user.getTokenId();// 用户id
 		int currency = message.getMGrade();// 游戏币数量
 		String adress = message.getMAdress();// 热点地址
-		if (StringUtils.isNotBlank(tokenId) && currency > 0
-				&& StringUtils.isNotBlank(adress)) {
+		if (StringUtils.isNotBlank(tokenId) && currency > 0 && StringUtils.isNotBlank(adress)) {
 			List<WUser> userDetils = userService.userDetils(tokenId);// 根据用户id查询用户详细
 
-			message.setMID(UUIDUtil.createUUID());
+			message.setTokenId(UUIDUtil.createUUID());
 			message.setMDate(new Date());
 			message.setMGetStatus(GetStatusEnum.unreceived);
 			message.setMStatus(StatusEnum.normal);
-			message.setMUserGC(userDetils.get(0).getWGCNum());// 存入用户GC号
+			message.setMUserGC(userDetils.get(0).getTokenId());// 存入用户tokenId号
 
 			int messageResult = commentService.insertMessage(message);// 插入热点
 			MMessageCommentRelation commentRelation = new MMessageCommentRelation(UUIDUtil.createUUID(), null,
-					message.getMID(), tokenId, null, null);
+					message.getTokenId(), tokenId, null, null);
 			int commentRelationResult = commentService.insertIMC(commentRelation);// 添加热点与用户关系
 			if ((messageResult > 0) && (commentRelationResult > 0)) {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
 
 				map2.put("messageinfo", messageJson);
-				map2.put("tokenId", message.getMID());
+				map2.put("tokenId", message.getTokenId());
 				map.put("result", "1");
 				map.put("desc", "添加成功!");
 				map.put("data", map2);
@@ -201,6 +201,7 @@ public class MMessageHandler {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
+		List<Object> list=new ArrayList<>();
 		MMessageCommentRelation messageRelation = new MMessageCommentRelation();
 		if (StringUtils.isNotBlank(user.getTokenId())) {
 			messageRelation.setMKUserID(user.getTokenId());
@@ -208,9 +209,10 @@ public class MMessageHandler {
 			if ((messageUser.size() > 0)) {
 				for (int i = 0; i < messageUser.size(); i++) {
 					MMessage message = new MMessage();
-					message.setMID(messageUser.get(i).getMKMessageID());
+					message.setTokenId(messageUser.get(i).getMKMessageID());
 					MMessage messageDetails = commentService.selectMessage(message);// 根据热点id查询热点
-					map2.put("", messageDetails);
+					list.add(messageDetails);
+					map2.put("messagelist", list);
 				}
 				map.put("result", "1");
 				map.put("desc", "查询成功!");
@@ -239,20 +241,18 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/deDailsMessage", method = RequestMethod.POST)
-	public void deDailsMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
+	public void deDailsMessage(MMessage message,PrintWriter out, HttpSession session, HttpServletRequest request) {
 		Gson gson = new Gson();
-		MMessage message = new MMessage();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String tokenId = request.getParameter("tokenId");// 热点id
+		String tokenId =message.getTokenId();// 热点id
 		if (StringUtils.isNotBlank(tokenId)) {
-			message.setMID(tokenId);
 			MMessage messageResult = commentService.selectMessage(message);
 			if (null != messageResult) {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
 
 				map2.put("messageinfo", messageJson);
-				map2.put("tokenId", message.getMID());
+				map2.put("tokenId", message.getTokenId());
 
 				map.put("result", "1");
 				map.put("desc", "查询成功!");
@@ -281,16 +281,15 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/recviedMessage", method = RequestMethod.POST)
-	public void recviedMessage(PrintWriter out, HttpSession session, HttpServletRequest request) {
+	public void recviedMessage(WUser user, MMessage message, PrintWriter out, HttpSession session,
+			HttpServletRequest request) {
 		Gson gson = new Gson();
-		MMessage message = new MMessage();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String tokenId = request.getParameter("tokenId");// 用户id
-		String messageid = request.getParameter("messageid");// 热点id
+		String tokenId = user.getTokenId();// 用户id
+		String messageid = message.getTokenId();// 热点id
 		if (StringUtils.isNotBlank(tokenId) && StringUtils.isNotBlank(messageid)) {
 			List<WUser> userDetils = userService.userDetils(tokenId);// 根据用户id查询用户详细
-			message.setMID(messageid);
 			message.setMGetUser(userDetils.get(0).getWGCNum());
 			message.setMGetStatus(GetStatusEnum.received);// 将热点状态改为收到
 			int messageResult = commentService.updateMessageRev(message);
@@ -298,7 +297,7 @@ public class MMessageHandler {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
 
 				map2.put("messageinfo", messageJson);
-				map2.put("tokenId", message.getMID());
+				map2.put("tokenId", message.getTokenId());
 
 				map.put("result", "1");
 				map.put("desc", "更新成功!");
@@ -329,7 +328,7 @@ public class MMessageHandler {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
 		if (StringUtils.isNotBlank(mid)) {
-			message.setMID(mid);
+			message.setTokenId(mid);
 			List<MComment> infos = mCommentService.getMessageComments(message);
 			if (infos.size() > 0) {
 				map.put("result", "1");
@@ -432,14 +431,14 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/selectWithMessage", method = RequestMethod.POST)
-	public void selectWithMessage(PrintWriter out, HttpServletRequest request) {
-		String tokenId = request.getParameter("tokenId");// 用户id
+	public void selectWithMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+		String tokenId = user.getTokenId();// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
 		if (StringUtils.isNotBlank(tokenId)) {
 			List<MMessage> result = mCommentService.selectWithMessage(tokenId);
-			if (result.size() > 0) {// 说明评论成功
+			if (result.size() > 0) {
 				map.put("result", "1");
 				map2.put("messageinfo", result);
 				map.put("desc", "查看成功");
@@ -462,8 +461,8 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/selectCountMessage", method = RequestMethod.POST)
-	public void selectCountMessage(PrintWriter out, HttpServletRequest request) {
-		String tokenId = request.getParameter("tokenId");// 用户id
+	public void selectCountMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+		String tokenId = user.getTokenId();// 用户id
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		Gson gson = new Gson();
@@ -492,8 +491,8 @@ public class MMessageHandler {
 	 * @param request
 	 */
 	@RequestMapping(value = "/limitMessage", method = RequestMethod.POST)
-	public void limitMessage(PrintWriter out, HttpServletRequest request) {
-		String tokenId = request.getParameter("tokenId");// 用户id
+	public void limitMessage(WUser user,PrintWriter out, HttpServletRequest request) {
+		String tokenId = user.getTokenId();// 用户id
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		WDetails details = new WDetails();
 		Map<String, Object> map = new HashMap<String, Object>();

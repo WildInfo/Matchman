@@ -17,7 +17,7 @@ public class MMessage implements Serializable {
 
 	private static final long serialVersionUID = -7538107101352953698L;
 
-	private String MID;// 主键ID
+	private String tokenId;// 主键ID
 	private String MContent;// 消息内容
 	private String MImage;// 消息图片
 	private int MGrade;// 热点等级(游戏币数量)
@@ -29,11 +29,12 @@ public class MMessage implements Serializable {
 	private String MGetUser;// 领取人GC号
 	private String MGetNum;// 领取游戏币数量
 	private String MUserGC;// 发布人GC号
-	public MMessage(String mID, String mContent, String mImage, int mGrade, String mAdress, Date mDate,
+
+	public MMessage(String tokenId, String mContent, String mImage, int mGrade, String mAdress, Date mDate,
 			MActivateStatusEnum mActivateStatus, StatusEnum mStatus, GetStatusEnum mGetStatus, String mGetUser,
 			String mGetNum, String mUserGC) {
 		super();
-		MID = mID;
+		this.setTokenId(tokenId);
 		MContent = mContent;
 		MImage = mImage;
 		MGrade = mGrade;
@@ -48,12 +49,6 @@ public class MMessage implements Serializable {
 	}
 	public MMessage() {
 		super();
-	}
-	public String getMID() {
-		return MID;
-	}
-	public void setMID(String mID) {
-		MID = mID;
 	}
 	public String getMContent() {
 		return MContent;
@@ -120,6 +115,19 @@ public class MMessage implements Serializable {
 	}
 	public void setMUserGC(String mUserGC) {
 		MUserGC = mUserGC;
+	}
+	public String getTokenId() {
+		return tokenId;
+	}
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
+	}
+	@Override
+	public String toString() {
+		return "MMessage [tokenId=" + tokenId + ", MContent=" + MContent + ", MImage=" + MImage + ", MGrade=" + MGrade
+				+ ", MAdress=" + MAdress + ", MDate=" + MDate + ", MActivateStatus=" + MActivateStatus + ", MStatus="
+				+ MStatus + ", MGetStatus=" + MGetStatus + ", MGetUser=" + MGetUser + ", MGetNum=" + MGetNum
+				+ ", MUserGC=" + MUserGC + "]";
 	}
 
 }
