@@ -154,9 +154,9 @@ public class IInformation implements Serializable {
 
 	@Override
 	public String toString() {
-		return "\nIInformation [IID=" + IID + ", IContent=" + IContent + ", IImage=" + IImage + ", IAdress=" + IAdress
-				+ ", IDate=" + IDate + ", IStatus=" + IStatus + ", IUserId=" + IUserId + ", IgdID="
-				+ IgdID + ", IhotID=" + IhotID + ", \ncomments=" + comments + ", \npraises=" + praises
-				+ "]";
+		return "IInformation ["+ "IID=" + IID + ", IContent=" + IContent + ", IImage=" + IImage
+				+ ", IAdress=" + IAdress + ", IDate=" + IDate + ", IStatus=" + IStatus + ", IUserId=" + IUserId
+				+ ", IgdID=" + IgdID + ", IhotID=" + IhotID + ", comments=" + comments + ", praises=" + praises + "]";
 	}
+	
 }

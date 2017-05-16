@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wild.mapper.message.InformationMapper">
 	<!-- 查看公开消息 -->
-	<select id="getPublicNews" parameterType="String" resultType="IInformation">
+	<select id="getPublicNews" parameterType="String" resultMap="infoMap">
 		select IID,Icontent,iimage,iadress,DATE_FORMAT(idate,'%Y-%m-%d %H:%i:%s') idate,istatus,iuserid,igdid,ihotid 
 		from i_information where 1=1 and iadress=#{adress}
 	</select>
@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		INSERT INTO i_information (IID, IContent, IImage, IAdress, IDate, IStatus, IUserId, IgdID, IhotID) 
 		 values
 		 (#{IID},#{IContent},#{IImage},#{IAdress},#{IDate},
-		 #{IStatus},#{IUserId},#{IgdID},#{IhotID})
+		 'normal',#{IUserId},#{IgdID},#{IhotID})
 	</insert>
 	
 	<!--当前用户或好友查看消息详情：点赞，评论-->
@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="IContent" property="IContent" />
 		<result column="IImage" property="IImage" />
 		<result column="IAdress" property="IAdress" />
-		<result column="IDate" property="IDate" />
+		<result column="IDate" property="IDate" jdbcType="TIMESTAMP" javaType="java.sql.Timestamp"/>
 		<result column="IStatus" property="IStatus" />
 		<result column="IUserId" property="IUserId" />
 		<collection property="comments" column="MID" ofType="MComment">

@@ -1,6 +1,7 @@
 package com.wild.handler.message;
 
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,10 +59,16 @@ public class InformationHandler {
 	 * @param response
 	 */
 	@RequestMapping(value="/getInfos", method = RequestMethod.POST)
-	public void getPublicNews(ModelMap map, PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-		List<IInformation> infos = informationService.getPublicNews("adress");
+	public void getPublicNews(ModelMap map,String address, PrintWriter out, HttpServletRequest request,
+				HttpServletResponse response) {
+		List<IInformation> infos = informationService.getPublicNews(address);
+		System.out.println(infos.get(0));
 		Gson gson = new Gson();
-		out.print(gson.toJson(infos));
+		if(null != infos && infos.size()>0){
+			out.print(gson.toJson(infos));
+		}else{
+			out.print("22222222222");
+		}
 		out.flush();
 		out.close();
 	}
