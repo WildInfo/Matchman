@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 登录 -->
 	<select id="login" parameterType="WUser" resultType="WUser">
-		select *
+		select tokenId,WGCNum,NickName,Sex,loginName,password,Age,date_format(WDate,'%Y-%m-%d %H:%i:%s') WDate,WStatus,WSuperManager
 		from w_user where
 		loginName=#{loginName} and
 		password=#{password}

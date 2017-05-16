@@ -36,7 +36,7 @@ public class WUser implements Serializable {
 	}
 
 	public WUser(String tokenId, String wGCNum, String nickName, int sex, String loginName, String password, int age,
-			String wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager, String validateCode) {
+			Date wDate, StatusEnum wStatus, UserVersioniEnum wSuperManager, String validateCode) {
 		super();
 		this.tokenId = tokenId;
 		WGCNum = wGCNum;
@@ -141,13 +141,16 @@ public class WUser implements Serializable {
 		return WDate;
 	}
 
-	public void setWDate(String wDate) {
+	public void setWDate(Date wDate) {
+		WDate = wDate;
+	}
+/*	public void setWDate(String wDate) {
 		DateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		try {
 			this.WDate = f.parse(wDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }

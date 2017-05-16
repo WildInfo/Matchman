@@ -86,7 +86,7 @@ public class WUserHandler implements Serializable {
 				user.setTokenId(UUIDUtil.createUUID());
 				// SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd
 				// hh:mm:ss");
-				user.setWDate(simpleDateFormat.format(new Date()));
+				user.setWDate(new Date());
 				user.setWStatus(StatusEnum.normal);
 				user.setWSuperManager(UserVersioniEnum.common);// 普通权限
 				// 判断性别
@@ -134,7 +134,7 @@ public class WUserHandler implements Serializable {
 									userJson.setSex(users.get(0).getSex());
 									userJson.setLoginName((users.get(0).getLoginName()));
 									userJson.setAge(users.get(0).getAge());
-									userJson.setWDate(simpleDateFormat.format(users.get(0).getWDate()));
+									userJson.setWDate(users.get(0).getWDate());
 
 									map2.put("userInfo", userJson);
 									map2.put("tokenId", users.get(0).getTokenId());
@@ -242,7 +242,7 @@ public class WUserHandler implements Serializable {
 				userJson.setSex(users.get(0).getSex());
 				userJson.setLoginName(users.get(0).getLoginName());
 				userJson.setAge(users.get(0).getAge());
-				userJson.setWDate(simpleDateFormat.format(users.get(0).getWDate()));
+				userJson.setWDate(users.get(0).getWDate());
 
 				map2.put("userInfo", userJson);
 				map2.put("tokenId", users.get(0).getTokenId());
@@ -352,7 +352,7 @@ public class WUserHandler implements Serializable {
 						userJson.setSex(users.get(0).getSex());
 						userJson.setLoginName(users.get(0).getLoginName());
 						userJson.setAge(users.get(0).getAge());
-						userJson.setWDate(sdf.format(users.get(0).getWDate()));
+						userJson.setWDate(users.get(0).getWDate());
 
 						map2.put("userInfo", userJson);
 						map2.put("tokenId", users.get(0).getTokenId());
