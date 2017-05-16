@@ -5,7 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.wild.mapper.message.InformationMapper">
 	<!-- 查看公开消息 -->
 	<select id="getPublicNews" parameterType="String" resultType="IInformation">
-		select * from i_information where 1=1 and iadress=#{adress}
+		select IID,Icontent,iimage,iadress,DATE_FORMAT(idate,'%Y-%m-%d %H:%i:%s') idate,istatus,iuserid,igdid,ihotid 
+		from i_information where 1=1 and iadress=#{adress}
 	</select>
 	
 	<!--插入公开消息-->
@@ -42,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</collection>
 	</resultMap>
 	<select id="getInfoDetails" parameterType="IInformation" resultMap="infoMap">
-		select c.iid,c.icontent,c.iimage,c.iadress,c.idate,c.istatus,c.iuserid,
+		select c.iid,c.icontent,c.iimage,c.iadress,DATE_FORMAT(c.idate,'%Y-%m-%d %H:%i:%s') idate,c.istatus,c.iuserid,
 		c.mid,c.mkuserid,c.mkmessageid,c.mpraise1,c.mpraise2,a.iid,a.mowneruser,a.mtargetuser,a.mcontent,a.mlikecount,
 		a.mcreatedAt,a.mparent,a.mparenttype from (select * from i_information i left join m_praise mp on i.iid=mp.MKMessageID where i.iid=#{IID}) c
 		left join 
@@ -53,7 +54,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!--当陌生人查看消息详情-->
 	<select id="getInfoDetailsByStrenger" parameterType="IInformation" resultType="IInformation">
-		select * from i_information where iid=#{IID}
+		select IID,Icontent,iimage,iadress,DATE_FORMAT(idate,'%Y-%m-%d %H:%i:%s') idate,istatus,iuserid,igdid,ihotid 
+		from i_information where iid=#{IID}
 	</select>
 	
 	<!--查看用户发表过的公开消息-->

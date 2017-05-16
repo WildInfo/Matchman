@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!--查询好友列表-->
 	<select id="getFriendList" parameterType="String" resultType="FriendList">
-		select wgcnum,wnickname,wage,wheadimage,ltime,laddress from (select wgcnum,wnickname,wheadimage,wage from w_user wu 
+		select wgcnum,wnickname,wage,wheadimage,select IID,Icontent,iimage,iadress,DATE_FORMAT(ltime,'%Y-%m-%d %H:%i:%s') ltime,istatus,iuserid,igdid,ihotid ,laddress from (select wgcnum,wnickname,wheadimage,wage from w_user wu 
 		left join w_details wd on wu.wid = wd.wid where wu.wgcnum in 
 		(select fkfriendid from f_friendship where fkuserid=#{userid})) a
 		left join l_lastoccur ll on a.wgcnum=ll.lusergc
@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!--查询最近最热好友查看用户个人消息-->
 	<select id="getHotCheck" parameterType="String" resultType="CheckUserInfo">
-		select checkusergc,targetusergc,checktime from checkPInfo where targetusergc=#{userid} 
+		select checkusergc,targetusergc,DATE_FORMAT(checktime,'%Y-%m-%d %H:%i:%s') checktime from checkPInfo where targetusergc=#{userid} 
 		and checkusergc=(select fkfriendid from f_friendship where fkuserid=#{userid} 
 		order by fhotnum desc limit 1)
 		order by checktime desc limit 1
@@ -68,8 +68,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="hotFriendMessage" parameterType="String" resultType="Date">
-		select mdate from m_message where musergc='100000002' 
-		and mgetuser = (select fkfriendid from f_friendship where fkuserid='100000002' order by fhotnum desc limit 1) 
+		select mdate from m_message where musergc=#{userid} 
+		and mgetuser = (select fkfriendid from f_friendship where fkuserid=#{userid} order by fhotnum desc limit 1) 
 		order by mdate desc limit 1
 	</select>
 	
