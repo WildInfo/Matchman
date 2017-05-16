@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class WUserHandler implements Serializable {
 
 	private static final long serialVersionUID = -2250657581544309429L;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+	DateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	private WUserService userService;
@@ -76,14 +78,15 @@ public class WUserHandler implements Serializable {
 		Gson gson = new Gson();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
-
 		WUserDetailsRelation detailsRelation = new WUserDetailsRelation();
 		if (StringUtils.isNotBlank(user.getLoginName())) {
 			// 数据不为空
 			if (StringUtils.isNotBlank(user.getLoginName()) && StringUtils.isNotBlank(user.getPassword())
 					&& StringUtils.isNotBlank(user.getValidateCode()) && StringUtils.isNotBlank(user.getNickName())) {
 				user.setTokenId(UUIDUtil.createUUID());
-				user.setWDate(new Date());
+				// SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd
+				// hh:mm:ss");
+				user.setWDate(simpleDateFormat.format(new Date()));
 				user.setWStatus(StatusEnum.normal);
 				user.setWSuperManager(UserVersioniEnum.common);// 普通权限
 				// 判断性别
@@ -131,7 +134,7 @@ public class WUserHandler implements Serializable {
 									userJson.setSex(users.get(0).getSex());
 									userJson.setLoginName((users.get(0).getLoginName()));
 									userJson.setAge(users.get(0).getAge());
-									userJson.setWDate(users.get(0).getWDate());
+									userJson.setWDate(simpleDateFormat.format(users.get(0).getWDate()));
 
 									map2.put("userInfo", userJson);
 									map2.put("tokenId", users.get(0).getTokenId());
@@ -239,7 +242,7 @@ public class WUserHandler implements Serializable {
 				userJson.setSex(users.get(0).getSex());
 				userJson.setLoginName(users.get(0).getLoginName());
 				userJson.setAge(users.get(0).getAge());
-				userJson.setWDate(users.get(0).getWDate());
+				userJson.setWDate(simpleDateFormat.format(users.get(0).getWDate()));
 
 				map2.put("userInfo", userJson);
 				map2.put("tokenId", users.get(0).getTokenId());
@@ -286,9 +289,11 @@ public class WUserHandler implements Serializable {
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		WatchmanMessage cl = new WatchmanMessage();
 		String tel = request.getParameter("loginName");// 获取短信验证码
-		String verificationCode = getCharAndNumr();
+		// String verificationCode = getCharAndNumr();
+		String verificationCode = "1111";
 		session.setAttribute(SessionAttribute.TELRLOGIN, verificationCode);
-		boolean result = cl.CouldMessageContent(tel, verificationCode);
+		// boolean result = cl.CouldMessageContent(tel, verificationCode);
+		boolean result = true;
 		long date = System.currentTimeMillis();
 		String time = sdf.format(date);
 		CheckCodeSer checkCodeSer = new CheckCodeSer(verificationCode, time, tel);
@@ -347,7 +352,7 @@ public class WUserHandler implements Serializable {
 						userJson.setSex(users.get(0).getSex());
 						userJson.setLoginName(users.get(0).getLoginName());
 						userJson.setAge(users.get(0).getAge());
-						userJson.setWDate(users.get(0).getWDate());
+						userJson.setWDate(sdf.format(users.get(0).getWDate()));
 
 						map2.put("userInfo", userJson);
 						map2.put("tokenId", users.get(0).getTokenId());
@@ -392,6 +397,7 @@ public class WUserHandler implements Serializable {
 
 	/**
 	 * 根据用户ID查询用户详情
+	 * 
 	 * @param user
 	 * @param details
 	 * @param request
