@@ -99,7 +99,6 @@ public class MMessageHandler {
 				MMessage messageJson = commentService.selectMessage(message);// 查询热点消息
 
 				map2.put("messageinfo", messageJson);
-				map2.put("tokenId", message.getTokenId());
 				map.put("result", "1");
 				map.put("desc", "添加成功!");
 				map.put("data", map2);
